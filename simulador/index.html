@@ -905,6 +905,12 @@ $('#unlock').onclick=()=>{
 };
 $('#demo').onclick=()=>{desbloqueado=true;toast('Modo demo — formulário ignorado');mostrar();};
 $('#reset').onclick=()=>location.reload();
+
+/* modo de teste: ?demo abre o diagnostico sem passar pelo formulario */
+if(/[?&]demo\b/.test(location.search)){
+  desbloqueado=true;
+  setTimeout(()=>{mostrar();toast('Modo de teste — formulário ignorado');},120);
+}
 atualizaSc(); contaOpcionais();
 $('#toggleMath').onclick=()=>{const e=$('#math'),ab=e.style.display==='none';
   e.style.display=ab?'block':'none';
