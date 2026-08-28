@@ -271,9 +271,22 @@ tbody tr:last-child td{border-bottom:0}
 
           <div class="f"><label>Rendimento bruto esperado (gross yield)</label>
             <div class="suffix"><input type="number" id="duYield" value="7" step="0.1"/><i>%</i></div></div>
-          <div class="f"><label>Service charges anuais
-              <span class="qmark" title="Encargos de condomínio no Dubai, cobrados por pé quadrado. Aqui expressos como percentagem do valor do imóvel.">?</span></label>
-            <div class="suffix"><input type="number" id="duSc" value="1.5" step="0.1"/><i>%</i></div></div>
+          <div class="f"><label>Tipologia</label>
+            <select id="duTipo">
+              <option value="450">Studio · ~450 sqft</option>
+              <option value="750" selected>1 quarto · ~750 sqft</option>
+              <option value="1100">2 quartos · ~1 100 sqft</option>
+              <option value="1600">3 quartos · ~1 600 sqft</option>
+              <option value="2400">4+ quartos · ~2 400 sqft</option>
+              <option value="0">Área personalizada</option>
+            </select></div>
+          <div class="f"><label>Área do imóvel
+              <span class="qmark" title="Built-up area. O service charge no Dubai é sempre cobrado por pé quadrado.">?</span></label>
+            <div class="suffix"><input type="number" id="duArea" value="750"/><i>sqft</i></div></div>
+          <div class="f full"><label>Service charge
+              <span class="qmark" title="Encargo anual de condomínio, cobrado por pé quadrado por ano. Base típica de mercado: 15 AED/sqft.">?</span></label>
+            <div class="suffix"><input type="number" id="duScSqft" value="15" step="0.5"/><i>AED/sqft/ano</i></div>
+            <span class="hint" id="scHint">—</span></div>
           <div class="f"><label>Gestão do arrendamento</label>
             <div class="suffix"><input type="number" id="duGestao" value="8" step="0.5"/><i>%</i></div></div>
           <div class="f"><label>Manutenção anual</label>
@@ -412,6 +425,8 @@ const v=id=>{const e=$('#'+id);return e?(parseFloat(e.value)||0):0;};
 const EUR=n=>new Intl.NumberFormat('pt-PT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n||0);
 const AED=n=>'AED '+new Intl.NumberFormat('pt-PT',{maximumFractionDigits:0}).format(n||0);
 const PCT=n=>new Intl.NumberFormat('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)+'%';
+const NUM0=n=>new Intl.NumberFormat('pt-PT',{maximumFractionDigits:0}).format(n||0);
+const nfAed=n=>new Intl.NumberFormat('pt-PT',{maximumFractionDigits:1}).format(n||0);
 function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;
   document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='.3s';setTimeout(()=>t.remove(),320);},2600);}
 
@@ -451,7 +466,10 @@ function compute(){
   const precoImovel=capital/(1+custoAq);           // preço tal que capital cobre preço + custos
   const custosAqui=precoImovel*custoAq;
   const rendaBrutaDu=precoImovel*v('duYield')/100*(1-v('duVac')/100);
-  const scDu=precoImovel*v('duSc')/100;
+  const areaDu=Math.max(1,v('duArea')||750);
+  const scAnualAed=areaDu*v('duScSqft');
+  const scDu=scAnualAed/fx;                        /* AED -> EUR */
+  const ppsfAed=areaDu?precoImovel*fx/areaDu:0;
   const gestaoDu=rendaBrutaDu*v('duGestao')/100;
   const manutDu=rendaBrutaDu*v('duManut')/100;
   const despesasDu=scDu+gestaoDu+manutDu;
@@ -491,7 +509,8 @@ function compute(){
         roi:ptValor?(liquidoPt+ptValor*aPt)/ptValor*100:0},
     venda:{custoVenda,maisValia,impostoMv,capital},
     du:{preco:precoImovel,custosAqui,rendaBruta:rendaBrutaDu,despesas:despesasDu,
-        sc:scDu,gestao:gestaoDu,manut:manutDu,antesImposto:antesImpostoDu,investido:capital,
+        sc:scDu,scAed:scAnualAed,area:areaDu,scSqft:v('duScSqft'),ppsfAed,
+        gestao:gestaoDu,manut:manutDu,antesImposto:antesImpostoDu,investido:capital,
         impostoPT:impostoDuPT,liquidoPT:liquidoDuPT,liquidoAE:liquidoDuAE,
         yieldB:precoImovel?rendaBrutaDu/precoImovel*100:0,
         yieldLPT:precoImovel?liquidoDuPT/precoImovel*100:0,
@@ -592,7 +611,7 @@ function render(){
     <tbody>${m.linhas.map(l=>`<tr><td>${l.ano}</td><td>${EUR(l.rendaPt)}</td><td>${EUR(l.rendaDuPT)}</td>
       <td>${EUR(l.rendaDuAE)}</td><td>${EUR(l.patPt)}</td><td>${EUR(l.patDuAE)}</td></tr>`).join('')}</tbody>`;
 
-  renderRegimes(m); renderRecs(m); renderMath(m);
+  renderRegimes(m); renderRecs(m); renderMath(m); atualizaSc(m);
   $('#fxb').textContent='€1 = AED '+new Intl.NumberFormat('pt-PT',{minimumFractionDigits:4}).format(fx);
   return m;
 }
@@ -671,14 +690,17 @@ function renderRecs(m){
     `As despesas consomem ${PCT(pesoD)} da renda bruta (${EUR(m.pt.despesas)}). Acima de 18% vale rever condomínio, seguro `+
     `e contrato de manutenção. Nota: só algumas despesas são dedutíveis em sede de categoria F.`,0,'info');
 
-  /* --- Dubai: service charge --- */
-  const sc=v('duSc');
-  if(sc>1.2){
-    const g=m.du.preco*(sc-1.2)/100;
-    add('🏢','rgb(201 162 39/.16)','Escolher edifícios com service charge mais baixo',
-      `A ${PCT(sc)} do valor, o service charge custa ${EUR(m.du.sc)} por ano — ${PCT(m.du.rendaBruta?m.du.sc/m.du.rendaBruta*100:0)} da renda bruta. `+
-      `Torres recentes com boa gestão ficam perto de 1,2%, o que liberta ${EUR(g)} por ano.`,g);
-  }
+  /* --- Dubai: service charge (AED/sqft) --- */
+  const sc=v('duScSqft'), ALVO=12;
+  if(sc>ALVO){
+    const g=m.du.area*(sc-ALVO)/fx;
+    add('🏢','rgb(201 162 39/.16)','Comunidades com service charge mais baixo',
+      `A ${nfAed(sc)} AED/sqft, os ${NUM0(m.du.area)} sqft custam ${AED(m.du.scAed)} por ano (${EUR(m.du.sc)}) — `+
+      `${PCT(m.du.rendaBruta?m.du.sc/m.du.rendaBruta*100:0)} da renda bruta. Torres com gestão eficiente ficam perto de `+
+      `${ALVO} AED/sqft, o que liberta ${EUR(g)} por ano.`,g);
+  }else if(sc<10) add('🏢','rgb(239 68 68/.14)','Service charge optimista',
+    `${nfAed(sc)} AED/sqft está abaixo do praticado na maioria das comunidades. A base típica ronda os 15 AED/sqft `+
+    `e torres com muitas comodidades ultrapassam os 20. Vale confirmar o valor real do edifício.`,0,'risk');
   /* --- Dubai: gestão --- */
   const gst=v('duGestao');
   if(gst>5){
@@ -778,7 +800,8 @@ function renderMath(m){
       EUR(m.du.rendaBruta))+
     step('D · Despesas operacionais',
       `service charge + gestão + manutenção<br/>`+
-      `<em>${nf(m.du.sc)} (${pct(v('duSc'))}% do valor) + ${nf(m.du.gestao)} (${pct(v('duGestao'))}% da renda) + ${nf(m.du.manut)} (${pct(v('duManut'))}% da renda)</em>`,
+      `<em>service charge = ${nf(m.du.area)} sqft × ${pct(m.du.scSqft)} AED/sqft = ${nf(m.du.scAed)} AED = ${nf(m.du.sc)} €</em><br/>`+
+      `<em>${nf(m.du.sc)} + ${nf(m.du.gestao)} (${pct(v('duGestao'))}% da renda) + ${nf(m.du.manut)} (${pct(v('duManut'))}% da renda)</em>`,
       EUR(m.du.despesas))+
     step('E · Rendimento antes de imposto',
       `renda bruta − despesas<br/><em>${nf(m.du.rendaBruta)} − ${nf(m.du.despesas)}</em>`,
@@ -851,11 +874,22 @@ $('#unlock').onclick=()=>{
 };
 $('#demo').onclick=()=>{desbloqueado=true;toast('Modo demo — formulário ignorado');mostrar();};
 $('#reset').onclick=()=>location.reload();
+atualizaSc();
 $('#toggleMath').onclick=()=>{const e=$('#math'),ab=e.style.display==='none';
   e.style.display=ab?'block':'none';
   $('#toggleMath').textContent=ab?'Ocultar cálculo':'Mostrar cálculo passo a passo';
   if(ab)e.scrollIntoView({behavior:'smooth',block:'nearest'});};
 
+$('#duTipo').onchange=e=>{const a=+e.target.value; if(a){$('#duArea').value=a;} atualizaSc();
+  if($('#res').style.display==='block')render();};
+function atualizaSc(mm){
+  const area=v('duArea')||0, sqft=v('duScSqft')||0, fx=v('fx')||4.2749;
+  const anualAed=area*sqft;
+  const m=mm||($('#res').style.display==='block'?compute():null);
+  $('#scHint').innerHTML=`${NUM0(area)} sqft × ${nfAed(sqft)} AED/sqft = <b>${AED(anualAed)}</b> por ano (${EUR(anualAed/fx)})`+
+    (m&&m.du.ppsfAed?` · preço implícito <b>${nfAed(m.du.ppsfAed)} AED/ft²</b>`:'');
+}
+['duArea','duScSqft','fx'].forEach(id=>$('#'+id).addEventListener('input',atualizaSc));
 $('#ptRegime').onchange=e=>{$('#marginalWrap').style.display=e.target.value==='X'?'flex':'none';};
 $('#duOrigem').onchange=e=>{
   const venda=e.target.value==='venda';
