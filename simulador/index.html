@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ONELIV · Simulador Portugal ↔ Dubai</title>
+<style>
+:root{
+  --gold:#c9a227; --gold-2:#e0bd4a; --gold-dim:#8a6f2a;
+  --ink:#0b0b0c; --ink-2:#131315; --ink-3:#1a1a1d; --ink-4:#232327;
+  --line:#2b2b30; --txt:#f2efe9; --txt-2:#a6a09a; --txt-3:#6f6a64;
+  --pt:#4f8ef7; --du:#c9a227; --du2:#22c55e; --bad:#ef4444;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:var(--ink);color:var(--txt);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.5}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select{font:inherit;color:inherit}
+a{color:var(--gold-2);text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 70px}
+
+/* header */
+.hd{display:flex;align-items:center;gap:12px;margin-bottom:26px;flex-wrap:wrap}
+.mark{width:40px;height:40px;border-radius:11px;background:linear-gradient(140deg,#3a2f12,var(--gold));
+  display:grid;place-items:center;font-weight:800;color:#151002;font-size:14px}
+.hd b{font-size:17px;letter-spacing:.5px}
+.hd b span{display:block;font-size:10.5px;font-weight:600;color:var(--gold);letter-spacing:1.4px}
+.fxbadge{margin-left:auto;font-size:11.5px;color:var(--txt-3);background:var(--ink-3);border:1px solid var(--line);
+  padding:7px 12px;border-radius:9px}
+
+/* hero */
+.hero{background:linear-gradient(125deg,#141313,#1b1a17 55%,#241f12);border:1px solid var(--line);
+  border-radius:18px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgb(201 162 39/.15),transparent 70%)}
+.hero h1{font-size:31px;letter-spacing:-1px;line-height:1.15;max-width:660px;position:relative}
+.hero p{color:var(--txt-2);margin-top:12px;max-width:620px;position:relative;font-size:15.5px}
+
+/* steps */
+.steps{display:flex;gap:6px;margin:0 0 20px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:9px;padding:9px 14px;border-radius:10px;background:var(--ink-2);
+  border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--txt-3)}
+.step.on{border-color:var(--gold);color:var(--gold-2)}
+.step .n{width:22px;height:22px;border-radius:999px;background:var(--ink-4);display:grid;place-items:center;
+  font-size:11.5px;font-weight:800;color:var(--txt-3)}
+.step.on .n{background:var(--gold);color:#151002}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.card-h{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.card-h h3{font-size:15px;font-weight:700}
+.card-h .fl{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--txt-3)}
+.card-b{padding:20px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f{display:flex;flex-direction:column;gap:6px}
+.f.full{grid-column:1/-1}
+.f label{font-size:12px;font-weight:600;color:var(--txt-2);display:flex;align-items:center;gap:6px}
+.f input,.f select{height:42px;background:var(--ink-3);border:1px solid var(--line);border-radius:10px;
+  padding:0 12px;outline:none;width:100%}
+.f input:focus,.f select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgb(201 162 39/.15)}
+.f .hint{font-size:11.5px;color:var(--txt-3);line-height:1.45}
+.suffix{position:relative}
+.suffix i{position:absolute;right:12px;top:12px;font-style:normal;font-size:12.5px;color:var(--txt-3)}
+.suffix input{padding-right:42px}
+
+.qmark{width:16px;height:16px;border-radius:999px;background:var(--ink-4);color:var(--txt-3);
+  font-size:10.5px;font-weight:800;display:inline-grid;place-items:center;cursor:help;flex:0 0 16px}
+
+.note{background:rgb(201 162 39/.07);border:1px solid rgb(201 162 39/.28);border-radius:11px;
+  padding:13px 15px;font-size:12.8px;color:var(--txt-2);line-height:1.6;margin-top:14px}
+.note b{color:var(--gold-2)}
+.warn{background:rgb(239 68 68/.06);border-color:rgb(239 68 68/.3)}
+.warn b{color:#fca5a5}
+
+.actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 20px;
+  border-radius:11px;font-weight:700;font-size:14.5px}
+.btn-g{background:var(--gold);color:#151002}
+.btn-g:hover{background:var(--gold-2)}
+.btn-o{background:var(--ink-3);border:1px solid var(--line);color:var(--txt)}
+.btn-o:hover{border-color:var(--gold-dim)}
+.tiny{font-size:12px;color:var(--txt-3)}
+.tiny a{cursor:pointer;text-decoration:underline}
+
+/* results */
+#res{display:none;margin-top:24px}
+.gate{display:none;margin-top:24px}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+.col{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r);padding:20px;position:relative;overflow:hidden}
+.col.best{border-color:var(--gold);box-shadow:0 0 0 1px rgb(201 162 39/.4)}
+.col .tag{position:absolute;top:0;right:0;background:var(--gold);color:#151002;font-size:10px;font-weight:800;
+  padding:4px 11px;border-radius:0 var(--r) 0 10px;letter-spacing:.5px}
+.col h4{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.col h4 .dot{width:9px;height:9px;border-radius:999px;flex:0 0 9px}
+.col .sub{font-size:11.5px;color:var(--txt-3);margin-top:3px;min-height:32px}
+.big{font-size:29px;font-weight:800;letter-spacing:-1.1px;margin-top:14px}
+.big small{display:block;font-size:11.5px;font-weight:600;color:var(--txt-3);letter-spacing:0;margin-top:3px}
+.lines{margin-top:16px;border-top:1px solid var(--line)}
+.ln{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.ln span{color:var(--txt-2)}
+.ln b{font-variant-numeric:tabular-nums}
+.ln.neg b{color:#fca5a5}
+.ln.tot{border-bottom:0;padding-top:12px}
+.ln.tot span,.ln.tot b{font-weight:800;color:var(--txt)}
+
+.verdict{background:linear-gradient(125deg,#1a1710,#241f12);border:1px solid var(--gold-dim);
+  border-radius:var(--r);padding:24px;margin-bottom:18px}
+.verdict h3{font-size:20px;letter-spacing:-.5px}
+.verdict p{color:var(--txt-2);margin-top:9px;font-size:14.5px;max-width:760px}
+.verdict .kpis{display:flex;gap:34px;margin-top:18px;flex-wrap:wrap}
+.verdict .kpis b{display:block;font-size:24px;font-weight:800;color:var(--gold-2);letter-spacing:-.6px}
+.verdict .kpis span{font-size:11.5px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.7px}
+
+svg.chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--txt-2)}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px}
+table{width:100%;border-collapse:collapse}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--txt-3);text-align:right;
+  padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child{text-align:left}
+td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px;text-align:right;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+td:first-child{text-align:left;color:var(--txt-2)}
+tbody tr:last-child td{border-bottom:0}
+
+/* lead form */
+.leadbox{background:linear-gradient(125deg,#151412,#211d13);border:1px solid var(--gold-dim);border-radius:18px;padding:30px}
+.leadbox h3{font-size:23px;letter-spacing:-.6px}
+.leadbox p{color:var(--txt-2);margin-top:8px;max-width:560px}
+.lock{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--txt-3);margin-top:18px}
+.blur{filter:blur(7px);opacity:.5;pointer-events:none;user-select:none}
+.cbrow{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--txt-2);grid-column:1/-1;margin-top:2px}
+.cbrow input{width:17px;height:17px;accent-color:var(--gold);margin-top:1px;flex:0 0 17px}
+
+
+/* --- regimes / recomendações / cálculo --- */
+#tblRegimes tbody tr{cursor:pointer}
+#tblRegimes tbody tr:hover{background:var(--ink-3)}
+#tblRegimes tr.cur{background:rgb(201 162 39/.10)}
+#tblRegimes tr.cur td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+.crit{font-size:11.8px;color:var(--txt-3);line-height:1.5;white-space:normal;max-width:420px}
+.delta-pos{color:#4ade80;font-weight:700}
+.delta-neg{color:#fca5a5;font-weight:700}
+.rec{display:flex;gap:14px;padding:16px 20px;border-top:1px solid var(--line);align-items:flex-start}
+.rec:first-child{border-top:0}
+.rec .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 34px;font-size:15px}
+.rec .bd{flex:1;min-width:0}
+.rec .bd b{font-size:14px;display:block}
+.rec .bd p{font-size:13px;color:var(--txt-2);margin-top:4px;line-height:1.55}
+.rec .imp{text-align:right;flex:0 0 auto}
+.rec .imp b{display:block;font-size:16px;font-weight:800;color:#4ade80;letter-spacing:-.4px}
+.rec .imp span{font-size:10.5px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.6px}
+.rec .imp.info b{color:var(--gold-2)}
+.rec .imp.risk b{color:#fca5a5}
+.math{padding:20px}
+.mstep{border-left:2px solid var(--line);padding:0 0 18px 16px;position:relative}
+.mstep:last-child{padding-bottom:0}
+.mstep::before{content:"";position:absolute;left:-5px;top:5px;width:8px;height:8px;border-radius:999px;background:var(--gold-dim)}
+.mstep h5{font-size:13px;font-weight:700;color:var(--txt)}
+.mstep .fx{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.3px;color:var(--txt-3);margin-top:5px;line-height:1.7}
+.mstep .fx em{font-style:normal;color:var(--gold-2)}
+.mstep .rs{font-size:13.5px;font-weight:700;margin-top:5px}
+.mgrp{margin-bottom:26px}
+.mgrp>h4{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.mgrp>h4 .dot{width:9px;height:9px;border-radius:999px;flex:0 0 9px}
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:6px}
+.gloss div{background:var(--ink-3);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.gloss b{font-size:12.5px;display:block;color:var(--gold-2)}
+.gloss span{font-size:12px;color:var(--txt-2);line-height:1.5}
+.btn-sm{height:34px;padding:0 13px;font-size:12.5px;border-radius:9px}
+
+.toast{position:fixed;bottom:20px;right:20px;background:#141210;border:1px solid var(--gold-dim);color:var(--txt);
+  padding:13px 17px;border-radius:11px;font-size:13.5px;font-weight:600;z-index:90;
+  box-shadow:0 14px 40px rgb(0 0 0/.6);animation:up .2s ease}
+@keyframes up{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.disc{margin-top:26px;font-size:11.8px;color:var(--txt-3);line-height:1.7;border-top:1px solid var(--line);padding-top:18px}
+.disc b{color:var(--txt-2)}
+@media(max-width:940px){.grid2,.cols{grid-template-columns:1fr}.hero h1{font-size:25px}}
+@media(max-width:620px){.form{grid-template-columns:1fr}.wrap{padding:18px 14px 50px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hd"><div class="mark">ON</div>
+    <b>ONELIV<span>PROPERTIES · DUBAI</span></b>
+    <div class="fxbadge">Câmbio de referência: <b id="fxb">€1 = AED 4,2749</b> · 27/08/2026</div></div>
+
+  <div class="hero">
+    <h1>Quanto é que o seu segundo imóvel em Portugal renderia se estivesse no Dubai?</h1>
+    <p>Simulação lado a lado, com os impostos que realmente se aplicam a cada cenário.
+       Todos os pressupostos são editáveis — nada aqui está escondido.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step on"><span class="n">1</span> O seu imóvel em Portugal</div>
+    <div class="step on"><span class="n">2</span> Cenário Dubai</div>
+    <div class="step on"><span class="n">3</span> Pressupostos</div>
+    <div class="step" id="st4"><span class="n">4</span> Diagnóstico</div>
+  </div>
+
+  <!-- ============== 1 + 2 ============== -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-h"><h3>1 · O seu imóvel em Portugal</h3><span class="fl">🇵🇹 EUR</span></div>
+      <div class="card-b">
+        <div class="form">
+          <div class="f"><label>Valor de mercado</label>
+            <div class="suffix"><input type="number" id="ptValor" value="350000"/><i>€</i></div></div>
+          <div class="f"><label>Renda mensal recebida</label>
+            <div class="suffix"><input type="number" id="ptRenda" value="1200"/><i>€</i></div></div>
+          <div class="f"><label>IMI anual</label>
+            <div class="suffix"><input type="number" id="ptImi" value="420"/><i>€</i></div></div>
+          <div class="f"><label>Condomínio anual</label>
+            <div class="suffix"><input type="number" id="ptCond" value="600"/><i>€</i></div></div>
+          <div class="f"><label>Seguros anuais</label>
+            <div class="suffix"><input type="number" id="ptSeg" value="180"/><i>€</i></div></div>
+          <div class="f"><label>Manutenção / conservação anual</label>
+            <div class="suffix"><input type="number" id="ptManut" value="700"/><i>€</i></div></div>
+          <div class="f"><label>Gestão / mediação de arrendamento</label>
+            <div class="suffix"><input type="number" id="ptGestao" value="0"/><i>%</i></div></div>
+          <div class="f"><label>Vacância assumida</label>
+            <div class="suffix"><input type="number" id="ptVac" value="5"/><i>%</i></div></div>
+
+          <div class="f full"><label>Regime / taxa de IRS aplicável aos rendimentos prediais
+              <span class="qmark" title="A taxa depende do tipo e da duração do contrato. Selecione a que se aplica ao seu caso — em caso de dúvida, confirme com o seu contabilista.">?</span></label>
+            <select id="ptRegime">
+              <option value="25">25% — taxa padrão do arrendamento habitacional</option>
+              <option value="15">15% — contratos de 5 a menos de 10 anos</option>
+              <option value="10">10% — contratos longos / contratos habitacionais dentro dos limites legais de renda</option>
+              <option value="5">5% — contratos de 20 anos ou mais</option>
+              <option value="0">0% — programa de arrendamento acessível (isento)</option>
+              <option value="28">28% — arrendamento não habitacional</option>
+              <option value="X">Englobamento — usar a minha taxa marginal de IRS</option>
+            </select>
+            <span class="hint">Ter “segundo imóvel” não define, por si só, a taxa. A taxa padrão do arrendamento
+              habitacional é <b>25%</b>; existem regimes reduzidos (incluindo <b>10%</b>) sujeitos a condições de
+              duração de contrato e de limites de renda. Escolha o regime que efectivamente se aplica.</span></div>
+
+          <div class="f full" id="marginalWrap" style="display:none"><label>Taxa marginal de IRS (englobamento)</label>
+            <div class="suffix"><input type="number" id="ptMarginal" value="43"/><i>%</i></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h3>2 · Cenário Dubai</h3><span class="fl">🇦🇪 AED</span></div>
+      <div class="card-b">
+        <div class="form">
+          <div class="f full"><label>Como financia a compra no Dubai?</label>
+            <select id="duOrigem">
+              <option value="venda">Vendo o imóvel em Portugal e reinvisto o capital líquido</option>
+              <option value="capital">Uso capital próprio disponível (mantenho o imóvel em Portugal)</option>
+            </select></div>
+
+          <div class="f full" id="capitalWrap" style="display:none"><label>Capital disponível para investir</label>
+            <div class="suffix"><input type="number" id="duCapital" value="350000"/><i>€</i></div></div>
+
+          <div class="f"><label>Custos de venda em Portugal
+              <span class="qmark" title="Mediação imobiliária com IVA, certificados, escritura.">?</span></label>
+            <div class="suffix"><input type="number" id="ptCustoVenda" value="6.15" step="0.05"/><i>%</i></div></div>
+          <div class="f"><label>Valor de aquisição original do imóvel
+              <span class="qmark" title="Usado para estimar a mais-valia na venda. Coloque 0 para ignorar.">?</span></label>
+            <div class="suffix"><input type="number" id="ptAquisicao" value="240000"/><i>€</i></div></div>
+          <div class="f full"><label>Taxa marginal de IRS para a mais-valia
+              <span class="qmark" title="Para residentes, 50% da mais-valia de imóvel que não seja habitação própria é englobada e tributada às taxas gerais.">?</span></label>
+            <div class="suffix"><input type="number" id="ptMvTaxa" value="43"/><i>%</i></div>
+            <span class="hint">Considera-se <b>50% da mais-valia</b> sujeita a englobamento (regra geral para imóveis
+              que não sejam habitação própria e permanente). Coloque 0 se não se aplicar.</span></div>
+
+          <div class="f"><label>Rendimento bruto esperado (gross yield)</label>
+            <div class="suffix"><input type="number" id="duYield" value="7" step="0.1"/><i>%</i></div></div>
+          <div class="f"><label>Service charges anuais
+              <span class="qmark" title="Encargos de condomínio no Dubai, cobrados por pé quadrado. Aqui expressos como percentagem do valor do imóvel.">?</span></label>
+            <div class="suffix"><input type="number" id="duSc" value="1.5" step="0.1"/><i>%</i></div></div>
+          <div class="f"><label>Gestão do arrendamento</label>
+            <div class="suffix"><input type="number" id="duGestao" value="8" step="0.5"/><i>%</i></div></div>
+          <div class="f"><label>Manutenção anual</label>
+            <div class="suffix"><input type="number" id="duManut" value="5" step="0.5"/><i>%</i></div></div>
+          <div class="f"><label>Vacância assumida</label>
+            <div class="suffix"><input type="number" id="duVac" value="5" step="0.5"/><i>%</i></div></div>
+          <div class="f"><label>Custos de aquisição (DLD + mediação)
+              <span class="qmark" title="Taxa de transferência do Dubai Land Department de 4% mais mediação de 2%.">?</span></label>
+            <div class="suffix"><input type="number" id="duCusto" value="6" step="0.1"/><i>%</i></div></div>
+        </div>
+
+        <div class="note"><b>Residência fiscal — o ponto que muda tudo.</b>
+          Enquanto for residente fiscal em Portugal, o rendimento predial obtido no estrangeiro continua a ser
+          declarado e tributado em Portugal (com crédito por imposto pago no estrangeiro, que nos EAU é zero).
+          A ausência de tributação só se materializa plenamente com residência fiscal nos EAU.
+          Por isso o diagnóstico apresenta <b>os dois cenários</b>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== 3 ============== -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-h"><h3>3 · Pressupostos</h3><span class="fl">EDITÁVEIS</span></div>
+    <div class="card-b">
+      <div class="form" style="grid-template-columns:repeat(4,1fr)">
+        <div class="f"><label>Câmbio EUR → AED</label>
+          <input type="number" id="fx" value="4.2749" step="0.0001"/>
+          <span class="hint">Referência de 27/08/2026. Actualize quando o câmbio mudar.</span></div>
+        <div class="f"><label>Horizonte da análise</label>
+          <div class="suffix"><input type="number" id="anos" value="10" min="1" max="30"/><i>anos</i></div></div>
+        <div class="f"><label>Valorização anual · Portugal</label>
+          <div class="suffix"><input type="number" id="aprPt" value="3" step="0.1"/><i>%</i></div></div>
+        <div class="f"><label>Valorização anual · Dubai</label>
+          <div class="suffix"><input type="number" id="aprDu" value="5" step="0.1"/><i>%</i></div></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-g" id="calc">Ver diagnóstico completo</button>
+        <button class="btn btn-o" id="reset">Repor valores</button>
+        <span class="tiny">Sem compromisso · <a id="demo">pré-visualizar sem formulário (modo demo)</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== LEAD GATE ============== -->
+  <div class="gate" id="gate">
+    <div class="leadbox">
+      <h3>O seu diagnóstico está pronto</h3>
+      <p>Indique onde o podemos enviar. Recebe o comparativo completo em PDF e, se quiser,
+         uma selecção de imóveis no Dubai compatíveis com o seu perfil de investimento.</p>
+      <div class="form" style="margin-top:20px">
+        <div class="f"><label>Nome</label><input id="ldNome" placeholder="O seu nome"/></div>
+        <div class="f"><label>WhatsApp</label><input id="ldTel" placeholder="+351 900 000 000"/></div>
+        <div class="f full"><label>E-mail</label><input id="ldMail" type="email" placeholder="nome@email.com"/></div>
+        <label class="cbrow"><input type="checkbox" id="ldCons"/>
+          <span>Autorizo a ONELIV Properties a contactar-me sobre esta simulação e a enviar-me
+            oportunidades de investimento. Posso retirar o consentimento a qualquer momento.</span></label>
+      </div>
+      <div class="actions"><button class="btn btn-g" id="unlock">Revelar diagnóstico</button>
+        <span class="tiny">Os seus dados não são partilhados com terceiros.</span></div>
+      <div class="lock">🔒 Pré-visualização bloqueada</div>
+      <div class="blur" style="margin-top:12px">
+        <div class="big">AED 000.000 <small>rendimento líquido anual</small></div></div>
+    </div>
+  </div>
+
+  <!-- ============== RESULTS ============== -->
+  <div id="res">
+    <div class="verdict" id="verdict"></div>
+
+    <div class="cols" id="cols"></div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-h"><h3>Regimes de IRS — critérios e efeito no seu caso</h3>
+        <span class="fl">CLIQUE NUMA LINHA PARA APLICAR</span></div>
+      <div style="overflow-x:auto"><table id="tblRegimes"></table></div>
+      <div class="card-b" style="padding-top:0">
+        <div class="note">Os critérios abaixo são os que determinam a taxa — <b>não é o facto de ser segundo imóvel</b>.
+          A elegibilidade depende do tipo de contrato, da sua duração e, nos regimes reduzidos, do cumprimento dos
+          limites legais de renda. Confirme o enquadramento do seu contrato antes de decidir.</div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><div class="card-h"><h3>Património acumulado</h3><span class="fl" id="hzLabel"></span></div>
+        <div class="card-b"><svg class="chart" id="chart" viewBox="0 0 760 340"></svg>
+          <div class="legend">
+            <span><i style="background:var(--pt)"></i>Portugal</span>
+            <span><i style="background:var(--du)"></i>Dubai · residente fiscal PT</span>
+            <span><i style="background:var(--du2)"></i>Dubai · residente fiscal EAU</span></div></div></div>
+
+      <div class="card"><div class="card-h"><h3>Fluxo ano a ano</h3><span class="fl">LÍQUIDO, APÓS IMPOSTO</span></div>
+        <div style="overflow-x:auto;max-height:420px"><table id="tbl"></table></div></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <div class="card-h"><h3>Como melhorar o retorno</h3><span class="fl">RECOMENDAÇÕES PARA O SEU CASO</span></div>
+      <div id="recs"></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <div class="card-h"><h3>Como chegámos a estes números</h3>
+        <button class="btn btn-o btn-sm" id="toggleMath" style="margin-left:auto">Mostrar cálculo passo a passo</button></div>
+      <div id="math" style="display:none"></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <div class="card-h"><h3>Próximo passo</h3></div>
+      <div class="card-b" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-g" id="pedir">Solicitar imóveis compatíveis</button>
+        <button class="btn btn-o" id="pdf">Descarregar diagnóstico</button>
+        <button class="btn btn-o" id="wa">Falar por WhatsApp</button>
+        <span class="tiny" id="leadEcho"></span>
+      </div>
+    </div>
+
+    <div class="disc">
+      <b>Nota importante.</b> Esta ferramenta é uma simulação informativa e não constitui aconselhamento fiscal,
+      jurídico ou de investimento. Em Portugal, a taxa aplicável aos rendimentos prediais depende do tipo e da
+      duração do contrato e das condições legais em vigor — a taxa padrão do arrendamento habitacional é de 25%,
+      existindo regimes reduzidos, incluindo 10% para determinados contratos que cumpram os limites legais de renda.
+      Nos EAU, considera-se investimento imobiliário detido por pessoa singular em capacidade pessoal, cujo
+      rendimento imobiliário está, em regra, excluído do Corporate Tax dos EAU; existem, ainda assim, encargos
+      locais (DLD, service charges, taxas municipais sobre arrendamento em alguns casos). Se mantiver residência
+      fiscal em Portugal, o rendimento e as mais-valias de fonte estrangeira continuam sujeitos a declaração e
+      tributação em Portugal. Enquadramento dos EAU conforme o guia da Federal Tax Authority
+      <a href="https://tax.gov.ae/Datafolder/Files/Pdf/2024/Real-Estate-Investment-for-natural-persons-22-10-2024.pdf" target="_blank" rel="noopener">Real Estate Investment for Natural Persons</a> (22/10/2024).
+      Confirme sempre o seu caso concreto com um contabilista certificado.
+      Câmbio de referência €1 = AED 4,2749 (27/08/2026), editável.
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== helpers ===================== */
+const $=s=>document.querySelector(s);
+const v=id=>{const e=$('#'+id);return e?(parseFloat(e.value)||0):0;};
+const EUR=n=>new Intl.NumberFormat('pt-PT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n||0);
+const AED=n=>'AED '+new Intl.NumberFormat('pt-PT',{maximumFractionDigits:0}).format(n||0);
+const PCT=n=>new Intl.NumberFormat('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)+'%';
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;
+  document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='.3s';setTimeout(()=>t.remove(),320);},2600);}
+
+/* ===================== model ===================== */
+function taxaPT(){
+  const r=$('#ptRegime').value;
+  return r==='X'? v('ptMarginal') : parseFloat(r);
+}
+function compute(){
+  const fx=v('fx')||4.2749, anos=Math.max(1,Math.min(30,v('anos')||10));
+
+  /* ---------- Portugal ---------- */
+  const ptValor=v('ptValor');
+  const rendaBruta=v('ptRenda')*12*(1-v('ptVac')/100);
+  const gestaoPt=rendaBruta*v('ptGestao')/100;
+  const despesasPt=v('ptImi')+v('ptCond')+v('ptSeg')+v('ptManut')+gestaoPt;
+  const colectavelPt=Math.max(0,rendaBruta-despesasPt);
+  const tPT=taxaPT();
+  const impostoPt=colectavelPt*tPT/100;
+  const liquidoPt=rendaBruta-despesasPt-impostoPt;
+
+  /* ---------- capital disponível para Dubai ---------- */
+  const origem=$('#duOrigem').value;
+  let capital, custoVenda=0, impostoMv=0, maisValia=0;
+  if(origem==='venda'){
+    custoVenda=ptValor*v('ptCustoVenda')/100;
+    const aq=v('ptAquisicao');
+    maisValia=aq>0?Math.max(0,ptValor-custoVenda-aq):0;
+    impostoMv=maisValia*0.5*v('ptMvTaxa')/100;
+    capital=ptValor-custoVenda-impostoMv;
+  }else{
+    capital=v('duCapital');
+  }
+
+  /* ---------- Dubai ---------- */
+  const custoAq=v('duCusto')/100;
+  const precoImovel=capital/(1+custoAq);           // preço tal que capital cobre preço + custos
+  const custosAqui=precoImovel*custoAq;
+  const rendaBrutaDu=precoImovel*v('duYield')/100*(1-v('duVac')/100);
+  const scDu=precoImovel*v('duSc')/100;
+  const gestaoDu=rendaBrutaDu*v('duGestao')/100;
+  const manutDu=rendaBrutaDu*v('duManut')/100;
+  const despesasDu=scDu+gestaoDu+manutDu;
+  const antesImpostoDu=rendaBrutaDu-despesasDu;
+
+  /* residente fiscal PT: rendimento predial estrangeiro tributado em PT (crédito EAU = 0) */
+  const impostoDuPT=Math.max(0,antesImpostoDu)*tPT/100;
+  const liquidoDuPT=antesImpostoDu-impostoDuPT;
+  /* residente fiscal EAU: sem imposto sobre o rendimento */
+  const liquidoDuAE=antesImpostoDu;
+
+  /* ---------- projecção ---------- */
+  const aPt=v('aprPt')/100, aDu=v('aprDu')/100;
+  const serie={pt:[],duPT:[],duAE:[]}, linhas=[];
+  let caixaPt=0,caixaDuPT=0,caixaDuAE=0;
+  for(let i=0;i<=anos;i++){
+    const valPt=ptValor*Math.pow(1+aPt,i);
+    const valDu=precoImovel*Math.pow(1+aDu,i);
+    if(i>0){
+      caixaPt+=liquidoPt*Math.pow(1+aPt,i-1);
+      caixaDuPT+=liquidoDuPT*Math.pow(1+aDu,i-1);
+      caixaDuAE+=liquidoDuAE*Math.pow(1+aDu,i-1);
+    }
+    serie.pt.push(valPt+caixaPt);
+    serie.duPT.push((origem==='venda'?0:ptValor*Math.pow(1+aPt,i))+valDu+caixaDuPT);
+    serie.duAE.push((origem==='venda'?0:ptValor*Math.pow(1+aPt,i))+valDu+caixaDuAE);
+    if(i>0)linhas.push({ano:i,
+      rendaPt:liquidoPt*Math.pow(1+aPt,i-1),
+      rendaDuPT:liquidoDuPT*Math.pow(1+aDu,i-1),
+      rendaDuAE:liquidoDuAE*Math.pow(1+aDu,i-1),
+      patPt:serie.pt[i],patDuPT:serie.duPT[i],patDuAE:serie.duAE[i]});
+  }
+  return {fx,anos,tPT,origem,
+    pt:{valor:ptValor,rendaBruta,despesas:despesasPt,imposto:impostoPt,liquido:liquidoPt,colectavel:colectavelPt,
+        gestao:gestaoPt,
+        yieldB:ptValor?rendaBruta/ptValor*100:0,yieldL:ptValor?liquidoPt/ptValor*100:0,
+        roi:ptValor?(liquidoPt+ptValor*aPt)/ptValor*100:0},
+    venda:{custoVenda,maisValia,impostoMv,capital},
+    du:{preco:precoImovel,custosAqui,rendaBruta:rendaBrutaDu,despesas:despesasDu,
+        sc:scDu,gestao:gestaoDu,manut:manutDu,antesImposto:antesImpostoDu,investido:capital,
+        impostoPT:impostoDuPT,liquidoPT:liquidoDuPT,liquidoAE:liquidoDuAE,
+        yieldB:precoImovel?rendaBrutaDu/precoImovel*100:0,
+        yieldLPT:precoImovel?liquidoDuPT/precoImovel*100:0,
+        yieldLAE:precoImovel?liquidoDuAE/precoImovel*100:0,
+        roiPT:capital?(liquidoDuPT+precoImovel*aDu)/capital*100:0,
+        roiAE:capital?(liquidoDuAE+precoImovel*aDu)/capital*100:0},
+    apr:{pt:aPt,du:aDu},
+    serie,linhas};
+}
+
+/* ===================== render ===================== */
+function render(){
+  const m=compute();
+  const fx=m.fx, aed=x=>AED(x*fx);
+
+  /* colunas */
+  const best=Math.max(m.pt.liquido,m.du.liquidoPT,m.du.liquidoAE);
+  const col=(cls,dot,titulo,sub,valor,linhas,isBest)=>`
+    <div class="col ${isBest?'best':''}">${isBest?'<span class="tag">MAIOR RENDIMENTO</span>':''}
+      <h4><span class="dot" style="background:${dot}"></span>${titulo}</h4>
+      <div class="sub">${sub}</div>
+      <div class="big">${EUR(valor)}<small>${aed(valor)} · rendimento líquido anual</small></div>
+      <div class="lines">${linhas.map(l=>`<div class="ln ${l[2]||''}"><span>${l[0]}</span><b>${l[1]}</b></div>`).join('')}</div>
+    </div>`;
+  $('#cols').innerHTML=
+    col('pt','var(--pt)','Portugal','Manter o imóvel arrendado, regime actual.',m.pt.liquido,[
+      ['Valor do imóvel',EUR(m.pt.valor)],
+      ['Renda bruta anual',EUR(m.pt.rendaBruta)],
+      ['Encargos e despesas','− '+EUR(m.pt.despesas),'neg'],
+      [`IRS predial (${PCT(m.tPT)})`,'− '+EUR(m.pt.imposto),'neg'],
+      ['Yield bruta',PCT(m.pt.yieldB)],
+      ['ROI total anual (renda + valorização)',PCT(m.pt.roi)],
+      ['Yield líquida',PCT(m.pt.yieldL),'tot'],
+    ],m.pt.liquido===best)
+   +col('du','var(--du)','Dubai · residente fiscal PT','Investe no Dubai mas mantém residência fiscal portuguesa.',m.du.liquidoPT,[
+      ['Preço do imóvel',EUR(m.du.preco)+' / '+aed(m.du.preco)],
+      ['Renda bruta anual',EUR(m.du.rendaBruta)],
+      ['Service charge, gestão, manutenção','− '+EUR(m.du.despesas),'neg'],
+      [`IRS em Portugal (${PCT(m.tPT)})`,'− '+EUR(m.du.impostoPT),'neg'],
+      ['Yield bruta',PCT(m.du.yieldB)],
+      ['ROI total anual (renda + valorização)',PCT(m.du.roiPT)],
+      ['Yield líquida',PCT(m.du.yieldLPT),'tot'],
+    ],m.du.liquidoPT===best)
+   +col('ae','var(--du2)','Dubai · residente fiscal EAU','Investimento por pessoa singular, em capacidade pessoal.',m.du.liquidoAE,[
+      ['Preço do imóvel',EUR(m.du.preco)+' / '+aed(m.du.preco)],
+      ['Renda bruta anual',EUR(m.du.rendaBruta)],
+      ['Service charge, gestão, manutenção','− '+EUR(m.du.despesas),'neg'],
+      ['Imposto sobre o rendimento','0 €'],
+      ['Yield bruta',PCT(m.du.yieldB)],
+      ['ROI total anual (renda + valorização)',PCT(m.du.roiAE)],
+      ['Yield líquida',PCT(m.du.yieldLAE),'tot'],
+    ],m.du.liquidoAE===best);
+
+  /* veredicto */
+  const dif=m.du.liquidoAE-m.pt.liquido;
+  const difPT=m.du.liquidoPT-m.pt.liquido;
+  const n=m.anos;
+  const patPt=m.serie.pt[n],patAE=m.serie.duAE[n],patPTr=m.serie.duPT[n];
+  const mult=m.pt.liquido>0?(m.du.liquidoAE/m.pt.liquido):0;
+  $('#verdict').innerHTML=`
+    <h3>${dif>0?`O mesmo capital renderia ${EUR(Math.abs(dif))} a mais por ano no Dubai`:`Neste cenário, Portugal mantém-se mais eficiente em ${EUR(Math.abs(dif))} por ano`}</h3>
+    <p>Com residência fiscal nos EAU, a diferença anual é de <b>${EUR(dif)}</b>${mult?` (${mult.toFixed(1).replace('.',',')}\u00d7 o rendimento líquido actual)`:''}.
+       Mantendo residência fiscal em Portugal, a diferença reduz-se para <b>${EUR(difPT)}</b> — porque o rendimento
+       estrangeiro continua a ser tributado em Portugal à taxa que seleccionou.</p>
+    <div class="kpis">
+      <div><b>${EUR(m.venda.capital)}</b><span>Capital investível</span></div>
+      <div><b>${PCT(m.du.yieldLAE)}</b><span>Yield líquida Dubai</span></div>
+      <div><b>${PCT(m.pt.yieldL)}</b><span>Yield líquida Portugal</span></div>
+      <div><b>${EUR(patAE-patPt)}</b><span>Diferença a ${n} anos</span></div>
+    </div>`;
+  $('#hzLabel').textContent=n+' ANOS';
+
+  /* gráfico */
+  const W=760,H=340,P={l:74,r:16,t:18,b:34},iw=W-P.l-P.r,ih=H-P.t-P.b;
+  const all=[...m.serie.pt,...m.serie.duPT,...m.serie.duAE];
+  const mx=Math.max(...all)*1.08||1, X=i=>P.l+(i/n)*iw, Y=y=>P.t+ih-(y/mx)*ih;
+  let g='';
+  for(let i=0;i<=4;i++){const yy=P.t+ih-(i/4)*ih,val=mx*i/4;
+    g+=`<line x1="${P.l}" y1="${yy}" x2="${W-P.r}" y2="${yy}" stroke="#2b2b30"/>
+        <text x="${P.l-9}" y="${yy+4}" text-anchor="end" font-size="10.5" fill="#6f6a64">${(val/1000).toFixed(0)}k€</text>`;}
+  for(let i=0;i<=n;i+=Math.max(1,Math.round(n/8)))
+    g+=`<text x="${X(i)}" y="${H-12}" text-anchor="middle" font-size="10.5" fill="#6f6a64">${i}</text>`;
+  const linha=(arr,cor,fill)=>{
+    const d=arr.map((y,i)=>`${i?'L':'M'}${X(i).toFixed(1)} ${Y(y).toFixed(1)}`).join(' ');
+    return `<path d="${d} L${X(n)} ${P.t+ih} L${P.l} ${P.t+ih} Z" fill="${fill}"/>
+            <path d="${d}" fill="none" stroke="${cor}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`
+      +arr.map((y,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(y).toFixed(1)}" r="3" fill="#131315" stroke="${cor}" stroke-width="2">
+          <title>Ano ${i}: ${EUR(y)}</title></circle>`).join('');
+  };
+  $('#chart').innerHTML=g
+    +linha(m.serie.pt,'#4f8ef7','rgba(79,142,247,.10)')
+    +linha(m.serie.duPT,'#c9a227','rgba(201,162,39,.10)')
+    +linha(m.serie.duAE,'#22c55e','rgba(34,197,94,.10)');
+
+  /* tabela */
+  $('#tbl').innerHTML=`<thead><tr><th>Ano</th><th>Renda PT</th><th>Renda Dubai (res. PT)</th>
+      <th>Renda Dubai (res. EAU)</th><th>Património PT</th><th>Património Dubai (EAU)</th></tr></thead>
+    <tbody>${m.linhas.map(l=>`<tr><td>${l.ano}</td><td>${EUR(l.rendaPt)}</td><td>${EUR(l.rendaDuPT)}</td>
+      <td>${EUR(l.rendaDuAE)}</td><td>${EUR(l.patPt)}</td><td>${EUR(l.patDuAE)}</td></tr>`).join('')}</tbody>`;
+
+  renderRegimes(m); renderRecs(m); renderMath(m);
+  $('#fxb').textContent='€1 = AED '+new Intl.NumberFormat('pt-PT',{minimumFractionDigits:4}).format(fx);
+  return m;
+}
+
+
+/* ===================== 1 · regimes de IRS: critérios e efeitos ===================== */
+const REGIMES=[
+ {v:'25',lbl:'25%',nome:'Taxa padrão — arrendamento habitacional',
+  crit:'Regra geral dos contratos de arrendamento para habitação. Aplica-se quando não se verificam as condições dos regimes reduzidos.'},
+ {v:'15',lbl:'15%',nome:'Contratos de 5 a menos de 10 anos',
+  crit:'Contrato de arrendamento habitacional com duração igual ou superior a 5 anos e inferior a 10 anos, comunicado à AT.'},
+ {v:'10',lbl:'10%',nome:'Contratos longos / dentro dos limites legais de renda',
+  crit:'Contratos habitacionais de duração longa, ou contratos que cumpram os limites legais de renda aplicáveis. Exige verificação contratual e do valor da renda.'},
+ {v:'5',lbl:'5%',nome:'Contratos de 20 anos ou mais',
+  crit:'Contrato de arrendamento habitacional com duração igual ou superior a 20 anos.'},
+ {v:'0',lbl:'0%',nome:'Programa de arrendamento acessível',
+  crit:'Habitação enquadrada no programa de arrendamento acessível, com renda abaixo do limite fixado para o concelho. Rendimento isento.'},
+ {v:'28',lbl:'28%',nome:'Arrendamento não habitacional',
+  crit:'Comércio, serviços, escritórios, armazéns e outros fins não habitacionais.'},
+ {v:'X',lbl:'marginal',nome:'Englobamento — taxas gerais de IRS',
+  crit:'Opção pelo englobamento: o rendimento predial soma-se aos restantes e é tributado às taxas progressivas. Pode compensar em escalões baixos.'},
+];
+function renderRegimes(m){
+  const base=m.pt.colectavel, bruto=m.pt.rendaBruta, desp=m.pt.despesas, actual=$('#ptRegime').value;
+  const linhas=REGIMES.map(r=>{
+    const taxa=r.v==='X'?v('ptMarginal'):parseFloat(r.v);
+    const imposto=base*taxa/100, liquido=bruto-desp-imposto;
+    return {...r,taxa,imposto,liquido,delta:liquido-m.pt.liquido,cur:r.v===actual};
+  });
+  $('#tblRegimes').innerHTML=
+    `<thead><tr><th>Regime</th><th style="text-align:left">Critérios de elegibilidade</th>
+      <th>Taxa</th><th>IRS anual</th><th>Rendimento líquido</th><th>Diferença</th></tr></thead>
+     <tbody>${linhas.map(l=>`<tr data-reg="${l.v}" class="${l.cur?'cur':''}">
+       <td><b>${l.nome}</b>${l.cur?' <span style="color:var(--gold-2);font-size:11px">· actual</span>':''}</td>
+       <td class="crit">${l.crit}</td>
+       <td>${PCT(l.taxa)}</td>
+       <td>${EUR(l.imposto)}</td>
+       <td><b>${EUR(l.liquido)}</b></td>
+       <td>${l.cur?'—':`<span class="${l.delta>=0?'delta-pos':'delta-neg'}">${l.delta>=0?'+':'−'}${EUR(Math.abs(l.delta))}</span>`}</td>
+     </tr>`).join('')}</tbody>`;
+  $('#tblRegimes').querySelectorAll('[data-reg]').forEach(tr=>tr.onclick=()=>{
+    $('#ptRegime').value=tr.dataset.reg;
+    $('#marginalWrap').style.display=tr.dataset.reg==='X'?'flex':'none';
+    render(); toast('Regime aplicado: '+REGIMES.find(r=>r.v===tr.dataset.reg).lbl);
+  });
+}
+
+/* ===================== 2 · recomendações personalizadas ===================== */
+function renderRecs(m){
+  const fx=m.fx, R=[];
+  const add=(ic,cor,tit,txt,imp,tipo)=>R.push({ic,cor,tit,txt,imp:imp||0,tipo:tipo||'gain'});
+
+  /* --- Portugal: regime fiscal --- */
+  if(m.tPT>10){
+    const g=m.pt.colectavel*(m.tPT-10)/100;
+    add('📑','rgb(79 142 247/.16)','Verificar elegibilidade para o regime de 10%',
+      `Está a ser tributado a ${PCT(m.tPT)}. Um contrato habitacional de duração longa ou que cumpra os limites legais de renda `+
+      `pode baixar a taxa para 10%. Sobre o seu rendimento colectável de ${EUR(m.pt.colectavel)}, a poupança seria de ${EUR(g)} por ano.`,g);
+  }
+  if(m.tPT>5){
+    const g=m.pt.colectavel*(m.tPT-5)/100;
+    add('📜','rgb(79 142 247/.16)','Contrato de 20 anos ou mais → 5%',
+      `O regime mais favorável exige contrato igual ou superior a 20 anos. Reduz o IRS de ${EUR(m.pt.imposto)} para ${EUR(m.pt.colectavel*0.05)} por ano.`,g);
+  }
+  /* --- Portugal: vacância --- */
+  const vac=v('ptVac');
+  if(vac>0){
+    const g=v('ptRenda')*12*vac/100*(1-m.tPT/100);
+    add('🔑','rgb(79 142 247/.16)','Reduzir a vacância',
+      `${PCT(vac)} de vacância retiram ${EUR(v('ptRenda')*12*vac/100)} de renda bruta por ano. Um contrato de longa duração `+
+      `elimina quase por completo este custo — e é o mesmo contrato que dá acesso à taxa reduzida.`,g);
+  }
+  /* --- Portugal: peso das despesas --- */
+  const pesoD=m.pt.rendaBruta?m.pt.despesas/m.pt.rendaBruta*100:0;
+  if(pesoD>18) add('🧾','rgb(79 142 247/.16)','Peso das despesas acima do normal',
+    `As despesas consomem ${PCT(pesoD)} da renda bruta (${EUR(m.pt.despesas)}). Acima de 18% vale rever condomínio, seguro `+
+    `e contrato de manutenção. Nota: só algumas despesas são dedutíveis em sede de categoria F.`,0,'info');
+
+  /* --- Dubai: service charge --- */
+  const sc=v('duSc');
+  if(sc>1.2){
+    const g=m.du.preco*(sc-1.2)/100;
+    add('🏢','rgb(201 162 39/.16)','Escolher edifícios com service charge mais baixo',
+      `A ${PCT(sc)} do valor, o service charge custa ${EUR(m.du.sc)} por ano — ${PCT(m.du.rendaBruta?m.du.sc/m.du.rendaBruta*100:0)} da renda bruta. `+
+      `Torres recentes com boa gestão ficam perto de 1,2%, o que liberta ${EUR(g)} por ano.`,g);
+  }
+  /* --- Dubai: gestão --- */
+  const gst=v('duGestao');
+  if(gst>5){
+    const g=m.du.rendaBruta*(gst-5)/100;
+    add('🤝','rgb(201 162 39/.16)','Negociar a comissão de gestão',
+      `Está a assumir ${PCT(gst)} de gestão (${EUR(m.du.gestao)}/ano). Contratos anuais pagos em 1 ou 2 cheques `+
+      `reduzem a carga de gestão para cerca de 5%.`,g);
+  }
+  /* --- Dubai: yield realista --- */
+  const yb=v('duYield');
+  if(yb>8.5) add('⚠️','rgb(239 68 68/.14)','Yield bruta optimista',
+    `${PCT(yb)} de yield bruta está acima do intervalo típico do mercado residencial de Dubai. `+
+    `Considere testar o cenário com 6,5–7,5% para ver se a decisão se mantém.`,0,'risk');
+  else if(yb<5.5) add('📈','rgb(201 162 39/.16)','Yield bruta conservadora',
+    `Assumiu ${PCT(yb)}. Comunidades com procura de arrendamento forte trabalham acima disto — vale testar 7%.`,
+    m.du.preco*(7-yb)/100*(1-v('duVac')/100),'info');
+
+  /* --- residência fiscal --- */
+  const gFisc=m.du.liquidoAE-m.du.liquidoPT;
+  if(gFisc>0) add('🌍','rgb(34 197 94/.14)','A residência fiscal é a maior alavanca isolada',
+    `Manter residência fiscal em Portugal custa ${EUR(gFisc)} por ano neste cenário — ${EUR(gFisc*m.anos)} ao longo de ${m.anos} anos. `+
+    `É o único factor da simulação que não depende do imóvel escolhido.`,gFisc);
+
+  /* --- golden visa --- */
+  const capAed=m.venda.capital*fx, GV=2000000;
+  if(capAed>=GV) add('🛂','rgb(34 197 94/.14)','Capital acima do limiar do Golden Visa',
+    `${AED(capAed)} ultrapassa o limiar de ${AED(GV)} para o visto de residência de 10 anos por investimento imobiliário — `+
+    `o que também viabiliza o cenário de residência fiscal nos EAU.`,0,'info');
+  else add('🛂','rgb(201 162 39/.16)','Faltam '+EUR((GV-capAed)/fx)+' para o limiar do Golden Visa',
+    `O capital investível é de ${AED(capAed)}. O limiar do visto de 10 anos por investimento imobiliário é de ${AED(GV)}. `+
+    `Faltam ${AED(GV-capAed)}, que podem vir de capital adicional ou de um plano de pagamento a prazo.`,0,'info');
+
+  /* --- off-plan --- */
+  add('🏗️','rgb(201 162 39/.16)','Plano de pagamento pode multiplicar a exposição',
+    `Com um plano 20/80, os mesmos ${EUR(m.venda.capital)} asseguram entrada em várias unidades em construção em vez de uma pronta. `+
+    `Aumenta a exposição à valorização, mas adia a renda e concentra risco de execução — só faz sentido com horizonte longo.`,0,'info');
+
+  /* --- mais-valia --- */
+  if(m.origem==='venda'&&m.venda.impostoMv>0)
+    add('💶','rgb(239 68 68/.14)','A mais-valia consome '+PCT(m.venda.impostoMv/m.pt.valor*100)+' do valor do imóvel',
+      `A venda gera ${EUR(m.venda.maisValia)} de mais-valia; com 50% englobado à taxa que indicou, o imposto estimado é ${EUR(m.venda.impostoMv)}. `+
+      `Existem regras de exclusão e de reinvestimento que dependem do caso concreto — confirme com o seu contabilista antes de vender.`,0,'risk');
+
+  R.sort((a,b)=>b.imp-a.imp);
+  $('#recs').innerHTML=R.map(r=>`<div class="rec">
+    <div class="ic" style="background:${r.cor}">${r.ic}</div>
+    <div class="bd"><b>${r.tit}</b><p>${r.txt}</p></div>
+    <div class="imp ${r.tipo==='gain'?'':r.tipo}">
+      ${r.imp>0?`<b>+${EUR(r.imp)}</b><span>por ano</span>`
+               :`<b>${r.tipo==='risk'?'Atenção':'Nota'}</b><span>${r.tipo==='risk'?'rever':'contexto'}</span>`}</div></div>`).join('');
+}
+
+/* ===================== 3 · cálculo passo a passo ===================== */
+function renderMath(m){
+  const step=(t,formula,resultado)=>`<div class="mstep"><h5>${t}</h5>
+    <div class="fx">${formula}</div><div class="rs">${resultado}</div></div>`;
+  const nf=n=>new Intl.NumberFormat('pt-PT',{maximumFractionDigits:0}).format(n);
+  const pct=n=>new Intl.NumberFormat('pt-PT',{maximumFractionDigits:2}).format(n);
+
+  const ptHtml=
+    step('1 · Renda bruta efectiva',
+      `renda mensal × 12 × (1 − vacância)<br/><em>${nf(v('ptRenda'))} × 12 × (1 − ${pct(v('ptVac'))}%)</em>`,
+      EUR(m.pt.rendaBruta))+
+    step('2 · Despesas',
+      `IMI + condomínio + seguros + manutenção + gestão<br/><em>${nf(v('ptImi'))} + ${nf(v('ptCond'))} + ${nf(v('ptSeg'))} + ${nf(v('ptManut'))} + ${nf(m.pt.gestao)}</em>`,
+      EUR(m.pt.despesas))+
+    step('3 · Rendimento colectável',
+      `renda bruta − despesas<br/><em>${nf(m.pt.rendaBruta)} − ${nf(m.pt.despesas)}</em>`,
+      EUR(m.pt.colectavel))+
+    step('4 · IRS predial',
+      `colectável × taxa do regime seleccionado<br/><em>${nf(m.pt.colectavel)} × ${pct(m.tPT)}%</em>`,
+      '− '+EUR(m.pt.imposto))+
+    step('5 · Rendimento líquido',
+      `renda bruta − despesas − IRS<br/><em>${nf(m.pt.rendaBruta)} − ${nf(m.pt.despesas)} − ${nf(m.pt.imposto)}</em>`,
+      EUR(m.pt.liquido))+
+    step('6 · Yield líquida e ROI',
+      `yield líquida = líquido ÷ valor do imóvel<br/><em>${nf(m.pt.liquido)} ÷ ${nf(m.pt.valor)}</em><br/>`+
+      `ROI total = (líquido + valorização) ÷ valor<br/><em>(${nf(m.pt.liquido)} + ${nf(m.pt.valor*m.apr.pt)}) ÷ ${nf(m.pt.valor)}</em>`,
+      PCT(m.pt.yieldL)+' · ROI '+PCT(m.pt.roi));
+
+  const capHtml = m.origem==='venda'
+    ? step('A · Capital investível após a venda',
+        `valor − custos de venda − IRS de mais-valia<br/>`+
+        `<em>mais-valia = ${nf(m.pt.valor)} − ${nf(m.venda.custoVenda)} − ${nf(v('ptAquisicao'))} = ${nf(m.venda.maisValia)}</em><br/>`+
+        `<em>IRS = 50% × ${nf(m.venda.maisValia)} × ${pct(v('ptMvTaxa'))}% = ${nf(m.venda.impostoMv)}</em><br/>`+
+        `<em>${nf(m.pt.valor)} − ${nf(m.venda.custoVenda)} − ${nf(m.venda.impostoMv)}</em>`,
+        EUR(m.venda.capital))
+    : step('A · Capital investível','capital próprio indicado',EUR(m.venda.capital));
+
+  const duHtml=capHtml+
+    step('B · Preço do imóvel comprável',
+      `capital ÷ (1 + custos de aquisição)<br/><em>${nf(m.venda.capital)} ÷ (1 + ${pct(v('duCusto'))}%)</em><br/>`+
+      `<em>custos DLD + mediação = ${nf(m.du.custosAqui)}</em>`,
+      EUR(m.du.preco)+' · '+AED(m.du.preco*m.fx))+
+    step('C · Renda bruta efectiva',
+      `preço × yield bruta × (1 − vacância)<br/><em>${nf(m.du.preco)} × ${pct(v('duYield'))}% × (1 − ${pct(v('duVac'))}%)</em>`,
+      EUR(m.du.rendaBruta))+
+    step('D · Despesas operacionais',
+      `service charge + gestão + manutenção<br/>`+
+      `<em>${nf(m.du.sc)} (${pct(v('duSc'))}% do valor) + ${nf(m.du.gestao)} (${pct(v('duGestao'))}% da renda) + ${nf(m.du.manut)} (${pct(v('duManut'))}% da renda)</em>`,
+      EUR(m.du.despesas))+
+    step('E · Rendimento antes de imposto',
+      `renda bruta − despesas<br/><em>${nf(m.du.rendaBruta)} − ${nf(m.du.despesas)}</em>`,
+      EUR(m.du.antesImposto))+
+    step('F · Imposto — os dois cenários',
+      `<b style="color:var(--txt-2)">Residente fiscal nos EAU:</b> rendimento imobiliário de pessoa singular em capacidade pessoal, `+
+      `em regra excluído do Corporate Tax dos EAU → <em>0 €</em><br/>`+
+      `<b style="color:var(--txt-2)">Residente fiscal em Portugal:</b> rendimento predial de fonte estrangeira declarado em Portugal, `+
+      `crédito por imposto pago nos EAU = 0 → <em>${nf(m.du.antesImposto)} × ${pct(m.tPT)}% = ${nf(m.du.impostoPT)}</em>`,
+      'EAU: '+EUR(m.du.liquidoAE)+' · PT: '+EUR(m.du.liquidoPT))+
+    step('G · Yield líquida e ROI',
+      `yield líquida = líquido ÷ preço do imóvel<br/>`+
+      `ROI total = (líquido + valorização) ÷ capital investido<br/>`+
+      `<em>(${nf(m.du.liquidoAE)} + ${nf(m.du.preco*m.apr.du)}) ÷ ${nf(m.du.investido)}</em>`,
+      PCT(m.du.yieldLAE)+' · ROI '+PCT(m.du.roiAE));
+
+  const projHtml=step('Projecção a '+m.anos+' anos',
+      `património = valor do imóvel × (1 + valorização)^n + soma das rendas líquidas acumuladas<br/>`+
+      `<em>Portugal: ${nf(m.pt.valor)} × (1 + ${pct(m.apr.pt*100)}%)^${m.anos} + rendas</em><br/>`+
+      `<em>Dubai: ${nf(m.du.preco)} × (1 + ${pct(m.apr.du*100)}%)^${m.anos} + rendas</em>`,
+      'PT '+EUR(m.serie.pt[m.anos])+' · Dubai (EAU) '+EUR(m.serie.duAE[m.anos]));
+
+  $('#math').innerHTML=`<div class="math">
+    <div class="mgrp"><h4><span class="dot" style="background:var(--pt)"></span>Portugal</h4>${ptHtml}</div>
+    <div class="mgrp"><h4><span class="dot" style="background:var(--du)"></span>Dubai</h4>${duHtml}</div>
+    <div class="mgrp"><h4><span class="dot" style="background:var(--du2)"></span>Projecção</h4>${projHtml}</div>
+    <h4 style="font-size:14px;margin-bottom:10px">Glossário</h4>
+    <div class="gloss">
+      <div><b>Yield bruta</b><span>Renda anual antes de despesas e impostos, dividida pelo valor do imóvel.</span></div>
+      <div><b>Yield líquida</b><span>Renda anual depois de despesas e imposto, dividida pelo valor do imóvel.</span></div>
+      <div><b>ROI total anual</b><span>Rendimento líquido mais valorização do imóvel, dividido pelo capital investido.</span></div>
+      <div><b>Capital investido</b><span>No Dubai inclui o preço mais DLD e mediação; em Portugal é o valor de mercado do imóvel já detido.</span></div>
+      <div><b>Rendimento colectável</b><span>Base sobre a qual incide a taxa de IRS predial, após dedução das despesas elegíveis.</span></div>
+      <div><b>Service charge</b><span>Encargo anual de condomínio no Dubai, normalmente cobrado por pé quadrado.</span></div>
+    </div></div>`;
+}
+
+/* ===================== fluxo / lead gate ===================== */
+let desbloqueado=false, lead=null;
+function mostrar(){
+  render();
+  $('#res').style.display='block';
+  $('#gate').style.display='none';
+  $('#st4').classList.add('on');
+  $('#res').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('#calc').onclick=()=>{
+  if(desbloqueado){mostrar();return;}
+  $('#gate').style.display='block';
+  $('#gate').scrollIntoView({behavior:'smooth',block:'center'});
+};
+$('#unlock').onclick=()=>{
+  const nome=$('#ldNome').value.trim(), tel=$('#ldTel').value.trim(), mail=$('#ldMail').value.trim();
+  if(!nome){toast('Indique o seu nome');$('#ldNome').focus();return;}
+  if(!tel&&!mail){toast('Indique o WhatsApp ou o e-mail');$('#ldTel').focus();return;}
+  if(!$('#ldCons').checked){toast('É necessário autorizar o contacto');return;}
+  const m=compute();
+  lead={nome,telefone:tel,email:mail,origem:'Simulador Portugal ↔ Dubai',data:new Date().toISOString(),
+    capital_eur:Math.round(m.venda.capital),
+    yield_liquida_pt:+m.pt.yieldL.toFixed(2),yield_liquida_dubai:+m.du.yieldLAE.toFixed(2),
+    ganho_anual_eur:Math.round(m.du.liquidoAE-m.pt.liquido),
+    regime_irs:$('#ptRegime').options[$('#ptRegime').selectedIndex].text,
+    horizonte_anos:m.anos};
+  /* aqui entraria o POST para o CRM / webhook da ONELIV */
+  console.log('LEAD →',lead);
+  desbloqueado=true;
+  $('#leadEcho').textContent=`Diagnóstico associado a ${nome}${tel?' · '+tel:''}`;
+  toast('Diagnóstico desbloqueado');
+  mostrar();
+};
+$('#demo').onclick=()=>{desbloqueado=true;toast('Modo demo — formulário ignorado');mostrar();};
+$('#reset').onclick=()=>location.reload();
+$('#toggleMath').onclick=()=>{const e=$('#math'),ab=e.style.display==='none';
+  e.style.display=ab?'block':'none';
+  $('#toggleMath').textContent=ab?'Ocultar cálculo':'Mostrar cálculo passo a passo';
+  if(ab)e.scrollIntoView({behavior:'smooth',block:'nearest'});};
+
+$('#ptRegime').onchange=e=>{$('#marginalWrap').style.display=e.target.value==='X'?'flex':'none';};
+$('#duOrigem').onchange=e=>{
+  const venda=e.target.value==='venda';
+  $('#capitalWrap').style.display=venda?'none':'flex';
+  $('#ptCustoVenda').closest('.f').style.display=venda?'flex':'none';
+  $('#ptAquisicao').closest('.f').style.display=venda?'flex':'none';
+  $('#ptMvTaxa').closest('.f').style.display=venda?'flex':'none';
+};
+document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',()=>{
+  if($('#res').style.display==='block')render();}));
+
+$('#pedir').onclick=()=>{
+  const m=compute();
+  const txt=`Olá ONELIV, fiz a simulação Portugal ↔ Dubai e gostaria de receber imóveis compatíveis.\n\n`+
+    `Capital investível: ${EUR(m.venda.capital)}\n`+
+    `Yield líquida estimada no Dubai: ${PCT(m.du.yieldLAE)}\n`+
+    `Ganho anual face a Portugal: ${EUR(m.du.liquidoAE-m.pt.liquido)}\n`+
+    (lead?`Nome: ${lead.nome}\n`:'');
+  window.open('https://wa.me/971500000000?text='+encodeURIComponent(txt),'_blank');
+};
+$('#wa').onclick=()=>$('#pedir').click();
+$('#pdf').onclick=()=>window.print();
+</script>
+</body>
+</html>
