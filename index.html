@@ -170,6 +170,13 @@ tbody tr:last-child td{border-bottom:0}
 .gloss span{font-size:12px;color:var(--txt-2);line-height:1.5}
 .btn-sm{height:34px;padding:0 13px;font-size:12.5px;border-radius:9px}
 
+.optbtn{margin-top:18px;width:100%;height:44px;border:1px dashed var(--line);border-radius:11px;
+  color:var(--txt-2);font-size:13.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:9px}
+.optbtn:hover{border-color:var(--gold-dim);color:var(--txt)}
+.optbtn .tw{color:var(--gold);font-size:16px}
+.optbtn em{font-style:normal;font-size:11.5px;color:var(--gold-2);font-weight:700}
+.opthint{font-size:12.5px;color:var(--txt-3);line-height:1.6;margin:16px 0 14px}
+#optWrap{border-top:1px solid var(--line);margin-top:14px}
 .toast{position:fixed;bottom:20px;right:20px;background:#141210;border:1px solid var(--gold-dim);color:var(--txt);
   padding:13px 17px;border-radius:11px;font-size:13.5px;font-weight:600;z-index:90;
   box-shadow:0 14px 40px rgb(0 0 0/.6);animation:up .2s ease}
@@ -287,15 +294,30 @@ tbody tr:last-child td{border-bottom:0}
               <span class="qmark" title="Encargo anual de condomínio, cobrado por pé quadrado por ano. Base típica de mercado: 15 AED/sqft.">?</span></label>
             <div class="suffix"><input type="number" id="duScSqft" value="15" step="0.5"/><i>AED/sqft/ano</i></div>
             <span class="hint" id="scHint">—</span></div>
-          <div class="f"><label>Gestão do arrendamento</label>
-            <div class="suffix"><input type="number" id="duGestao" value="8" step="0.5"/><i>%</i></div></div>
-          <div class="f"><label>Manutenção anual</label>
-            <div class="suffix"><input type="number" id="duManut" value="5" step="0.5"/><i>%</i></div></div>
-          <div class="f"><label>Vacância assumida</label>
-            <div class="suffix"><input type="number" id="duVac" value="5" step="0.5"/><i>%</i></div></div>
-          <div class="f"><label>Custos de aquisição (DLD + mediação)
-              <span class="qmark" title="Taxa de transferência do Dubai Land Department de 4% mais mediação de 2%.">?</span></label>
-            <div class="suffix"><input type="number" id="duCusto" value="6" step="0.1"/><i>%</i></div></div>
+        </div>
+
+        <button class="optbtn" id="optBtn"><span class="tw">＋</span> Adicionar custos opcionais
+          <em id="optCount"></em></button>
+        <div id="optWrap" style="display:none">
+          <p class="opthint">Nenhum destes custos é obrigatório no Dubai. Ficam a zero até os activar —
+            acrescente apenas os que se aplicam ao caso do cliente.</p>
+          <div class="form">
+            <div class="f"><label>Gestão de arrendamento
+                <span class="qmark" title="Só se o cliente contratar uma empresa de gestão. Muitos investidores arrendam directamente, em 1 cheque anual.">?</span></label>
+              <div class="suffix"><input type="number" id="duGestao" value="0" step="0.5"/><i>% da renda</i></div></div>
+            <div class="f"><label>Manutenção anual
+                <span class="qmark" title="Em unidades novas, a manutenção estrutural está coberta pelo service charge e pela garantia do promotor.">?</span></label>
+              <div class="suffix"><input type="number" id="duManut" value="0" step="0.5"/><i>% da renda</i></div></div>
+            <div class="f"><label>Vacância assumida</label>
+              <div class="suffix"><input type="number" id="duVac" value="0" step="0.5"/><i>%</i></div></div>
+            <div class="f"><label>Custos de aquisição (DLD + mediação)
+                <span class="qmark" title="Taxa do Dubai Land Department de 4% mais mediação. Deixe a zero para simular só o rendimento do imóvel.">?</span></label>
+              <div class="suffix"><input type="number" id="duCusto" value="0" step="0.1"/><i>%</i></div></div>
+            <label class="cbrow" style="margin-top:4px"><input type="checkbox" id="duResPT"/>
+              <span><b style="color:var(--txt)">Mostrar também o cenário de residência fiscal em Portugal.</b>
+                No Dubai não há imposto sobre o rendimento predial. Mas quem mantém residência fiscal portuguesa
+                continua a declarar o rendimento estrangeiro em Portugal — active isto para ver essa coluna.</span></label>
+          </div>
         </div>
 
         <div class="note"><b>Residência fiscal — o ponto que muda tudo.</b>
@@ -421,6 +443,7 @@ tbody tr:last-child td{border-bottom:0}
 <script>
 /* ===================== helpers ===================== */
 const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
 const v=id=>{const e=$('#'+id);return e?(parseFloat(e.value)||0):0;};
 const EUR=n=>new Intl.NumberFormat('pt-PT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n||0);
 const AED=n=>'AED '+new Intl.NumberFormat('pt-PT',{maximumFractionDigits:0}).format(n||0);
@@ -475,6 +498,7 @@ function compute(){
   const despesasDu=scDu+gestaoDu+manutDu;
   const antesImpostoDu=rendaBrutaDu-despesasDu;
 
+  const mostrarPT=!!($('#duResPT')&&$('#duResPT').checked);
   /* residente fiscal PT: rendimento predial estrangeiro tributado em PT (crédito EAU = 0) */
   const impostoDuPT=Math.max(0,antesImpostoDu)*tPT/100;
   const liquidoDuPT=antesImpostoDu-impostoDuPT;
@@ -502,7 +526,7 @@ function compute(){
       rendaDuAE:liquidoDuAE*Math.pow(1+aDu,i-1),
       patPt:serie.pt[i],patDuPT:serie.duPT[i],patDuAE:serie.duAE[i]});
   }
-  return {fx,anos,tPT,origem,
+  return {fx,anos,tPT,origem,mostrarPT,
     pt:{valor:ptValor,rendaBruta,despesas:despesasPt,imposto:impostoPt,liquido:liquidoPt,colectavel:colectavelPt,
         gestao:gestaoPt,
         yieldB:ptValor?rendaBruta/ptValor*100:0,yieldL:ptValor?liquidoPt/ptValor*100:0,
@@ -527,7 +551,7 @@ function render(){
   const fx=m.fx, aed=x=>AED(x*fx);
 
   /* colunas */
-  const best=Math.max(m.pt.liquido,m.du.liquidoPT,m.du.liquidoAE);
+  const best=Math.max(m.pt.liquido,m.mostrarPT?m.du.liquidoPT:-Infinity,m.du.liquidoAE);
   const col=(cls,dot,titulo,sub,valor,linhas,isBest)=>`
     <div class="col ${isBest?'best':''}">${isBest?'<span class="tag">MAIOR RENDIMENTO</span>':''}
       <h4><span class="dot" style="background:${dot}"></span>${titulo}</h4>
@@ -535,6 +559,7 @@ function render(){
       <div class="big">${EUR(valor)}<small>${aed(valor)} · rendimento líquido anual</small></div>
       <div class="lines">${linhas.map(l=>`<div class="ln ${l[2]||''}"><span>${l[0]}</span><b>${l[1]}</b></div>`).join('')}</div>
     </div>`;
+  $('#cols').style.gridTemplateColumns='repeat('+(m.mostrarPT?3:2)+',1fr)';
   $('#cols').innerHTML=
     col('pt','var(--pt)','Portugal','Manter o imóvel arrendado, regime actual.',m.pt.liquido,[
       ['Valor do imóvel',EUR(m.pt.valor)],
@@ -545,7 +570,7 @@ function render(){
       ['ROI total anual (renda + valorização)',PCT(m.pt.roi)],
       ['Yield líquida',PCT(m.pt.yieldL),'tot'],
     ],m.pt.liquido===best)
-   +col('du','var(--du)','Dubai · residente fiscal PT','Investe no Dubai mas mantém residência fiscal portuguesa.',m.du.liquidoPT,[
+   +(m.mostrarPT?col('du','var(--du)','Dubai · residente fiscal PT','Investe no Dubai mas mantém residência fiscal portuguesa.',m.du.liquidoPT,[
       ['Preço do imóvel',EUR(m.du.preco)+' / '+aed(m.du.preco)],
       ['Renda bruta anual',EUR(m.du.rendaBruta)],
       ['Service charge, gestão, manutenção','− '+EUR(m.du.despesas),'neg'],
@@ -553,11 +578,11 @@ function render(){
       ['Yield bruta',PCT(m.du.yieldB)],
       ['ROI total anual (renda + valorização)',PCT(m.du.roiPT)],
       ['Yield líquida',PCT(m.du.yieldLPT),'tot'],
-    ],m.du.liquidoPT===best)
-   +col('ae','var(--du2)','Dubai · residente fiscal EAU','Investimento por pessoa singular, em capacidade pessoal.',m.du.liquidoAE,[
+    ],m.du.liquidoPT===best):'')
+   +col('ae','var(--du2)','Dubai','Sem imposto sobre o rendimento predial. Investimento por pessoa singular, em capacidade pessoal.',m.du.liquidoAE,[
       ['Preço do imóvel',EUR(m.du.preco)+' / '+aed(m.du.preco)],
       ['Renda bruta anual',EUR(m.du.rendaBruta)],
-      ['Service charge, gestão, manutenção','− '+EUR(m.du.despesas),'neg'],
+      [m.du.gestao+m.du.manut>0?'Service charge, gestão, manutenção':'Service charge','− '+EUR(m.du.despesas),'neg'],
       ['Imposto sobre o rendimento','0 €'],
       ['Yield bruta',PCT(m.du.yieldB)],
       ['ROI total anual (renda + valorização)',PCT(m.du.roiAE)],
@@ -572,9 +597,9 @@ function render(){
   const mult=m.pt.liquido>0?(m.du.liquidoAE/m.pt.liquido):0;
   $('#verdict').innerHTML=`
     <h3>${dif>0?`O mesmo capital renderia ${EUR(Math.abs(dif))} a mais por ano no Dubai`:`Neste cenário, Portugal mantém-se mais eficiente em ${EUR(Math.abs(dif))} por ano`}</h3>
-    <p>Com residência fiscal nos EAU, a diferença anual é de <b>${EUR(dif)}</b>${mult?` (${mult.toFixed(1).replace('.',',')}\u00d7 o rendimento líquido actual)`:''}.
-       Mantendo residência fiscal em Portugal, a diferença reduz-se para <b>${EUR(difPT)}</b> — porque o rendimento
-       estrangeiro continua a ser tributado em Portugal à taxa que seleccionou.</p>
+    <p>No Dubai não há imposto sobre o rendimento predial: a diferença anual é de <b>${EUR(dif)}</b>${mult?` (${mult.toFixed(1).replace('.',',')}\u00d7 o rendimento líquido actual)`:''}.
+       ${m.mostrarPT?`Mantendo residência fiscal em Portugal, a diferença reduz-se para <b>${EUR(difPT)}</b> — porque o rendimento
+       estrangeiro continua a ser tributado em Portugal à taxa que seleccionou.`:''}</p>
     <div class="kpis">
       <div><b>${EUR(m.venda.capital)}</b><span>Capital investível</span></div>
       <div><b>${PCT(m.du.yieldLAE)}</b><span>Yield líquida Dubai</span></div>
@@ -585,7 +610,7 @@ function render(){
 
   /* gráfico */
   const W=760,H=340,P={l:74,r:16,t:18,b:34},iw=W-P.l-P.r,ih=H-P.t-P.b;
-  const all=[...m.serie.pt,...m.serie.duPT,...m.serie.duAE];
+  const all=[...m.serie.pt,...(m.mostrarPT?m.serie.duPT:[]),...m.serie.duAE];
   const mx=Math.max(...all)*1.08||1, X=i=>P.l+(i/n)*iw, Y=y=>P.t+ih-(y/mx)*ih;
   let g='';
   for(let i=0;i<=4;i++){const yy=P.t+ih-(i/4)*ih,val=mx*i/4;
@@ -602,13 +627,15 @@ function render(){
   };
   $('#chart').innerHTML=g
     +linha(m.serie.pt,'#4f8ef7','rgba(79,142,247,.10)')
-    +linha(m.serie.duPT,'#c9a227','rgba(201,162,39,.10)')
+    +(m.mostrarPT?linha(m.serie.duPT,'#c9a227','rgba(201,162,39,.10)'):'')
     +linha(m.serie.duAE,'#22c55e','rgba(34,197,94,.10)');
+  $$('.legend span')[1].style.display=m.mostrarPT?'':'none';
+  $$('.legend span')[2].firstChild.nextSibling.textContent='Dubai';
 
   /* tabela */
-  $('#tbl').innerHTML=`<thead><tr><th>Ano</th><th>Renda PT</th><th>Renda Dubai (res. PT)</th>
-      <th>Renda Dubai (res. EAU)</th><th>Património PT</th><th>Património Dubai (EAU)</th></tr></thead>
-    <tbody>${m.linhas.map(l=>`<tr><td>${l.ano}</td><td>${EUR(l.rendaPt)}</td><td>${EUR(l.rendaDuPT)}</td>
+  $('#tbl').innerHTML=`<thead><tr><th>Ano</th><th>Renda PT</th>${m.mostrarPT?'<th>Renda Dubai (res. PT)</th>':''}
+      <th>Renda Dubai</th><th>Património PT</th><th>Património Dubai</th></tr></thead>
+    <tbody>${m.linhas.map(l=>`<tr><td>${l.ano}</td><td>${EUR(l.rendaPt)}</td>${m.mostrarPT?`<td>${EUR(l.rendaDuPT)}</td>`:''}
       <td>${EUR(l.rendaDuAE)}</td><td>${EUR(l.patPt)}</td><td>${EUR(l.patDuAE)}</td></tr>`).join('')}</tbody>`;
 
   renderRegimes(m); renderRecs(m); renderMath(m); atualizaSc(m);
@@ -703,7 +730,7 @@ function renderRecs(m){
     `e torres com muitas comodidades ultrapassam os 20. Vale confirmar o valor real do edifício.`,0,'risk');
   /* --- Dubai: gestão --- */
   const gst=v('duGestao');
-  if(gst>5){
+  if(gst>5&&m.du.gestao>0){
     const g=m.du.rendaBruta*(gst-5)/100;
     add('🤝','rgb(201 162 39/.16)','Negociar a comissão de gestão',
       `Está a assumir ${PCT(gst)} de gestão (${EUR(m.du.gestao)}/ano). Contratos anuais pagos em 1 ou 2 cheques `+
@@ -720,7 +747,7 @@ function renderRecs(m){
 
   /* --- residência fiscal --- */
   const gFisc=m.du.liquidoAE-m.du.liquidoPT;
-  if(gFisc>0) add('🌍','rgb(34 197 94/.14)','A residência fiscal é a maior alavanca isolada',
+  if(gFisc>0&&m.mostrarPT) add('🌍','rgb(34 197 94/.14)','A residência fiscal é a maior alavanca isolada',
     `Manter residência fiscal em Portugal custa ${EUR(gFisc)} por ano neste cenário — ${EUR(gFisc*m.anos)} ao longo de ${m.anos} anos. `+
     `É o único factor da simulação que não depende do imóvel escolhido.`,gFisc);
 
@@ -739,6 +766,9 @@ function renderRecs(m){
     `Aumenta a exposição à valorização, mas adia a renda e concentra risco de execução — só faz sentido com horizonte longo.`,0,'info');
 
   /* --- mais-valia --- */
+  if(m.du.gestao+m.du.manut===0) add('✅','rgb(34 197 94/.14)','Estrutura de custos enxuta',
+    `Neste cenário o único encargo recorrente é o service charge (${AED(m.du.scAed)}/ano). Sem gestão, sem manutenção `+
+    `e sem imposto sobre o rendimento — é isto que explica a diferença de yield face a Portugal.`,0,'info');
   if(m.origem==='venda'&&m.venda.impostoMv>0)
     add('💶','rgb(239 68 68/.14)','A mais-valia consome '+PCT(m.venda.impostoMv/m.pt.valor*100)+' do valor do imóvel',
       `A venda gera ${EUR(m.venda.maisValia)} de mais-valia; com 50% englobado à taxa que indicou, o imposto estimado é ${EUR(m.venda.impostoMv)}. `+
@@ -800,18 +830,19 @@ function renderMath(m){
       EUR(m.du.rendaBruta))+
     step('D · Despesas operacionais',
       `service charge + gestão + manutenção<br/>`+
-      `<em>service charge = ${nf(m.du.area)} sqft × ${pct(m.du.scSqft)} AED/sqft = ${nf(m.du.scAed)} AED = ${nf(m.du.sc)} €</em><br/>`+
-      `<em>${nf(m.du.sc)} + ${nf(m.du.gestao)} (${pct(v('duGestao'))}% da renda) + ${nf(m.du.manut)} (${pct(v('duManut'))}% da renda)</em>`,
+      `<em>service charge = ${nf(m.du.area)} sqft × ${pct(m.du.scSqft)} AED/sqft = ${nf(m.du.scAed)} AED = ${nf(m.du.sc)} €</em>`+
+      (m.du.gestao>0?`<br/><em>gestão = ${pct(v('duGestao'))}% da renda = ${nf(m.du.gestao)} €</em>`:'')+
+      (m.du.manut>0?`<br/><em>manutenção = ${pct(v('duManut'))}% da renda = ${nf(m.du.manut)} €</em>`:'')+
+      (m.du.gestao+m.du.manut===0?`<br/><em>gestão e manutenção não activadas → 0 €</em>`:''),
       EUR(m.du.despesas))+
     step('E · Rendimento antes de imposto',
       `renda bruta − despesas<br/><em>${nf(m.du.rendaBruta)} − ${nf(m.du.despesas)}</em>`,
       EUR(m.du.antesImposto))+
-    step('F · Imposto — os dois cenários',
-      `<b style="color:var(--txt-2)">Residente fiscal nos EAU:</b> rendimento imobiliário de pessoa singular em capacidade pessoal, `+
-      `em regra excluído do Corporate Tax dos EAU → <em>0 €</em><br/>`+
-      `<b style="color:var(--txt-2)">Residente fiscal em Portugal:</b> rendimento predial de fonte estrangeira declarado em Portugal, `+
-      `crédito por imposto pago nos EAU = 0 → <em>${nf(m.du.antesImposto)} × ${pct(m.tPT)}% = ${nf(m.du.impostoPT)}</em>`,
-      'EAU: '+EUR(m.du.liquidoAE)+' · PT: '+EUR(m.du.liquidoPT))+
+    step('F · Imposto',
+      `Rendimento imobiliário de pessoa singular em capacidade pessoal, em regra excluído do Corporate Tax dos EAU → <em>0 €</em>`+
+      (m.mostrarPT?`<br/><b style="color:var(--txt-2)">Cenário adicional — residente fiscal em Portugal:</b> rendimento predial de `+
+      `fonte estrangeira declarado em Portugal, crédito por imposto pago nos EAU = 0 → <em>${nf(m.du.antesImposto)} × ${pct(m.tPT)}% = ${nf(m.du.impostoPT)}</em>`:''),
+      EUR(m.du.liquidoAE)+(m.mostrarPT?' · res. PT: '+EUR(m.du.liquidoPT):''))+
     step('G · Yield líquida e ROI',
       `yield líquida = líquido ÷ preço do imóvel<br/>`+
       `ROI total = (líquido + valorização) ÷ capital investido<br/>`+
@@ -874,12 +905,26 @@ $('#unlock').onclick=()=>{
 };
 $('#demo').onclick=()=>{desbloqueado=true;toast('Modo demo — formulário ignorado');mostrar();};
 $('#reset').onclick=()=>location.reload();
-atualizaSc();
+atualizaSc(); contaOpcionais();
 $('#toggleMath').onclick=()=>{const e=$('#math'),ab=e.style.display==='none';
   e.style.display=ab?'block':'none';
   $('#toggleMath').textContent=ab?'Ocultar cálculo':'Mostrar cálculo passo a passo';
   if(ab)e.scrollIntoView({behavior:'smooth',block:'nearest'});};
 
+$('#optBtn').onclick=()=>{
+  const w=$('#optWrap'), abrir=w.style.display==='none';
+  w.style.display=abrir?'block':'none';
+  $('#optBtn').innerHTML=(abrir?'<span class="tw">−</span> Ocultar custos opcionais':'<span class="tw">＋</span> Adicionar custos opcionais')
+    +'<em id="optCount"></em>';
+  contaOpcionais();
+  if(abrir)w.scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+function contaOpcionais(){
+  const n=['duGestao','duManut','duVac','duCusto'].filter(id=>v(id)>0).length+(($('#duResPT')||{}).checked?1:0);
+  const e=$('#optCount'); if(e)e.textContent=n?` · ${n} activo${n>1?'s':''}`:'';
+}
+$('#duResPT').onchange=()=>{contaOpcionais();if($('#res').style.display==='block')render();};
+['duGestao','duManut','duVac','duCusto'].forEach(id=>$('#'+id).addEventListener('input',contaOpcionais));
 $('#duTipo').onchange=e=>{const a=+e.target.value; if(a){$('#duArea').value=a;} atualizaSc();
   if($('#res').style.display==='block')render();};
 function atualizaSc(mm){
