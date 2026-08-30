@@ -1,0 +1,8 @@
+{
+  "name": "aura-studio-server",
+  "version": "1.0.0",
+  "description": "Servidor de geracao para o AURA Studio",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
