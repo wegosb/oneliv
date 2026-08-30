@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ONELIV — Investimento imobiliário no Dubai</title>
+<meta name="description" content="Portfólio, off-plan e ferramentas de decisão para investir em imobiliário no Dubai. Tudo num só lugar."/>
+<style>
+:root{
+  --bg:#000; --bg-2:#0b0c0d; --bg-3:#111214; --panel:#16181a; --line:rgba(255,255,255,.09);
+  --txt:#f9fbfc; --txt-2:#b6bbc2; --txt-3:#777e85;
+  --gold:#c9a227; --gold-2:#e3c161;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img,svg{display:block;max-width:100%}
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+
+/* ---------------- nav ---------------- */
+.nav{position:fixed;inset:0 0 auto 0;height:72px;z-index:60;display:flex;align-items:center;
+  background:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,0));transition:background .3s,border-color .3s;
+  border-bottom:1px solid transparent}
+.nav.solid{background:rgba(8,9,10,.92);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:14px;width:100%}
+.brand{display:flex;align-items:center;gap:11px;flex:0 0 auto}
+.brand .mk{width:34px;height:34px;position:relative}
+.brand .mk svg{width:34px;height:34px}
+.brand b{font-size:19px;letter-spacing:2.5px;font-weight:600}
+.links{display:flex;gap:38px;margin-left:56px;flex:1}
+.links a{font-size:14.5px;color:var(--txt);opacity:.86;position:relative;padding:6px 0}
+.links a:hover{opacity:1}
+.links a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--gold);transition:right .28s}
+.links a:hover::after{right:0}
+.navr{display:flex;align-items:center;gap:16px;flex:0 0 auto}
+.lang{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--txt-2);cursor:pointer}
+.lang:hover{color:var(--txt)}
+.pill{border:1px solid rgba(255,255,255,.55);border-radius:999px;padding:9px 20px;font-size:14px;
+  transition:.22s;white-space:nowrap}
+.pill:hover{background:#fff;color:#000;border-color:#fff}
+.pill.solid{background:#fff;color:#000;border-color:#fff}
+.pill.solid:hover{background:var(--gold-2);border-color:var(--gold-2);color:#181203}
+.burger{display:none;width:40px;height:40px;place-items:center}
+.burger span{display:block;width:20px;height:1.5px;background:#fff;position:relative}
+.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:20px;height:1.5px;background:#fff}
+.burger span::before{top:-6px}.burger span::after{top:6px}
+
+/* ---------------- hero ---------------- */
+.hero{position:relative;height:100vh;min-height:640px;overflow:hidden;display:grid;place-items:center}
+.scene{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease;will-change:opacity}
+.scene.on{opacity:1}
+.scene .sky{position:absolute;inset:0}
+.scene .zoom{position:absolute;inset:-4%;animation:kb 22s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1) translate3d(0,0,0)}to{transform:scale(1.13) translate3d(-1.5%,-1.5%,0)}}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 50% 30%,transparent 30%,rgba(0,0,0,.55) 100%),
+             linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 26%,transparent 55%,rgba(0,0,0,.9) 100%)}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.16;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}
+.hero-in{position:relative;z-index:3;text-align:center;padding:0 24px}
+.hero h1{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(38px,6.2vw,92px);
+  line-height:1.03;letter-spacing:-.5px;text-shadow:0 4px 40px rgba(0,0,0,.55)}
+.hero .sub{font-family:var(--serif);font-size:clamp(17px,2.1vw,27px);color:rgba(255,255,255,.9);margin-top:20px;
+  text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.hero .cta{margin-top:38px;display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.hero .pill{padding:13px 34px;font-size:16px}
+.capbar{position:absolute;left:50%;transform:translateX(-50%);bottom:44px;z-index:4;width:min(760px,calc(100% - 40px));
+  background:rgba(20,20,22,.5);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;padding:11px;display:flex;align-items:center;gap:14px}
+.capbar .th{width:88px;height:56px;border-radius:9px;flex:0 0 88px;overflow:hidden;position:relative}
+.capbar .tx{font-size:14.5px;color:rgba(255,255,255,.92);flex:1;min-width:0}
+.capbar .tx small{display:block;font-size:11.5px;color:var(--txt-3);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px}
+.dots{display:flex;gap:6px;flex:0 0 auto;padding-right:6px}
+.dots i{width:5px;height:5px;border-radius:99px;background:rgba(255,255,255,.3);cursor:pointer;transition:.3s}
+.dots i.on{width:20px;background:var(--gold-2)}
+.scrolldown{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:4;font-size:10.5px;
+  letter-spacing:2px;color:var(--txt-3);text-transform:uppercase}
+
+/* ---------------- sections ---------------- */
+section{position:relative}
+.intro{padding:140px 0 120px;text-align:center}
+.eyebrow{font-family:var(--serif);font-style:italic;font-size:clamp(30px,4.6vw,58px);line-height:1.06}
+.eyebrow span{display:block;font-family:var(--sans);font-style:normal;font-size:12px;letter-spacing:5px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:600}
+.intro p{max-width:900px;margin:34px auto 0;color:var(--txt-2);font-size:17px;line-height:1.85}
+
+.feat{padding:60px 0}
+.feat .row{display:grid;grid-template-columns:1.15fr 1fr;gap:72px;align-items:center}
+.feat .row.rev{grid-template-columns:1fr 1.15fr}
+.feat .row.rev .media{order:2}
+.media{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:16/10;border:1px solid var(--line);
+  background:#08090a}
+.media .zoom{position:absolute;inset:-3%;animation:kb 26s ease-in-out infinite alternate}
+.media .tagv{position:absolute;left:14px;top:14px;z-index:3;font-size:10.5px;letter-spacing:1.6px;
+  text-transform:uppercase;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);border:1px solid var(--line);
+  padding:6px 11px;border-radius:8px;color:var(--txt-2)}
+.copy h3{font-family:var(--serif);font-size:clamp(24px,2.9vw,38px);line-height:1.18;font-weight:400}
+.copy p{color:var(--txt-2);margin-top:20px;font-size:16px;line-height:1.8}
+.copy .meta{display:flex;gap:34px;margin-top:26px;flex-wrap:wrap}
+.copy .meta b{display:block;font-family:var(--serif);font-size:27px;color:var(--gold-2)}
+.copy .meta span{font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--txt-3)}
+.copy .go{display:inline-flex;align-items:center;gap:9px;margin-top:30px;font-size:14.5px;color:var(--txt);
+  border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:5px;transition:.25s}
+.copy .go:hover{color:var(--gold-2);border-color:var(--gold-2);gap:14px}
+
+/* serviços */
+.tools{padding:120px 0}
+.tools .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
+.tool{border:1px solid var(--line);border-radius:16px;padding:30px 28px;background:linear-gradient(160deg,#101113,#0a0b0c);
+  transition:.28s;position:relative;overflow:hidden}
+.tool:hover{border-color:rgba(201,162,39,.45);transform:translateY(-4px)}
+.tool::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,162,39,.14),transparent 70%);opacity:0;transition:.3s}
+.tool:hover::after{opacity:1}
+.tool .ic{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;
+  margin-bottom:20px;font-size:19px}
+.tool h4{font-size:17px;font-weight:600;letter-spacing:-.2px}
+.tool p{color:var(--txt-2);font-size:14.5px;margin-top:10px;line-height:1.7}
+.tool .lk{margin-top:18px;font-size:13px;color:var(--gold-2);display:inline-flex;gap:7px;align-items:center}
+
+/* private */
+.private{padding:120px 0;background:linear-gradient(180deg,#000,#0c0d0f 40%,#000)}
+.private .head{text-align:center;max-width:820px;margin:0 auto}
+.private .head p{color:var(--txt-2);margin-top:20px;font-size:16.5px;line-height:1.8}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:64px}
+.col h5{font-size:15px;font-weight:650;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.col li{list-style:none;color:var(--txt-2);font-size:14px;line-height:1.65;padding-left:18px;position:relative;margin-bottom:11px}
+.col li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:1px;background:var(--gold)}
+.band{margin-top:64px;border:1px solid var(--line);border-radius:18px;overflow:hidden;position:relative;
+  min-height:230px;display:flex;align-items:flex-end;padding:34px}
+.band .zoom{position:absolute;inset:-3%;animation:kb 30s ease-in-out infinite alternate}
+.band .bd{position:relative;z-index:3}
+.band .bd b{font-family:var(--serif);font-size:clamp(20px,2.4vw,31px);font-weight:400;display:block}
+.band .bd span{color:var(--txt-2);font-size:14px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:76px 0 40px;background:#050506}
+.fgrid{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:40px}
+.fcol h6{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--txt-3);margin-bottom:18px;font-weight:600}
+.fcol a{display:block;font-size:14px;color:var(--txt-2);margin-bottom:11px;transition:.2s}
+.fcol a:hover{color:var(--gold-2)}
+.fbrand p{color:var(--txt-3);font-size:13.5px;margin-top:16px;max-width:280px;line-height:1.75}
+.apps{display:flex;gap:9px;margin-top:22px;flex-wrap:wrap}
+.app{border:1px solid var(--line);border-radius:9px;padding:8px 13px;font-size:12.5px;color:var(--txt-2);transition:.2s}
+.app:hover{border-color:rgba(255,255,255,.3);color:var(--txt)}
+.fbot{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--txt-3)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* mobile */
+.mob{position:fixed;inset:72px 0 0 0;background:rgba(6,7,8,.98);backdrop-filter:blur(20px);z-index:55;
+  padding:34px 32px;display:none;flex-direction:column;gap:6px}
+.mob.open{display:flex}
+.mob a{font-family:var(--serif);font-size:26px;padding:13px 0;border-bottom:1px solid var(--line)}
+@media(max-width:1080px){
+  .links{display:none}.burger{display:grid}
+  .feat .row,.feat .row.rev{grid-template-columns:1fr;gap:34px}
+  .feat .row.rev .media{order:0}
+  .tools .grid{grid-template-columns:1fr 1fr}
+  .cols{grid-template-columns:1fr 1fr}
+  .fgrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .wrap{padding:0 20px}
+  .tools .grid,.cols,.fgrid{grid-template-columns:1fr}
+  .capbar{bottom:26px;padding:9px}.capbar .th{width:66px;height:44px;flex-basis:66px}
+  .intro{padding:90px 0 70px}.tools,.private{padding:80px 0}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav"><div class="wrap">
+  <a class="brand" href="#top">
+    <span class="mk"><svg viewBox="0 0 40 40" fill="none">
+      <circle cx="20" cy="20" r="18" stroke="#c9a227" stroke-width="1.2"/>
+      <path d="M10 26 L18 12 L22 20 L26 14 L31 26" stroke="#f9fbfc" stroke-width="1.6" stroke-linejoin="round"/>
+      <circle cx="20" cy="20" r="11" stroke="rgba(255,255,255,.22)" stroke-width="1"/></svg></span>
+    <b>ONELIV</b></a>
+  <div class="links">
+    <a href="#portfolio" data-t="nav1">Portfólio</a>
+    <a href="#offplan" data-t="nav2">Off-Plan</a>
+    <a href="#ferramentas" data-t="nav3">Ferramentas</a>
+    <a href="#private" data-t="nav4">ONELIV Private</a>
+    <a href="#contacto" data-t="nav5">Contacto</a>
+  </div>
+  <div class="navr">
+    <div class="lang" id="lang">🌐 <span id="langLbl">PT</span> ▾</div>
+    <a class="pill solid" href="#contacto" data-t="cta">Falar connosco</a>
+    <button class="burger" id="burger"><span></span></button>
+  </div>
+</div></nav>
+<div class="mob" id="mob">
+  <a href="#portfolio">Portfólio</a><a href="#offplan">Off-Plan</a>
+  <a href="#ferramentas">Ferramentas</a><a href="#private">ONELIV Private</a><a href="#contacto">Contacto</a>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div id="scenes"></div>
+  <div class="grain"></div>
+  <div class="hero-in">
+    <h1 data-t="h1">O seu património,<br/>na cidade que não pára</h1>
+    <p class="sub" data-t="sub">Dubai. Um portefólio, uma equipa, uma decisão informada.</p>
+    <div class="cta">
+      <a class="pill" href="#portfolio" data-t="c1">Explorar portefólio</a>
+      <a class="pill solid" href="https://wegosb.github.io/oneliv/" target="_blank" rel="noopener" data-t="c2">Simular o meu investimento</a>
+    </div>
+  </div>
+  <div class="capbar" id="capbar">
+    <div class="th" id="capTh"></div>
+    <div class="tx"><small data-t="capl">Em destaque</small><span id="capTx"></span></div>
+    <div class="dots" id="capDots"></div>
+  </div>
+  <div class="scrolldown">↓ scroll</div>
+</header>
+
+<!-- ============ INTRO ============ -->
+<section class="intro" id="portfolio"><div class="wrap rv">
+  <h2 class="eyebrow"><span data-t="ey1">ONELIV · 2026</span><span style="font-family:var(--serif);font-style:italic;
+    font-size:inherit;letter-spacing:0;text-transform:none;color:inherit;margin:0" data-t="ey2">Portefólio &amp; Mercado</span></h2>
+  <p data-t="p1">Trabalhamos os três mercados de Dubai numa só operação: o primário, com acesso directo aos promotores
+    e planos de pagamento; o off-plan, com inventário e disponibilidade em tempo real; e o secundário, onde a
+    negociação decide o preço. A cada oportunidade juntamos o que raramente aparece num anúncio — o encargo real
+    de condomínio, a yield líquida depois de custos, e o enquadramento fiscal de quem compra a partir de Portugal.</p>
+</div></section>
+
+<!-- ============ FEATURES ============ -->
+<section class="feat" id="offplan"><div class="wrap">
+  <div class="row rv">
+    <div class="media" data-scene="1"><span class="tagv">Off-Plan</span></div>
+    <div class="copy">
+      <h3 data-t="f1h">Inventário off-plan com disponibilidade real</h3>
+      <p data-t="f1p">Mapa por comunidade, filtros por tipologia, entrega e plano de pagamento. Vê a unidade,
+        o piso, a área e o que ainda está disponível — não uma brochura de há seis meses. Escolhida a unidade,
+        gera-se a apresentação para o cliente em segundos, com o plano de pagamento e as taxas já calculadas.</p>
+      <div class="meta">
+        <div><b>30+</b><span data-t="f1m1">Projectos</span></div>
+        <div><b>12</b><span data-t="f1m2">Promotores</span></div>
+        <div><b>14</b><span data-t="f1m3">Comunidades</span></div>
+      </div>
+      <a class="go" href="#contacto" data-t="f1g">Ver inventário →</a>
+    </div>
+  </div>
+</div></section>
+
+<section class="feat" id="ferramentas"><div class="wrap">
+  <div class="row rev rv">
+    <div class="copy">
+      <h3 data-t="f2h">Simulador fiscal Portugal ↔ Dubai</h3>
+      <p data-t="f2p">A pergunta que todo o investidor português faz: compensa? A ferramenta compara o imóvel
+        arrendado em Portugal com o mesmo capital investido em Dubai — com o regime de IRS que se aplica ao
+        contrato, o service charge em AED por pé quadrado, e o efeito da residência fiscal. Mostra a conta
+        passo a passo, sem caixa preta.</p>
+      <div class="meta">
+        <div><b>2,52%</b><span data-t="f2m1">Yield líquida PT</span></div>
+        <div><b>6,15%</b><span data-t="f2m2">Yield líquida Dubai</span></div>
+        <div><b>15</b><span data-t="f2m3">AED/sqft base</span></div>
+      </div>
+      <a class="go" href="https://wegosb.github.io/oneliv/" target="_blank" rel="noopener" data-t="f2g">Abrir o simulador →</a>
+    </div>
+    <div class="media" data-scene="2"><span class="tagv">Ferramentas</span></div>
+  </div>
+</div></section>
+
+<section class="feat"><div class="wrap">
+  <div class="row rv">
+    <div class="media" data-scene="3"><span class="tagv">Gestão</span></div>
+    <div class="copy">
+      <h3 data-t="f3h">Depois da escritura, alguém trata do resto</h3>
+      <p data-t="f3p">Arrendamento, Ejari, cobrança em um ou quatro cheques, manutenção e renovação de contrato.
+        O proprietário recebe um relatório trimestral com a ocupação, o rendimento líquido e o que foi gasto.
+        Sem gestão activa, um imóvel em Dubai rende menos do que devia — é aí que a diferença se perde.</p>
+      <div class="meta">
+        <div><b>4%</b><span data-t="f3m1">Taxa DLD</span></div>
+        <div><b>0%</b><span data-t="f3m2">Imposto sobre renda</span></div>
+        <div><b>2M</b><span data-t="f3m3">AED · Golden Visa</span></div>
+      </div>
+      <a class="go" href="#contacto" data-t="f3g">Falar com a equipa →</a>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ TOOLS ============ -->
+<section class="tools"><div class="wrap">
+  <div class="rv" style="text-align:center">
+    <h2 class="eyebrow"><span data-t="ey3">Serviços</span><span style="font-family:var(--serif);font-style:italic;
+      letter-spacing:0;text-transform:none;color:inherit;margin:0" data-t="ey4">Do primeiro número à chave</span></h2>
+  </div>
+  <div class="grid" id="toolGrid"></div>
+</div></section>
+
+<!-- ============ PRIVATE ============ -->
+<section class="private" id="private"><div class="wrap">
+  <div class="head rv">
+    <h2 class="eyebrow"><span data-t="ey5">ONELIV Private</span><span style="font-family:var(--serif);font-style:italic;
+      letter-spacing:0;text-transform:none;color:inherit;margin:0" data-t="ey6">Para quem compra acima de AED 5M</span></h2>
+    <p data-t="p2">Acesso a stock que não chega aos portais, negociação directa com o promotor, e acompanhamento
+      de residência fiscal e estruturação. Um interlocutor único, do primeiro contacto à entrega das chaves.</p>
+  </div>
+  <div class="cols" id="privCols"></div>
+  <div class="band rv" data-scene="4">
+    <div class="bd"><b data-t="bandb">Palm Jumeirah · Frond G</b>
+      <span data-t="bands">5 quartos · 8 400 sqft · vago na transferência — sob consulta</span></div>
+  </div>
+</div></section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="contacto"><div class="wrap">
+  <div class="fgrid">
+    <div class="fcol fbrand">
+      <a class="brand" href="#top"><span class="mk"><svg viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="18" stroke="#c9a227" stroke-width="1.2"/>
+        <path d="M10 26 L18 12 L22 20 L26 14 L31 26" stroke="#f9fbfc" stroke-width="1.6" stroke-linejoin="round"/>
+        <circle cx="20" cy="20" r="11" stroke="rgba(255,255,255,.22)" stroke-width="1"/></svg></span><b>ONELIV</b></a>
+      <p data-t="fp">Mediação e investimento imobiliário no Dubai. ORN-28841 · Dubai, Emirados Árabes Unidos.</p>
+      <div class="apps">
+        <a class="app" href="#" data-app="iOS">iOS</a><a class="app" href="#" data-app="Android">Android</a>
+        <a class="app" href="#" data-app="WhatsApp">WhatsApp</a></div>
+    </div>
+    <div class="fcol"><h6 data-t="fc1">Portefólio</h6>
+      <a href="#offplan">Off-Plan</a><a href="#offplan">Mercado secundário</a>
+      <a href="#offplan">Arrendamento</a><a href="#private">Private</a></div>
+    <div class="fcol"><h6 data-t="fc2">Comunidades</h6>
+      <a href="#offplan">Palm Jumeirah</a><a href="#offplan">Dubai Marina</a>
+      <a href="#offplan">Downtown</a><a href="#offplan">Creek Harbour</a><a href="#offplan">Dubai Hills</a></div>
+    <div class="fcol"><h6 data-t="fc3">Ferramentas</h6>
+      <a href="https://wegosb.github.io/oneliv/" target="_blank" rel="noopener">Simulador fiscal</a>
+      <a href="https://wegosb.github.io/oneliv/?demo" target="_blank" rel="noopener">Ver exemplo</a>
+      <a href="#ferramentas">Planos de pagamento</a><a href="#ferramentas">Golden Visa</a></div>
+    <div class="fcol"><h6 data-t="fc4">Contacto</h6>
+      <a href="mailto:hello@oneliv.ae">hello@oneliv.ae</a><a href="tel:+97143312200">+971 4 331 2200</a>
+      <a href="#" data-app="WhatsApp">WhatsApp</a><a href="#top">Termos</a><a href="#top">Privacidade</a></div>
+  </div>
+  <div class="fbot"><span>© 2024–2026 ONELIV Properties. Todos os direitos reservados.</span>
+    <span data-t="fbot2">Imagens ilustrativas · valores sujeitos a confirmação</span></div>
+</div></footer>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+/* ============ cenas: skyline de Dubai desenhado em SVG ============ */
+const CENAS=[
+ {id:1,nome:'Palm Jumeirah',cap:'Villa de 5 quartos na Frond G, vista mar aberto, vaga na transferência.',
+  sky:['#2b1a3d','#7b3f5e','#d97742','#f2b263'],sil:'#140d1c',sun:'#ffd9a0',sunY:.66,luz:'rgba(255,214,160,.9)'},
+ {id:2,nome:'Downtown Dubai',cap:'Apartamento de 2 quartos com vista para o Burj Khalifa, entrega Q4 2028.',
+  sky:['#050a1a','#0d1b3a','#1c3563','#2f4f86'],sil:'#03060f',sun:'#9fc4ff',sunY:.3,luz:'rgba(159,196,255,.85)'},
+ {id:3,nome:'Dubai Marina',cap:'Estúdio na marina, rendimento bruto de 7,2%, arrendado em um cheque.',
+  sky:['#01080f','#062033','#0c3a4d','#145a63'],sil:'#010508',sun:'#7fe7d6',sunY:.24,luz:'rgba(127,231,214,.8)'},
+ {id:4,nome:'Creek Harbour',cap:'Torre com entrega em 2029, plano 80/20, entrada a partir de AED 1,72M.',
+  sky:['#101425','#2d3357','#6b5f86','#c9a27a'],sil:'#0a0c16',sun:'#ffe6c2',sunY:.52,luz:'rgba(255,230,194,.85)'},
+];
+function skyline(c,semi){
+  /* silhueta de torres — Burj ao centro, densidade crescente */
+  const W=1600,H=900,base=H*0.99;
+  let torres='',luzes='';
+  const rnd=(seed=>()=>((seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff))(c.id*7919);
+  const specs=[];
+  for(let x=-40;x<W+60;x+=rnd()*48+34){
+    const w=rnd()*46+26, h=(rnd()*rnd()*250+70)*(1+Math.abs(x-W/2)<300?1.1:1);
+    specs.push({x,w,h});
+  }
+  /* torre central alta (Burj) */
+  specs.push({x:W*0.5-26,w:52,h:520,burj:true});
+  specs.sort((a,b)=>a.h-b.h);
+  specs.forEach(s=>{
+    const y=base-s.h;
+    if(s.burj){
+      torres+=`<path d="M${s.x} ${base} L${s.x+6} ${y+120} L${s.x+s.w/2} ${y-60} L${s.x+s.w-6} ${y+120} L${s.x+s.w} ${base} Z" fill="${c.sil}"/>`;
+    }else{
+      torres+=`<rect x="${s.x.toFixed(0)}" y="${y.toFixed(0)}" width="${s.w.toFixed(0)}" height="${(s.h+8).toFixed(0)}" fill="${c.sil}"/>`;
+      if(rnd()<.4) torres+=`<rect x="${(s.x+s.w*.35).toFixed(0)}" y="${(y-16).toFixed(0)}" width="${(s.w*.3).toFixed(0)}" height="18" fill="${c.sil}"/>`;
+    }
+    /* janelas acesas */
+    const cols=Math.max(1,Math.floor(s.w/11));
+    for(let i=0;i<cols;i++) for(let j=0;j<Math.floor(s.h/16);j++){
+      if(rnd()<.16) luzes+=`<rect x="${(s.x+4+i*11).toFixed(0)}" y="${(y+8+j*16).toFixed(0)}" width="4" height="6" fill="${c.luz}" opacity="${(.25+rnd()*.65).toFixed(2)}"/>`;
+    }
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice" style="width:100%;height:100%">
+    <defs><linearGradient id="g${c.id}${semi}" x1="0" y1="0" x2="0" y2="1">
+      ${c.sky.map((col,i)=>`<stop offset="${(i/(c.sky.length-1)*100).toFixed(0)}%" stop-color="${col}"/>`).join('')}
+      </linearGradient>
+      <radialGradient id="s${c.id}${semi}"><stop offset="0%" stop-color="${c.sun}" stop-opacity=".95"/>
+      <stop offset="100%" stop-color="${c.sun}" stop-opacity="0"/></radialGradient></defs>
+    <rect width="${W}" height="${H}" fill="url(#g${c.id}${semi})"/>
+    <circle cx="${W*0.68}" cy="${H*c.sunY}" r="210" fill="url(#s${c.id}${semi})"/>
+    <circle cx="${W*0.68}" cy="${H*c.sunY}" r="46" fill="${c.sun}" opacity=".9"/>
+    ${torres}${luzes}
+    <rect y="${base}" width="${W}" height="${H-base+10}" fill="${c.sil}"/>
+  </svg>`;
+}
+/* pintar as cenas do hero */
+const sc=$('#scenes');
+sc.innerHTML=CENAS.map((c,i)=>`<div class="scene ${i===0?'on':''}" data-i="${i}">
+  <div class="zoom">${skyline(c,'h')}</div></div>`).join('');
+/* painéis das secções */
+$$('[data-scene]').forEach(el=>{
+  const c=CENAS[(+el.dataset.scene-1)%CENAS.length];
+  el.insertAdjacentHTML('afterbegin',`<div class="zoom">${skyline(c,'m'+el.dataset.scene)}</div>`);
+});
+
+/* rotação do hero + legenda */
+let idx=0,timer=null;
+$('#capDots').innerHTML=CENAS.map((_,i)=>`<i class="${i===0?'on':''}" data-d="${i}"></i>`).join('');
+function pintarCap(){
+  const c=CENAS[idx];
+  $('#capTx').textContent=c.cap;
+  $('#capTh').innerHTML=skyline(c,'t'+c.id);
+  $$('.scene').forEach((s,i)=>s.classList.toggle('on',i===idx));
+  $$('#capDots i').forEach((d,i)=>d.classList.toggle('on',i===idx));
+}
+function proxima(){ idx=(idx+1)%CENAS.length; pintarCap(); }
+function reiniciar(){ clearInterval(timer); timer=setInterval(proxima,6500); }
+$('#capDots').onclick=e=>{const d=e.target.dataset.d; if(d!=null){idx=+d;pintarCap();reiniciar();}};
+pintarCap(); reiniciar();
+
+/* ============ serviços ============ */
+const SERVICOS=[
+ ['🏙️','Mercado primário','Acesso directo aos promotores, unidades antes do lançamento público e planos de pagamento negociados.','Ver lançamentos'],
+ ['📐','Off-plan e disponibilidade','Grelha de unidades por piso, área e preço por pé quadrado, actualizada com o promotor.','Consultar inventário'],
+ ['🔑','Mercado secundário','Imóveis prontos, com histórico de transacções do DLD e margem real de negociação.','Falar connosco'],
+ ['📊','Simulador fiscal','Compara Portugal e Dubai com o seu regime de IRS, service charge e residência fiscal.','Abrir simulador'],
+ ['🛂','Golden Visa','A partir de AED 2M em imobiliário, residência de 10 anos. Tratamos do processo de ponta a ponta.','Saber mais'],
+ ['🧾','Gestão de arrendamento','Ejari, cobrança, manutenção e relatório trimestral ao proprietário.','Pedir proposta'],
+];
+$('#toolGrid').innerHTML=SERVICOS.map(([ic,t,p,l],i)=>`<div class="tool rv" style="transition-delay:${i*60}ms">
+  <div class="ic">${ic}</div><h4>${t}</h4><p>${p}</p>
+  <a class="lk" href="${t.includes('Simulador')?'https://wegosb.github.io/oneliv/':'#contacto'}"
+     ${t.includes('Simulador')?'target="_blank" rel="noopener"':''}>${l} →</a></div>`).join('');
+
+/* ============ ONELIV Private ============ */
+const PRIV=[
+ ['Acesso privado',['Stock fora dos portais','Alocações antes do lançamento','Visitas reservadas']],
+ ['Negociação',['Contacto directo com o promotor','Planos de pagamento à medida','Comissão transparente']],
+ ['Estruturação',['Residência fiscal nos EAU','Golden Visa por investimento','Abertura de conta local']],
+ ['Depois da compra',['Gestão e arrendamento','Relatório trimestral','Revenda assistida']],
+];
+$('#privCols').innerHTML=PRIV.map(([h,li],i)=>`<div class="col rv" style="transition-delay:${i*70}ms">
+  <h5>${h}</h5><ul>${li.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+
+/* ============ nav + scroll ============ */
+addEventListener('scroll',()=>{ $('#nav').classList.toggle('solid',scrollY>40); },{passive:true});
+$('#burger').onclick=()=>$('#mob').classList.toggle('open');
+$$('#mob a').forEach(a=>a.onclick=()=>$('#mob').classList.remove('open'));
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),
+  {threshold:.12,rootMargin:'0px 0px -8% 0px'});
+$$('.rv').forEach(e=>io.observe(e));
+
+/* ============ PT / EN ============ */
+const EN={nav1:'Portfolio',nav2:'Off-Plan',nav3:'Tools',nav4:'ONELIV Private',nav5:'Contact',cta:'Talk to us',
+ h1:'Your wealth,<br/>in the city that never stops',sub:'Dubai. One portfolio, one team, one informed decision.',
+ c1:'Explore portfolio',c2:'Simulate my investment',capl:'Featured',
+ ey1:'ONELIV · 2026',ey2:'Portfolio &amp; Market',
+ p1:'We work all three Dubai markets in a single operation: primary, with direct developer access and payment plans; off-plan, with live inventory and availability; and secondary, where negotiation sets the price. To every opportunity we add what an ad rarely shows — the real service charge, the net yield after costs, and the tax position of a buyer coming from Portugal.',
+ f1h:'Off-plan inventory with real availability',
+ f1p:'Map by community, filters by unit type, handover and payment plan. See the unit, the floor, the area and what is actually left — not a brochure from six months ago. Once chosen, the client presentation is generated in seconds, with the payment plan and fees already calculated.',
+ f1m1:'Projects',f1m2:'Developers',f1m3:'Communities',f1g:'View inventory →',
+ f2h:'Portugal ↔ Dubai tax simulator',
+ f2p:'The question every Portuguese investor asks: is it worth it? The tool compares a rented property in Portugal with the same capital invested in Dubai — with the income tax regime that applies to the contract, the service charge in AED per square foot, and the effect of tax residency. It shows the maths step by step, no black box.',
+ f2m1:'Net yield PT',f2m2:'Net yield Dubai',f2m3:'AED/sqft base',f2g:'Open the simulator →',
+ f3h:'After the deed, someone handles the rest',
+ f3p:'Letting, Ejari, collection in one or four cheques, maintenance and renewal. The owner gets a quarterly report with occupancy, net income and spend. Without active management a Dubai property earns less than it should — that is where the difference is lost.',
+ f3m1:'DLD fee',f3m2:'Tax on rent',f3m3:'AED · Golden Visa',f3g:'Talk to the team →',
+ ey3:'Services',ey4:'From the first number to the keys',
+ ey5:'ONELIV Private',ey6:'For purchases above AED 5M',
+ p2:'Access to stock that never reaches the portals, direct negotiation with the developer, and support on tax residency and structuring. A single point of contact, from first call to handover.',
+ bandb:'Palm Jumeirah · Frond G',bands:'5 bedrooms · 8,400 sqft · vacant on transfer — price on request',
+ fp:'Real estate brokerage and investment in Dubai. ORN-28841 · Dubai, United Arab Emirates.',
+ fc1:'Portfolio',fc2:'Communities',fc3:'Tools',fc4:'Contact',
+ fbot2:'Illustrative imagery · figures subject to confirmation'};
+const PT={}; $$('[data-t]').forEach(e=>PT[e.dataset.t]=e.innerHTML);
+let lang='PT';
+$('#lang').onclick=()=>{
+  lang=lang==='PT'?'EN':'PT';
+  const d=lang==='EN'?EN:PT;
+  $$('[data-t]').forEach(e=>{ if(d[e.dataset.t]!==undefined) e.innerHTML=d[e.dataset.t]; });
+  $('#langLbl').textContent=lang;
+  document.documentElement.lang=lang==='EN'?'en':'pt-PT';
+};
+
+/* ============ WhatsApp ============ */
+$$('[data-app]').forEach(a=>a.onclick=e=>{
+  if(a.dataset.app==='WhatsApp'){e.preventDefault();
+    open('https://wa.me/971500000000?text='+encodeURIComponent('Olá ONELIV, vim pelo site e gostaria de saber mais.'),'_blank');}
+});
+</script>
+</body>
+</html>
