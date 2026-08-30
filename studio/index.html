@@ -285,6 +285,11 @@ svg[viewBox="0 0 24 24"]{width:16px;height:16px;flex:0 0 auto;stroke:currentColo
 }
 @media(max-width:640px){.pad{padding:16px 14px 50px}.plans{grid-template-columns:1fr}.tools{grid-template-columns:1fr}}
 
+.sdot{width:7px;height:7px;border-radius:99px;flex:0 0 7px;display:inline-block}
+.sdot.off{background:var(--txt-3)}
+.sdot.ok{background:var(--ac);box-shadow:0 0 0 3px rgba(34,224,125,.18)}
+.sdot.warn{background:var(--warn);box-shadow:0 0 0 3px rgba(255,181,69,.18)}
+
 </style>
 </head>
 <body></body>
@@ -411,7 +416,33 @@ function seedFeed(){
 }
 let DB=(()=>{ try{const r=localStorage.getItem(KEY); if(r){const d=JSON.parse(r); if(d.v===1)return d;}}catch(e){}
   return {v:1,creditos:1200,plano:'Free',assets:[],feed:seedFeed(),board:[],likes:[]}; })();
+DB.srv=DB.srv||{url:'',ok:false,provider:''};
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}};
+
+/* ===================== ligação ao servidor ===================== */
+const srvOn=()=>!!(DB.srv&&DB.srv.url);
+async function srvFetch(caminho,opts){
+  const base=DB.srv.url.replace(/\/+$/,'');
+  const r=await fetch(base+caminho,{...opts,headers:{'Content-Type':'application/json',...(opts&&opts.headers)}});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error||('HTTP '+r.status));
+  return j;
+}
+async function srvTeste(url){
+  const r=await fetch(url.replace(/\/+$/,'')+'/health',{cache:'no-store'});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+/* devolve o HTML da média: ficheiro real do servidor, ou arte local */
+function midia(a,w,h){
+  if(a&&a.url){
+    return /\.(mp4|webm|mov)(\?|$)/i.test(a.url)
+      ? `<video class="art" src="${esc(a.url)}" style="width:100%;aspect-ratio:${w}/${h};object-fit:cover"
+           autoplay muted loop playsinline></video>`
+      : `<img class="art" src="${esc(a.url)}" alt="" loading="lazy" style="width:100%;aspect-ratio:${w}/${h};object-fit:cover"/>`;
+  }
+  return arte(a&&a.prompt||'',w,h,a&&a.tipo);
+}
 
 /* ===================== ícones ===================== */
 const I={
@@ -459,6 +490,7 @@ function shell(){
       <header class="top">
         <h2 id="topTitle">Explorar</h2><div class="sp"></div>
         <div class="credits">${svg('spark','')}<span>Créditos</span> <b id="cred">${NUM(DB.creditos)}</b></div>
+        <button class="btn btn-g btn-sm" id="topSrv"><i class="sdot" id="sdot"></i><span id="srvLbl">Servidor</span></button>
         <button class="btn btn-g btn-sm" id="topPlan">Melhorar plano</button>
         <div class="avatarme" id="me">AU</div>
       </header>
@@ -467,7 +499,49 @@ function shell(){
   $('.credits svg').style.cssText='width:15px;height:15px;stroke:none;fill:var(--ac)';
   $('#signin').onclick=()=>toast('Sessão iniciada como convidado','ok');
   $('#topPlan').onclick=()=>location.hash='#/plans';
+  $('#topSrv').onclick=modalServidor;
+  pintaEstadoSrv();
   $('#me').onclick=()=>toast('Conta de demonstração · '+DB.plano);
+}
+function pintaEstadoSrv(){
+  const d=$('#sdot'), l=$('#srvLbl'); if(!d)return;
+  d.className='sdot '+(srvOn()?(DB.srv.ok?'ok':'warn'):'off');
+  l.textContent=srvOn()?(DB.srv.ok?('Ligado · '+(DB.srv.provider||'servidor')):'Servidor?'):'Local';
+}
+function modalServidor(){
+  const ov=el(`<div class="ov-m"><div class="mdl"><div class="mdl-h"><h3>Ligar a um servidor</h3>
+      <button class="xbtn" data-close>${svg('x')}</button></div>
+    <div class="mdl-b">
+      <p style="font-size:13px;color:var(--txt-2);line-height:1.7;margin-bottom:16px">
+        Sem servidor, a aplicação funciona em <b>modo local</b>: as gerações são simuladas e desenhadas no browser.
+        Ligada a um servidor, os pedidos passam a ser reais — e a chave do fornecedor fica lá, nunca aqui.</p>
+      <div class="grp"><label>Endereço do servidor</label>
+        <input id="srvUrl" class="ta" style="min-height:0;height:42px;padding:0 12px"
+          placeholder="https://api.oneliv.ae" value="${esc(DB.srv.url||'')}"/></div>
+      <div id="srvRes" style="font-size:12.5px;color:var(--txt-3);margin-top:12px">Ainda não testado.</div>
+    </div>
+    <div class="mdl-f"><button class="btn btn-g" id="srvOff">Usar modo local</button>
+      <button class="btn btn-g" id="srvTest">Testar ligação</button>
+      <button class="btn btn-p" id="srvSave">Guardar</button></div></div></div>`);
+  document.body.appendChild(ov);
+  ov.addEventListener('click',e=>{if(e.target===ov||e.target.closest('[data-close]'))ov.remove();});
+  const res=$('#srvRes',ov);
+  $('#srvTest',ov).onclick=async()=>{
+    const u=$('#srvUrl',ov).value.trim();
+    if(!u){res.textContent='Indique o endereço.';return;}
+    res.textContent='A testar…';
+    try{const h=await srvTeste(u);
+      DB.srv.provider=h.provider||''; 
+      res.innerHTML=`<span style="color:var(--ac-2)">✓ Ligado</span> · fornecedor <b>${esc(h.provider||'?')}</b>`+
+        (h.chave?'':' · <span style="color:var(--warn)">sem chave configurada no servidor</span>')+
+        ` · versão ${esc(h.versao||'?')}`;
+      DB.srv.ok=true;
+    }catch(e){DB.srv.ok=false;res.innerHTML=`<span style="color:var(--bad)">✕ Falhou</span> — ${esc(e.message)}`;}
+  };
+  $('#srvSave',ov).onclick=()=>{DB.srv.url=$('#srvUrl',ov).value.trim();save();pintaEstadoSrv();
+    ov.remove();toast(srvOn()?'Servidor guardado':'Modo local','ok');};
+  $('#srvOff',ov).onclick=()=>{DB.srv={url:'',ok:false,provider:''};save();pintaEstadoSrv();
+    ov.remove();toast('A usar modo local');};
 }
 function setCred(n){DB.creditos=Math.max(0,n);save();const e=$('#cred');if(e)e.textContent=NUM(DB.creditos);}
 
@@ -575,12 +649,13 @@ function abrirVisor(x){
   const ov=el(`<div class="ov-m"><div class="mdl lg"><div class="mdl-h"><h3>Pré-visualização</h3>
       <button class="btn btn-g btn-sm" data-re>Reutilizar prompt</button>
       <button class="xbtn" data-close>${svg('x')}</button></div>
-    <div class="viewer"><div class="stage">${arte(x.prompt,rw*70,rh*70,x.tipo)}</div>
+    <div class="viewer"><div class="stage">${midia(x,rw*70,rh*70)}</div>
       <div class="side"><dl class="kv">
         <dt>Autor</dt><dd>${esc(x.autor||'—')}</dd>
         <dt>Modelo</dt><dd>${esc(x.modelo||'3.0')}</dd>
         <dt>Formato</dt><dd>${rw}:${rh}${x.k4?' · 4K':''}</dd>
         <dt>Tipo</dt><dd>${x.video?'Vídeo':'Imagem'}</dd>
+        <dt>Origem</dt><dd>${x.url?'servidor':'local'}</dd>
         <dt>Duração</dt><dd>${x.video?(x.dur||5)+' s':'—'}</dd>
         <dt>Criado</dt><dd>${x.at?ago(x.at):'—'}</dd></dl>
         <div style="margin-top:16px"><div style="font-size:11.5px;color:var(--txt-3);margin-bottom:6px">Prompt</div>
@@ -696,7 +771,7 @@ PAGES.generate=function(v){
     $('#resN').textContent=DB.assets.length;
     $('#resGrid').innerHTML=DB.assets.length?DB.assets.map(a=>{
       const [rw,rh]=a.ratio;
-      return `<div class="card" data-a="${a.id}">${arte(a.prompt,rw*60,rh*60,a.tipo)}
+      return `<div class="card" data-a="${a.id}">${midia(a,rw*60,rh*60)}
         <div class="acts"><button data-dl="${a.id}" title="Descarregar">↓</button>
           <button data-bd="${a.id}" title="Prancha">▦</button>
           <button data-rm="${a.id}" title="Apagar">✕</button></div>
@@ -717,7 +792,7 @@ PAGES.generate=function(v){
       DB.board.push({id:'B'+Date.now(),prompt:a.prompt,tipo:a.tipo,
         x:80+DB.board.length%5*240,y:80+Math.floor(DB.board.length/5)*200});save();toast('Enviado para a prancha','ok');});
   }
-  function gerar(){
+  async function gerar(){
     const p=$('#gPrompt').value.trim();
     if(!p){toast('Escreva um prompt primeiro','err');$('#gPrompt').focus();return;}
     const c=custo();
@@ -730,15 +805,43 @@ PAGES.generate=function(v){
       <div class="info"><div class="pr">${esc(p)}</div></div></div>`);
     const g=$('#resGrid'); if(g.querySelector('.empty'))g.innerHTML='';
     g.prepend(q);
+    const guardar=(url,viaSrv)=>{
+      const a={id:'A'+Date.now(),prompt:p,neg:GEN.neg,tipo:['cidade','retrato','abstracto','natureza','produto'][hash(p)%5],
+        modelo:MODELS.find(m=>m.k===GEN.modelo).n,qual:GEN.qual,ratio:[rw,rh],dur:GEN.dur,
+        video:GEN.modo!=='t2i',k4:GEN.qual==='pro',cam:GEN.cam,crv:GEN.crv,at:Date.now(),likes:0,
+        url:url||null,origem:viaSrv?'servidor':'local'};
+      DB.assets.unshift(a); save(); pintaRes();
+      toast('Geração concluída · −'+c+' créditos'+(viaSrv?' · via servidor':''),'ok');
+    };
+    const falhou=msg=>{ q.remove(); setCred(DB.creditos+c); pintaRes();
+      toast('Falhou: '+msg+' · créditos devolvidos','err'); };
+
+    if(srvOn()){
+      try{
+        const j=await srvFetch('/v1/generate',{method:'POST',body:JSON.stringify({
+          prompt:p, negative:GEN.neg, model:GEN.modelo==='3.0'?'3.0-omni':GEN.modelo,
+          mode:GEN.modo==='t2i'?'text-to-image':(GEN.modo==='i2v'?'image-to-video':'text-to-video'),
+          aspect_ratio:GEN.ratio, duration:GEN.dur, quality:GEN.qual})});
+        DB.srv.ok=true; save(); pintaEstadoSrv();
+        const iv=setInterval(async()=>{
+          try{
+            const st=await srvFetch('/v1/jobs/'+j.id);
+            $('#qp',q).textContent=Math.round(st.progress||0)+'%';
+            $('#qb',q).style.width=(st.progress||0)+'%';
+            if(st.status==='succeeded'){clearInterval(iv);q.remove();
+              guardar(st.output&&st.output.kind==='url'?st.output.url:null,true);}
+            if(st.status==='failed'){clearInterval(iv);falhou(st.error||'erro no servidor');}
+          }catch(e){clearInterval(iv);falhou(e.message);}
+        },900);
+      }catch(e){ DB.srv.ok=false; save(); pintaEstadoSrv(); falhou(e.message); }
+      return;
+    }
+    /* modo local */
     let pr=0;
     const iv=setInterval(()=>{
       pr=Math.min(100,pr+Math.random()*13+4);
       $('#qp',q).textContent=Math.round(pr)+'%'; $('#qb',q).style.width=pr+'%';
-      if(pr>=100){clearInterval(iv);
-        const a={id:'A'+Date.now(),prompt:p,neg:GEN.neg,tipo:['cidade','retrato','abstracto','natureza','produto'][hash(p)%5],
-          modelo:MODELS.find(m=>m.k===GEN.modelo).n,qual:GEN.qual,ratio:[rw,rh],dur:GEN.dur,
-          video:GEN.modo!=='t2i',k4:GEN.qual==='pro',cam:GEN.cam,crv:GEN.crv,at:Date.now(),likes:0};
-        DB.assets.unshift(a); save(); pintaRes(); toast('Geração concluída · −'+c+' créditos','ok');}
+      if(pr>=100){clearInterval(iv);q.remove();guardar(null,false);}
     },260);
   }
 };
@@ -759,7 +862,7 @@ PAGES.assets=function(v){
     if(asF==='vid')l=l.filter(a=>a.video); if(asF==='img')l=l.filter(a=>!a.video);
     if(asF==='pro')l=l.filter(a=>a.qual==='pro'); if(asF==='4k')l=l.filter(a=>a.k4);
     $('#asGrid').innerHTML=l.length?l.map(a=>{const [rw,rh]=a.ratio;
-      return `<div class="card" data-a="${a.id}">${arte(a.prompt,rw*60,rh*60,a.tipo)}
+      return `<div class="card" data-a="${a.id}">${midia(a,rw*60,rh*60)}
         <div class="acts"><button data-dl="${a.id}">↓</button><button data-rm="${a.id}">✕</button></div>
         <div class="info"><div class="pr">${esc(a.prompt)}</div>
           <div class="mt"><span class="pill ac">${esc(a.modelo)}</span><span class="pill">${rw}:${rh}</span>
