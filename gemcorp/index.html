@@ -402,6 +402,18 @@ tbody tr:hover{background:var(--ink-2)}
   .hero{font-size:26px}.kv{grid-template-columns:1fr}
 }
 
+/* knowledge search results */
+.ksr{position:absolute;top:40px;left:0;right:0;background:var(--ink-2);border:1px solid var(--line-2);
+  border-radius:10px;box-shadow:0 18px 44px rgba(0,0,0,.6);z-index:60;overflow:hidden;max-height:380px;overflow-y:auto}
+.ksr-h{padding:9px 13px;font-size:10px;letter-spacing:.13em;color:var(--txt-4);font-weight:700;
+  border-bottom:1px solid var(--line)}
+.ksr-i{display:flex;gap:10px;align-items:center;padding:10px 13px;cursor:pointer;border-bottom:1px solid var(--line)}
+.ksr-i:last-child{border-bottom:0}
+.ksr-i:hover{background:var(--ink-3)}
+.ksr-i b{font-size:12.5px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ksr-i span{font-size:11px;color:var(--txt-3);display:block;margin-top:2px}
+.ksr-e{padding:16px;text-align:center;font-size:12.5px;color:var(--txt-4)}
+
 </style>
 </head>
 <body></body>
@@ -633,14 +645,36 @@ function setNav(r){
   $('#ttl').textContent=TITLES[r]||'Gemcorp Flow';
 }
 function wireSearch(){
-  const inp=$('#gq');
-  inp.addEventListener('keydown',e=>{
-    if(e.key!=='Enter')return;
-    const q=inp.value.trim().toLowerCase(); if(!q)return;
-    const d=DEALS.find(x=>(x.n+x.c+x.s).toLowerCase().includes(q));
-    if(d){openDeal(d.id);inp.value='';}
-    else toast('No match for "'+q+'"');
-  });
+  const inp=$('#gq'), box=inp.closest('.search');
+  const close=()=>{const r=$('.ksr');if(r)r.remove();};
+  const run=()=>{
+    close();
+    const q=inp.value.trim().toLowerCase(); if(q.length<2)return;
+    const hits=[];
+    DEALS.filter(x=>(x.n+x.c+x.s+x.lead).toLowerCase().includes(q)).slice(0,4)
+      .forEach(x=>hits.push({k:'DEAL',t:x.n,s:`${x.c} · ${x.s} · ${USD(x.v)}`,go:()=>openDeal(x.id)}));
+    DOCS.filter(x=>(x.n+x.cat+x.by).toLowerCase().includes(q)).slice(0,3)
+      .forEach(x=>hits.push({k:'DOCUMENT',t:x.n,s:`${x.cat} · ${x.v}`,go:()=>{location.hash='#/documents';}}));
+    FINDINGS.filter(x=>(x.t+x.cat+x.d+x.src+' horizon').toLowerCase().includes(q)).slice(0,3)
+      .forEach(x=>hits.push({k:'FINDING',t:x.t,s:`${x.cat} · AI analysis`,go:()=>{location.hash='#/ai';}}));
+    ALERTS.filter(x=>{const d=dealById(x.deal);
+      return (x.t+x.cat+x.d+(d?d.n+d.c:'')).toLowerCase().includes(q);}).slice(0,3)
+      .forEach(x=>{const d=dealById(x.deal);
+        hits.push({k:'ALERT',t:x.t,s:`${d?d.n+' · ':''}${x.cat} · ${USD(x.exp)} exposure`,
+          go:()=>{location.hash='#/risk';}});});
+    if(!hits.length){
+      box.appendChild(el(`<div class="ksr"><div class="ksr-e">No match for “${esc(inp.value)}”</div></div>`));
+      return;}
+    const r=el(`<div class="ksr"><div class="ksr-h">${hits.length} results across the platform</div>
+      ${hits.map((h,i)=>`<div class="ksr-i" data-h="${i}"><span class="tagp t-mut">${h.k}</span>
+        <div style="flex:1;min-width:0"><b>${esc(h.t)}</b><span>${esc(h.s)}</span></div></div>`).join('')}</div>`);
+    box.appendChild(r);
+    $$('[data-h]',r).forEach(x=>x.onmousedown=()=>{close();inp.value='';hits[+x.dataset.h].go();});
+  };
+  inp.addEventListener('input',run);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){const f=$('.ksr-i');if(f)f.dispatchEvent(new Event('mousedown'));}
+    if(e.key==='Escape')close();});
+  inp.addEventListener('blur',()=>setTimeout(close,180));
 }
 
 /* ---------------- router ---------------- */
@@ -1237,6 +1271,7 @@ PAGES.ai=function(v){
       ['Report generation','report','Board and investor packs assembled from live data.'],
       ['Smart recommendations','ai','Suggests next action based on comparable transactions.'],
       ['Anomaly detection','eye','Surfaces figures that diverge from history or peers.'],
+      ['Knowledge search','search','Ask across every deal, document and finding at once.'],
     ].map(([t,i,d])=>`<div class="secit"><div class="i">${svg(i)}</div><b>${t}</b><span>${d}</span></div>`).join('')}</div>
   </div>`;
   renderFindings($('#aiHost'),dealById('HOR'));
