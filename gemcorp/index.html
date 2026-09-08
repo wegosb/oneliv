@@ -135,7 +135,7 @@ svg{display:block}
   background:rgba(8,11,16,.82);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:8px;padding:9px 13px}
 .maplegend div{font-size:11px;color:var(--txt-2);display:flex;align-items:center;gap:7px}
 .maplegend i{width:7px;height:7px;border-radius:50%;background:var(--gold)}
-.mapstat{position:absolute;right:18px;top:16px;background:rgba(8,11,16,.82);backdrop-filter:blur(10px);
+.mapstat{position:absolute;right:18px;bottom:16px;background:rgba(8,11,16,.82);backdrop-filter:blur(10px);
   border:1px solid var(--line);border-radius:8px;padding:12px 15px;min-width:170px}
 .mapstat .t{font-size:10px;letter-spacing:.12em;color:var(--txt-3);font-weight:700}
 .mapstat .r{display:flex;justify-content:space-between;gap:14px;font-size:12px;margin-top:8px}
@@ -414,6 +414,145 @@ tbody tr:hover{background:var(--ink-2)}
 .ksr-i span{font-size:11px;color:var(--txt-3);display:block;margin-top:2px}
 .ksr-e{padding:16px;text-align:center;font-size:12.5px;color:var(--txt-4)}
 
+/* =====================================================================
+   LEDGER — second design direction
+   Editorial institutional finance: paper, hairlines, typographic grid.
+   Not a recolour — the structural devices change.
+   ===================================================================== */
+body[data-theme="ledger"]{
+  --ink:#F7F5F1; --ink-1:#FFFFFF; --ink-2:#FBFAF7; --ink-3:#F1EEE8; --ink-4:#E6E2DA;
+  --line:rgba(24,26,29,.12); --line-2:rgba(24,26,29,.26);
+  --txt:#181A1D; --txt-2:#55595F; --txt-3:#82878E; --txt-4:#A8ADB4;
+  --gold:#8C6D2F; --gold-2:#6E5522; --gold-dim:#B9A madeira;
+  --gold-dim:#BCA97C;
+  --ok:#1F6B4A; --warn:#95651A; --bad:#9B2C2C; --info:#274C86; --violet:#4A3D8F;
+  --r:0px;
+  background:var(--ink); color:var(--txt);
+}
+/* --- structure: hairlines, no shadows, no radius --- */
+body[data-theme="ledger"] .card,
+body[data-theme="ledger"] .kpi,
+body[data-theme="ledger"] .kcol,
+body[data-theme="ledger"] .dcard,
+body[data-theme="ledger"] .find,
+body[data-theme="ledger"] .gate,
+body[data-theme="ledger"] .secit,
+body[data-theme="ledger"] .mod,
+body[data-theme="ledger"] .genbox,
+body[data-theme="ledger"] .gmod,
+body[data-theme="ledger"] .mapwrap{border-radius:0;box-shadow:none}
+body[data-theme="ledger"] .card,
+body[data-theme="ledger"] .kpi{background:var(--ink-1);border-color:var(--line)}
+body[data-theme="ledger"] .rail{background:var(--ink-2);border-right:1px solid var(--line)}
+body[data-theme="ledger"] .top{background:var(--ink-1);border-bottom:1px solid var(--line-2)}
+body[data-theme="ledger"] .brand .mk{background:var(--txt);color:#F7F5F1;border-radius:0}
+body[data-theme="ledger"] .nav{border-radius:0}
+body[data-theme="ledger"] .nav.on{background:transparent;color:var(--txt);font-weight:650}
+body[data-theme="ledger"] .nav.on::before{background:var(--txt);left:-12px;width:3px}
+body[data-theme="ledger"] .nav .cnt{background:var(--ink-3);border-radius:0;color:var(--txt-2)}
+body[data-theme="ledger"] .nav.on .cnt{background:var(--txt);color:var(--ink-1)}
+body[data-theme="ledger"] .nav .cnt.hot{background:var(--bad);color:#fff}
+body[data-theme="ledger"] .mkbtn{border-radius:0;border-style:solid;border-color:var(--line-2)}
+body[data-theme="ledger"] .mkbtn:hover{background:var(--txt);color:var(--ink-1);border-color:var(--txt)}
+body[data-theme="ledger"] .btn{border-radius:0;letter-spacing:.08em;text-transform:uppercase;font-size:11px;font-weight:700}
+body[data-theme="ledger"] .btn-g{background:var(--txt);color:var(--ink-1)}
+body[data-theme="ledger"] .btn-g:hover{background:#000}
+body[data-theme="ledger"] .btn-o{background:transparent;border:1px solid var(--line-2);color:var(--txt)}
+body[data-theme="ledger"] .btn-o:hover{background:var(--txt);color:var(--ink-1);border-color:var(--txt)}
+body[data-theme="ledger"] .search input,body[data-theme="ledger"] .fld input,
+body[data-theme="ledger"] .fld select,body[data-theme="ledger"] .fld textarea{
+  border-radius:0;background:var(--ink-1);border-color:var(--line-2)}
+body[data-theme="ledger"] .tagp{border-radius:0;border:1px solid currentColor;background:transparent!important}
+body[data-theme="ledger"] .demo{border-radius:0;background:transparent;border:1px solid var(--txt);color:var(--txt)}
+body[data-theme="ledger"] .bar{background:var(--ink-4);border-radius:0;height:2px}
+body[data-theme="ledger"] .bar i{background:var(--txt);border-radius:0}
+body[data-theme="ledger"] .bar.ok i{background:var(--ok)}
+body[data-theme="ledger"] .bar.warn i{background:var(--warn)}
+body[data-theme="ledger"] .bar.bad i{background:var(--bad)}
+body[data-theme="ledger"] .av-s,body[data-theme="ledger"] .me .av{border-radius:0;background:var(--ink-3);color:var(--txt-2)}
+body[data-theme="ledger"] .mdl,body[data-theme="ledger"] .ksr{border-radius:0;background:var(--ink-1)}
+body[data-theme="ledger"] .aipanel,body[data-theme="ledger"] .toast{border-radius:0;background:var(--ink-1)}
+body[data-theme="ledger"] .aifab{border-radius:0;background:var(--txt);border-color:var(--txt)}
+body[data-theme="ledger"] .aifab svg{stroke:var(--ink-1)}
+body[data-theme="ledger"] .aim.a{background:var(--ink-3);border-radius:0}
+body[data-theme="ledger"] .aim.u{background:var(--txt);color:var(--ink-1);border-radius:0}
+body[data-theme="ledger"] .memo{background:var(--ink-1);border-color:var(--line)}
+body[data-theme="ledger"] .memo .mh{border-bottom-color:var(--txt)}
+body[data-theme="ledger"] .kpi:hover{transform:none;border-color:var(--txt)}
+body[data-theme="ledger"] .dcard:hover,body[data-theme="ledger"] .mod:hover{transform:none;border-color:var(--txt)}
+body[data-theme="ledger"] .ring circle:first-child{stroke:var(--ink-4)}
+body[data-theme="ledger"] .mland{fill:#E9E5DD;stroke:#D5CFC3}
+body[data-theme="ledger"] .mland.act{fill:#DED8CC}
+body[data-theme="ledger"] .mland.act:hover{fill:#CFC7B7}
+body[data-theme="ledger"] .mpin circle.core{fill:var(--txt)}
+body[data-theme="ledger"] .mpin circle.halo{fill:var(--txt);opacity:.1}
+body[data-theme="ledger"] .mpin.hot circle.core{fill:var(--bad)}
+body[data-theme="ledger"] .maplegend,body[data-theme="ledger"] .mapstat{background:rgba(255,255,255,.94);border-radius:0}
+body[data-theme="ledger"] .tip{background:var(--txt);color:var(--ink-1);border-radius:0;border-color:var(--txt)}
+body[data-theme="ledger"] .tip span{color:rgba(255,255,255,.7)}
+body[data-theme="ledger"] .gmod{background:var(--ink-3);border-color:var(--line-2)}
+body[data-theme="ledger"] .prio:hover{background:var(--ink-3)}
+body[data-theme="ledger"] tbody tr:hover{background:var(--ink-3)}
+body[data-theme="ledger"] .kcol{background:var(--ink-2)}
+body[data-theme="ledger"] .dcard{background:var(--ink-1)}
+body[data-theme="ledger"] .kcol.over{background:var(--ink-3);border-color:var(--txt)}
+
+/* --- editorial devices --- */
+.tape{height:30px;flex:0 0 30px;border-bottom:1px solid var(--line);background:var(--ink-1);
+  display:flex;align-items:center;overflow:hidden;position:relative}
+.tape::after{content:"";position:absolute;right:0;top:0;bottom:0;width:70px;
+  background:linear-gradient(90deg,transparent,var(--ink-1))}
+.tape-in{display:flex;gap:34px;white-space:nowrap;animation:tick 46s linear infinite;padding-left:26px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tape-i{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--txt-3);display:flex;gap:9px}
+.tape-i b{color:var(--txt-2);font-weight:600}
+.tape-i .up{color:var(--ok)} .tape-i .dn{color:var(--bad)}
+.tape-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--txt-4);
+  padding:0 14px;border-right:1px solid var(--line);height:100%;display:flex;align-items:center;flex:0 0 auto;
+  background:var(--ink-2);z-index:2}
+
+/* index numbering — editorial signature */
+.idx{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--txt-4);flex:0 0 auto}
+body[data-theme="ledger"] .dcard h4::before{content:attr(data-idx) "  ";font-family:var(--mono);
+  font-size:10px;color:var(--txt-4);letter-spacing:.1em;font-weight:400}
+
+/* masthead */
+body[data-theme="ledger"] .hero{font-size:40px;letter-spacing:-.03em;line-height:1.05}
+body[data-theme="ledger"] .hero em{color:var(--txt);font-style:italic}
+body[data-theme="ledger"] .sec h2{color:var(--txt);font-weight:750}
+body[data-theme="ledger"] .sec .ln{background:var(--line-2)}
+body[data-theme="ledger"] .sec a,body[data-theme="ledger"] .sec button{color:var(--txt);
+  border-bottom:1px solid var(--txt);padding-bottom:1px}
+body[data-theme="ledger"] .kpi .v{color:var(--txt)}
+body[data-theme="ledger"] .kpi.crit .v{color:var(--bad)}
+body[data-theme="ledger"] .kpi.warn .v{color:var(--warn)}
+body[data-theme="ledger"] .kpi.gold .v{color:var(--txt)}
+body[data-theme="ledger"] .kpi .l{color:var(--txt-3)}
+body[data-theme="ledger"] .kpi{border-top:2px solid var(--txt)}
+body[data-theme="ledger"] .dcard .amt{color:var(--txt)}
+body[data-theme="ledger"] .dhead .meta div b.g{color:var(--txt)}
+body[data-theme="ledger"] .kcol-h .sum{color:var(--txt)}
+body[data-theme="ledger"] .bhero h1{color:var(--txt)}
+body[data-theme="ledger"] .bhero p{color:var(--txt-2)}
+body[data-theme="ledger"] .mod .i{background:var(--ink-3);border-radius:0}
+body[data-theme="ledger"] .mod .i svg,body[data-theme="ledger"] .secit .i svg{stroke:var(--txt)}
+body[data-theme="ledger"] .secit .i{background:var(--ink-3);border-radius:0}
+body[data-theme="ledger"] .find{background:var(--ink-1)}
+body[data-theme="ledger"] .audit{color:var(--txt-3)}
+
+/* theme switch */
+.tsw{display:flex;border:1px solid var(--line);height:30px;flex:0 0 auto}
+.tsw button{padding:0 11px;font-size:9.5px;font-weight:750;letter-spacing:.12em;color:var(--txt-3)}
+.tsw button.on{background:var(--txt);color:var(--ink-1)}
+body[data-theme="ledger"] .tsw{border-color:var(--line-2)}
+
+/* dot cartogram — replaces blob map */
+.carto{display:block;width:100%;height:auto}
+.cdot{transition:fill .3s,r .3s}
+.ccell{cursor:pointer}
+.ccell:hover .cdot{fill:var(--gold-2)}
+body[data-theme="ledger"] .ccell:hover .cdot{fill:var(--txt)}
+
 </style>
 </head>
 <body></body>
@@ -624,11 +763,14 @@ function shell(){
      <div class="railfoot"><button class="mkbtn" id="mkSystem">${svg('plus')}<span>Create Custom Workflow</span></button></div>
    </aside>
    <div class="main">
+     <div class="tape"><span class="tape-lbl">POSITIONS</span><div class="tape-in" id="tape"></div></div>
      <header class="top">
        <div><h1 id="ttl">Overview</h1><div class="crumbs" id="crumbs">Gemcorp Capital · Global</div></div>
        <span class="demo">CONCEPT DEMO — SAMPLE DATA</span>
        <div class="sp"></div>
        <div class="search">${svg('search')}<input id="gq" placeholder="Search deals, documents, counterparties"/></div>
+       <div class="tsw" id="tsw">
+         <button data-th="terminal">TERMINAL</button><button data-th="ledger">LEDGER</button></div>
        <button class="ico" id="bell">${svg('bell')}<i class="dot"></i></button>
        <div class="me"><div class="av">AK</div><div><b>Atanas Kovachev</b><span>Investment Director</span></div></div>
      </header>
@@ -638,7 +780,7 @@ function shell(){
   $('#mkSystem').onclick=()=>location.hash='#/builder';
   $('#bell').onclick=()=>location.hash='#/risk';
   $('#aifab').onclick=toggleAI;
-  wireSearch();
+  wireSearch(); paintTape(); wireTheme();
 }
 function setNav(r){
   $$('.nav').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
@@ -677,6 +819,25 @@ function wireSearch(){
   inp.addEventListener('blur',()=>setTimeout(close,180));
 }
 
+function wireTheme(){
+  const cur=localStorage.getItem('gc.theme')||'terminal';
+  document.body.dataset.theme=cur;
+  $$('#tsw button').forEach(b=>{
+    b.classList.toggle('on',b.dataset.th===cur);
+    b.onclick=()=>{const th=b.dataset.th;
+      document.body.dataset.theme=th; localStorage.setItem('gc.theme',th);
+      $$('#tsw button').forEach(x=>x.classList.toggle('on',x.dataset.th===th));
+      toast(th==='ledger'?'Ledger — editorial institutional':'Terminal — dark institutional');
+      route();};
+  });
+}
+function paintTape(){
+  const items=DEALS.map((d,i)=>{
+    const mv=((d.irr-16)*10).toFixed(1), up=+mv>=0;
+    return `<span class="tape-i"><b>${d.id}</b><span>${USD(d.v)}</span>
+      <span class="${up?'up':'dn'}">${up?'▲':'▼'} ${Math.abs(mv)}bp</span></span>`;});
+  $('#tape').innerHTML=(items.join('')+items.join(''));
+}
 /* ---------------- router ---------------- */
 const PAGES={};
 function route(){
@@ -851,54 +1012,64 @@ function wirePrios(){$$('[data-deal]').forEach(r=>r.onclick=()=>openDeal(r.datas
 
 /* ---------------- world map ---------------- */
 function drawMap(host){
-  const W=1000,H=460;
-  /* stylised landmasses — abstract, not a survey map */
-  const LAND=[
-   'M120 120 L215 96 L268 130 L250 186 L196 200 L150 176 Z',
-   'M232 214 L286 202 L322 258 L306 340 L268 392 L236 330 L226 268 Z',
-   'M436 86 L560 70 L640 96 L628 150 L536 168 L462 146 Z',
-   'M452 176 L556 168 L604 210 L588 300 L520 348 L470 288 L444 226 Z',
-   'M612 120 L700 104 L748 142 L724 196 L648 200 L616 166 Z',
-   'M660 210 L742 200 L790 246 L764 300 L692 296 L656 252 Z',
-   'M796 300 L864 292 L888 336 L856 372 L806 356 Z',
-  ];
-  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" id="msvg">
-    <defs><radialGradient id="glow"><stop offset="0%" stop-color="#C9A961" stop-opacity=".28"/>
-      <stop offset="100%" stop-color="#C9A961" stop-opacity="0"/></radialGradient></defs>
-    <rect width="${W}" height="${H}" fill="#0A0E14"/>
-    <g stroke="#111823" stroke-width=".7">
-      ${[...Array(11)].map((_,i)=>`<line x1="0" y1="${i*46}" x2="${W}" y2="${i*46}"/>`).join('')}
-      ${[...Array(21)].map((_,i)=>`<line x1="${i*50}" y1="0" x2="${i*50}" y2="${H}"/>`).join('')}</g>
-    ${LAND.map((d,i)=>`<path class="mland ${i>=1?'act':''}" d="${d}"/>`).join('')}
-    ${REGIONS.map(r=>`<circle cx="${r.x/100*W}" cy="${r.y/100*H}" r="86" fill="url(#glow)"/>
-      <text x="${r.x/100*W}" y="${r.y/100*H-58}" text-anchor="middle" font-size="10.5"
-        fill="#5F6A78" font-weight="700" letter-spacing="2">${r.n.toUpperCase()}</text>`).join('')}
+  /* dot cartogram: each cell is a position, grouped by region.
+     Abstract by design — an index of exposure, not a survey map. */
+  const COLS=44, ROWS=15, cw=22, ch=22, W=COLS*cw, H=ROWS*ch;
+  const bands={africa:[16,26],me:[27,32],asia:[33,43],latam:[3,13]};
+  const cells=[];
+  REGIONS.forEach(rg=>{
+    const [c0,c1]=bands[rg.k];
+    for(let c=c0;c<=c1;c++)for(let r=3;r<ROWS-2;r++){
+      const t=(Math.sin(c*.7)+Math.cos(r*.9))*.5;
+      if(t>-.25) cells.push({c,r,rg});
+    }
+  });
+  const perRegion={}; REGIONS.forEach(r=>perRegion[r.k]=[]);
+  cells.forEach(x=>perRegion[x.rg.k].push(x));
+  const pinCell={};
+  DEALS.forEach((d,i)=>{
+    const k=['africa','me','asia','latam'][
+      ['Angola','Ghana','Nigeria','Kenya','Zambia','Morocco','Egypt'].includes(d.c)?0:
+      ['UAE'].includes(d.c)?1:['India','Kazakhstan'].includes(d.c)?2:3];
+    const pool=perRegion[k]; if(!pool||!pool.length)return;
+    const cell=pool[Math.floor(pool.length/2+ (i*7)%Math.max(1,pool.length/2) - pool.length/6)]||pool[0];
+    pinCell[d.id]={...cell,d};
+  });
+  const hot=new Set(['HOR','NOV']);
+  host.innerHTML=`<svg class="carto" viewBox="0 0 ${W} ${H+52}">
+    ${cells.map(x=>`<rect x="${x.c*cw+4}" y="${x.r*ch+40}" width="${cw-8}" height="${ch-8}"
+      fill="currentColor" opacity=".07"/>`).join('')}
+    ${REGIONS.map(rg=>{const [c0,c1]=bands[rg.k];
+      return `<text x="${(c0+ (c1-c0)/2)*cw}" y="30" text-anchor="middle" font-size="10"
+        letter-spacing="2.4" font-weight="700" fill="currentColor" opacity=".42">${rg.n.toUpperCase()}</text>`;}).join('')}
+    ${Object.entries(pinCell).map(([id,p])=>{
+      const d=p.d, sz=Math.max(4,Math.min(8.5,d.v/1e6/16));
+      return `<g class="ccell mpin ${hot.has(id)?'hot':''}" data-pin="${id}">
+        <rect x="${p.c*cw+4}" y="${p.r*ch+40}" width="${cw-8}" height="${ch-8}" fill="transparent"/>
+        <circle class="halo" cx="${p.c*cw+cw/2}" cy="${p.r*ch+40+ch/2-4}" r="${sz+6}"/>
+        <circle class="cdot core" cx="${p.c*cw+cw/2}" cy="${p.r*ch+40+ch/2-4}" r="${sz}"/></g>`;}).join('')}
   </svg>
   <div class="mapstat"><div class="t">PIPELINE EXPOSURE</div>
     ${REGIONS.map(r=>`<div class="r" data-reg="${r.k}" style="cursor:pointer">
       <span>${r.n}</span><b class="num">${USD(r.exp)}</b></div>`).join('')}</div>
   <div class="maplegend">
-    <div><i></i>Active opportunity</div>
+    <div><i></i>Active position — size by ticket</div>
     <div><i style="background:var(--bad)"></i>Requires attention</div>
     <div style="color:var(--txt-4)">${DEALS.length} positions · sample data</div></div>`;
-  const svgEl=$('#msvg',host);
-  PINS.forEach(p=>{
-    const d=dealById(p.id); if(!d)return;
-    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
-    g.setAttribute('class','mpin '+(p.hot?'hot':''));
-    g.innerHTML=`<circle class="halo" cx="${p.x/100*W}" cy="${p.y/100*H}" r="15"/>
-      <circle class="core" cx="${p.x/100*W}" cy="${p.y/100*H}" r="4.5"/>`;
-    g.addEventListener('mouseenter',e=>{
-      const t=el(`<div class="tip" style="left:${p.x}%;top:${p.y}%"><b>${esc(d.n)}</b>
-        <span>${esc(d.c)} · ${esc(d.s)} · ${USD(d.v)}</span></div>`);
-      host.appendChild(t); g._tip=t;});
-    g.addEventListener('mouseleave',()=>{if(g._tip){g._tip.remove();g._tip=null;}});
-    g.addEventListener('click',()=>openDeal(p.id));
-    svgEl.appendChild(g);
+  host.style.color='var(--txt)';
+  $$('[data-pin]',host).forEach(g=>{
+    const d=dealById(g.dataset.pin);
+    g.addEventListener('mouseenter',()=>{
+      const r=g.getBoundingClientRect(), hb=host.getBoundingClientRect();
+      const t=el(`<div class="tip" style="left:${r.left-hb.left+r.width/2}px;top:${r.top-hb.top}px">
+        <b>${esc(d.n)}</b><span>${esc(d.c)} · ${esc(d.s)} · ${USD(d.v)}</span></div>`);
+      host.appendChild(t); g._t=t;});
+    g.addEventListener('mouseleave',()=>{if(g._t){g._t.remove();g._t=null;}});
+    g.addEventListener('click',()=>openDeal(d.id));
   });
   $$('[data-reg]',host).forEach(r=>r.onclick=()=>{
-    const reg=REGIONS.find(x=>x.k===r.dataset.reg);
-    toast(`${reg.n}: ${reg.deals} active opportunities · ${USD(reg.exp)} exposure`,'gold');});
+    const rg=REGIONS.find(x=>x.k===r.dataset.reg);
+    toast(`${rg.n}: ${rg.deals} active opportunities · ${USD(rg.exp)} exposure`,'gold');});
 }
 
 /* ============ SCREEN 2 — DEAL FLOW ============ */
@@ -960,7 +1131,7 @@ PAGES.flow=function(v){
 function dealCard(d){
   return `<div class="dcard" data-d="${d.id}">
     <div class="r1"><span class="risk ${d.risk}" title="Risk: ${riskLbl[d.risk]}"></span>
-      <h4>${esc(d.n)}</h4></div>
+      <h4 data-idx="${pad2(DEALS.indexOf(d)+1)}">${esc(d.n)}</h4></div>
     <div class="geo">${esc(d.c)} · ${esc(d.s)}</div>
     <div class="amt num">${USD(d.v)}</div>
     <div class="prog"><div class="lbl"><span>DUE DILIGENCE</span><span class="num">${d.dd}%</span></div>
