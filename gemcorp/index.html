@@ -1,0 +1,1763 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="GEMCORP FLOW — Investment Intelligence &amp; Deal Management System. Concept prototype."/>
+<title>GEMCORP FLOW — Investment Intelligence &amp; Deal Management</title>
+<style>
+/* ================= GEMCORP FLOW — institutional design system ================= */
+:root{
+  --ink:#080B10; --ink-1:#0C1119; --ink-2:#111823; --ink-3:#18202D; --ink-4:#202A39;
+  --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.14);
+  --txt:#EDF0F4; --txt-2:#96A0AE; --txt-3:#5F6A78; --txt-4:#3E4753;
+  --gold:#C9A961; --gold-2:#E2CB92; --gold-dim:#8A7440;
+  --ok:#3FB984; --warn:#E0A458; --bad:#E0605F; --info:#5B8DEF; --violet:#9B8CEF;
+  --rail:238px; --top:64px; --r:10px;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--ink);color:var(--txt);font-family:var(--sans);font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow:hidden;letter-spacing:-.005em}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+svg{display:block}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#222C3A;border-radius:9px}
+::-webkit-scrollbar-thumb:hover{background:#2D3A4B}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.app{display:flex;height:100vh}
+
+/* ---------------- rail ---------------- */
+.rail{width:var(--rail);flex:0 0 var(--rail);background:var(--ink-1);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;overflow:hidden}
+.brand{height:var(--top);flex:0 0 var(--top);display:flex;align-items:center;gap:11px;padding:0 20px;
+  border-bottom:1px solid var(--line)}
+.brand .mk{width:30px;height:30px;flex:0 0 30px;border-radius:7px;display:grid;place-items:center;
+  background:linear-gradient(145deg,var(--gold),var(--gold-dim));color:#0B0906;font-weight:800;font-size:13px;
+  font-family:var(--serif)}
+.brand b{font-size:14.5px;font-weight:650;letter-spacing:.14em}
+.brand small{display:block;font-size:9px;letter-spacing:.18em;color:var(--txt-3);font-weight:600;margin-top:1px}
+.navwrap{flex:1;overflow-y:auto;padding:14px 12px}
+.navlbl{font-size:9.5px;letter-spacing:.16em;color:var(--txt-4);font-weight:700;padding:0 10px;margin:16px 0 7px}
+.navlbl:first-child{margin-top:0}
+.nav{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:8px;color:var(--txt-2);
+  font-size:13.5px;font-weight:500;position:relative;transition:background .14s,color .14s}
+.nav:hover{background:rgba(255,255,255,.035);color:var(--txt)}
+.nav.on{background:rgba(201,169,97,.1);color:var(--gold-2)}
+.nav.on::before{content:"";position:absolute;left:-12px;top:9px;bottom:9px;width:2px;background:var(--gold);border-radius:0 2px 2px 0}
+.nav svg{width:17px;height:17px;flex:0 0 17px;stroke:currentColor;fill:none;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+.nav .cnt{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--txt-3);background:var(--ink-3);
+  padding:1px 6px;border-radius:20px;min-width:20px;text-align:center}
+.nav.on .cnt{background:rgba(201,169,97,.18);color:var(--gold-2)}
+.nav .cnt.hot{background:rgba(224,96,95,.16);color:var(--bad)}
+.railfoot{padding:12px;border-top:1px solid var(--line)}
+.mkbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;height:40px;border-radius:9px;
+  border:1px dashed var(--line-2);color:var(--txt-2);font-size:11.5px;font-weight:600;transition:.16s;
+  white-space:nowrap;letter-spacing:-.01em;padding:0 6px}
+.mkbtn svg{width:14px;height:14px;flex:0 0 14px;stroke:currentColor;fill:none;stroke-width:2}
+.mkbtn:hover{border-color:var(--gold);color:var(--gold-2);background:rgba(201,169,97,.06)}
+
+/* ---------------- shell ---------------- */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.top{height:var(--top);flex:0 0 var(--top);border-bottom:1px solid var(--line);display:flex;align-items:center;
+  gap:16px;padding:0 26px;background:var(--ink-1)}
+.top h1{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.crumbs{font-size:11px;color:var(--txt-3);letter-spacing:.04em}
+.demo{font-size:9.5px;font-weight:750;letter-spacing:.13em;color:var(--gold-2);
+  background:rgba(201,169,97,.1);border:1px solid rgba(201,169,97,.28);padding:4px 9px;border-radius:5px;white-space:nowrap}
+.sp{flex:1}
+.search{position:relative;width:280px}
+.search input{width:100%;height:34px;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;
+  padding:0 12px 0 34px;outline:none;font-size:13px}
+.search input:focus{border-color:var(--line-2);background:var(--ink-3)}
+.search svg{position:absolute;left:11px;top:9px;width:15px;height:15px;stroke:var(--txt-3);fill:none;stroke-width:2}
+.ico{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--txt-2);position:relative}
+.ico:hover{background:var(--ink-3);color:var(--txt)}
+.ico svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6}
+.ico .dot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:9px;background:var(--bad)}
+.me{display:flex;align-items:center;gap:9px;padding-left:14px;border-left:1px solid var(--line)}
+.me .av{width:31px;height:31px;border-radius:50%;background:linear-gradient(140deg,#2A3purple,#1B2532);
+  background:linear-gradient(140deg,#2C3849,#18202B);border:1px solid var(--line-2);display:grid;place-items:center;
+  font-size:11px;font-weight:700;color:var(--gold-2)}
+.me b{font-size:12.5px;font-weight:600;display:block;line-height:1.25}
+.me span{font-size:10.5px;color:var(--txt-3)}
+.view{flex:1;overflow-y:auto;overflow-x:hidden}
+.pad{padding:28px 32px 80px;max-width:1680px}
+
+/* ---------------- typography ---------------- */
+.hero{font-family:var(--serif);font-size:34px;font-weight:400;letter-spacing:-.02em;line-height:1.15}
+.hero em{font-style:italic;color:var(--gold-2)}
+.lede{color:var(--txt-2);font-size:15px;margin-top:9px}
+.sec{display:flex;align-items:baseline;gap:12px;margin:34px 0 15px}
+.sec h2{font-size:11px;font-weight:750;letter-spacing:.16em;color:var(--txt-3)}
+.sec .ln{flex:1;height:1px;background:var(--line)}
+.sec a,.sec button{font-size:11.5px;color:var(--gold-2);font-weight:600;letter-spacing:.03em}
+.sec a:hover,.sec button:hover{color:var(--gold)}
+
+/* ---------------- cards ---------------- */
+.grid{display:grid;gap:14px}
+.g6{grid-template-columns:repeat(6,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:1fr 1fr}
+.card{background:var(--ink-1);border:1px solid var(--line);border-radius:var(--r)}
+.card-h{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.card-h h3{font-size:13.5px;font-weight:650}
+.card-h p{font-size:11.5px;color:var(--txt-3);margin-top:2px}
+.card-b{padding:18px}
+.kpi{padding:18px 20px;background:var(--ink-1);border:1px solid var(--line);border-radius:var(--r);
+  position:relative;overflow:hidden;transition:border-color .18s,transform .18s;cursor:pointer}
+.kpi:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.kpi .l{font-size:10.5px;letter-spacing:.11em;color:var(--txt-3);font-weight:650}
+.kpi .v{font-family:var(--serif);font-size:31px;margin-top:11px;letter-spacing:-.02em;line-height:1}
+.kpi .d{font-size:11px;color:var(--txt-3);margin-top:9px;display:flex;align-items:center;gap:5px}
+.kpi .d b{font-weight:650}
+.kpi.crit .v{color:var(--bad)} .kpi.warn .v{color:var(--warn)} .kpi.gold .v{color:var(--gold-2)}
+.kpi .spark{position:absolute;right:0;bottom:0;left:0;height:34px;opacity:.5}
+
+/* ---------------- map ---------------- */
+.mapwrap{position:relative;background:var(--ink-1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.mapwrap svg{width:100%;height:auto;display:block}
+.mland{fill:#141C27;stroke:#1E2836;stroke-width:.7}
+.mland.act{fill:#1D2836;cursor:pointer;transition:fill .2s}
+.mland.act:hover,.mland.act.on{fill:#2A3A4E}
+.mpin{cursor:pointer}
+.mpin circle.core{fill:var(--gold)}
+.mpin circle.halo{fill:var(--gold);opacity:.16}
+.mpin.hot circle.core{fill:var(--bad)} .mpin.hot circle.halo{fill:var(--bad)}
+.maplegend{position:absolute;left:18px;bottom:16px;display:flex;gap:16px;flex-wrap:wrap;
+  background:rgba(8,11,16,.82);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:8px;padding:9px 13px}
+.maplegend div{font-size:11px;color:var(--txt-2);display:flex;align-items:center;gap:7px}
+.maplegend i{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.mapstat{position:absolute;right:18px;top:16px;background:rgba(8,11,16,.82);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:8px;padding:12px 15px;min-width:170px}
+.mapstat .t{font-size:10px;letter-spacing:.12em;color:var(--txt-3);font-weight:700}
+.mapstat .r{display:flex;justify-content:space-between;gap:14px;font-size:12px;margin-top:8px}
+.mapstat .r b{color:var(--gold-2)}
+.tip{position:absolute;transform:translate(-50%,-140%);background:var(--ink-3);border:1px solid var(--line-2);
+  border-radius:8px;padding:9px 12px;pointer-events:none;z-index:9;box-shadow:0 12px 34px rgba(0,0,0,.6);white-space:nowrap}
+.tip b{font-size:12.5px;display:block}
+.tip span{font-size:11px;color:var(--txt-3)}
+
+/* ---------------- priorities ---------------- */
+.prio{display:flex;gap:14px;padding:15px 18px;border-top:1px solid var(--line);align-items:flex-start;cursor:pointer;
+  transition:background .15s}
+.prio:first-child{border-top:0}
+.prio:hover{background:var(--ink-2)}
+.prio .bar{width:3px;align-self:stretch;border-radius:3px;flex:0 0 3px}
+.tagp{font-size:9.5px;font-weight:750;letter-spacing:.12em;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.t-high{background:rgba(224,96,95,.14);color:var(--bad)}
+.t-review{background:rgba(224,164,88,.14);color:var(--warn)}
+.t-decision{background:rgba(91,141,239,.14);color:var(--info)}
+.t-ok{background:rgba(63,185,132,.14);color:var(--ok)}
+.t-gold{background:rgba(201,169,97,.14);color:var(--gold-2)}
+.t-mut{background:var(--ink-3);color:var(--txt-3)}
+.prio .bd{flex:1;min-width:0}
+.prio .bd b{font-size:13.5px;font-weight:600;display:block}
+.prio .bd p{font-size:12.5px;color:var(--txt-2);margin-top:3px}
+.prio .mt{font-size:11px;color:var(--txt-4);margin-top:6px;display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------------- buttons ---------------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 16px;
+  border-radius:8px;font-size:13px;font-weight:600;transition:.15s;white-space:nowrap;letter-spacing:.01em}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.9}
+.btn-g{background:var(--gold);color:#0C0A06}
+.btn-g:hover{background:var(--gold-2)}
+.btn-o{background:var(--ink-2);border:1px solid var(--line);color:var(--txt)}
+.btn-o:hover{border-color:var(--line-2);background:var(--ink-3)}
+.btn-q{color:var(--txt-2)} .btn-q:hover{color:var(--txt);background:var(--ink-3)}
+.btn-ok{background:rgba(63,185,132,.12);border:1px solid rgba(63,185,132,.4);color:var(--ok)}
+.btn-ok:hover{background:rgba(63,185,132,.2)}
+.btn-bad{background:rgba(224,96,95,.1);border:1px solid rgba(224,96,95,.35);color:var(--bad)}
+.btn-bad:hover{background:rgba(224,96,95,.18)}
+.btn-warn{background:rgba(224,164,88,.1);border:1px solid rgba(224,164,88,.35);color:var(--warn)}
+.btn-warn:hover{background:rgba(224,164,88,.18)}
+.btn-lg{height:48px;padding:0 26px;font-size:14px;border-radius:9px}
+.btn-sm{height:29px;padding:0 11px;font-size:11.5px;border-radius:6px}
+.btnrow{display:flex;gap:9px;flex-wrap:wrap}
+
+/* ---------------- kanban ---------------- */
+.kb{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;padding-bottom:14px}
+.kcol{flex:0 0 292px;background:var(--ink-1);border:1px solid var(--line);border-radius:var(--r);
+  display:flex;flex-direction:column;max-height:calc(100vh - 250px)}
+.kcol.over{border-color:var(--gold);background:rgba(201,169,97,.04)}
+.kcol-h{padding:13px 15px;border-bottom:1px solid var(--line)}
+.kcol-h .r1{display:flex;align-items:center;gap:9px}
+.kcol-h b{font-size:10.5px;letter-spacing:.13em;font-weight:750;color:var(--txt-2)}
+.kcol-h .n{font-size:10.5px;font-weight:700;color:var(--txt-3);background:var(--ink-3);padding:1px 7px;border-radius:20px}
+.kcol-h .sum{margin-left:auto;font-size:12px;font-weight:650;color:var(--gold-2)}
+.kcol-l{padding:11px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:10px;min-height:90px}
+.dcard{background:var(--ink-2);border:1px solid var(--line);border-radius:9px;padding:13px;cursor:grab;
+  transition:border-color .15s,transform .15s}
+.dcard:hover{border-color:var(--line-2);transform:translateY(-1px)}
+.dcard.drag{opacity:.35}
+.dcard .r1{display:flex;align-items:flex-start;gap:8px}
+.dcard h4{font-size:13.5px;font-weight:650;flex:1}
+.dcard .amt{font-family:var(--serif);font-size:16px;color:var(--gold-2);margin-top:9px;letter-spacing:-.01em}
+.dcard .geo{font-size:11.5px;color:var(--txt-3);margin-top:3px}
+.dcard .prog{margin-top:11px}
+.dcard .prog .lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--txt-4);margin-bottom:4px}
+.dcard .next{font-size:11px;color:var(--txt-2);margin-top:10px;padding-top:9px;border-top:1px solid var(--line);
+  display:flex;gap:7px;align-items:center}
+.dcard .next svg{width:12px;height:12px;stroke:var(--txt-4);fill:none;stroke-width:2;flex:0 0 12px}
+.dcard .team{display:flex;gap:-6px;margin-top:9px}
+.av-s{width:21px;height:21px;border-radius:50%;background:var(--ink-4);border:1.5px solid var(--ink-2);
+  display:grid;place-items:center;font-size:9px;font-weight:700;color:var(--txt-2);margin-right:-6px}
+.risk{width:7px;height:7px;border-radius:50%;flex:0 0 7px;margin-top:4px}
+.risk.low{background:var(--ok)} .risk.med{background:var(--warn)} .risk.high{background:var(--bad)}
+.bar{height:3px;background:var(--ink-4);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:var(--gold);transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.bar.ok i{background:var(--ok)} .bar.warn i{background:var(--warn)} .bar.bad i{background:var(--bad)}
+
+/* ---------------- detail ---------------- */
+.dhead{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:24px}
+.dhead .t{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap}
+.dhead h1{font-family:var(--serif);font-size:31px;letter-spacing:-.02em}
+.dhead .meta{display:flex;gap:26px;margin-top:16px;flex-wrap:wrap}
+.dhead .meta div span{font-size:10px;letter-spacing:.12em;color:var(--txt-4);font-weight:700;display:block}
+.dhead .meta div b{font-size:15px;font-weight:600;margin-top:4px;display:block}
+.dhead .meta div b.g{font-family:var(--serif);font-size:22px;color:var(--gold-2);font-weight:400}
+.tabs{display:flex;gap:1px;border-bottom:1px solid var(--line);overflow-x:auto;margin-bottom:22px}
+.tab{padding:11px 15px;font-size:12.5px;font-weight:600;color:var(--txt-3);border-bottom:2px solid transparent;
+  white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--txt-2)}
+.tab.on{color:var(--gold-2);border-color:var(--gold)}
+.ring{position:relative;width:132px;height:132px;flex:0 0 132px}
+.ring svg{transform:rotate(-90deg)}
+.ring .mid{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .mid b{font-family:var(--serif);font-size:29px;line-height:1}
+.ring .mid span{font-size:9.5px;letter-spacing:.11em;color:var(--txt-3);font-weight:700;display:block;margin-top:4px}
+.ddrow{display:flex;align-items:center;gap:13px;padding:11px 0;border-top:1px solid var(--line)}
+.ddrow:first-child{border-top:0}
+.ddrow .nm{flex:0 0 128px;font-size:12.5px;color:var(--txt-2)}
+.ddrow .bar{flex:1}
+.ddrow .pc{flex:0 0 46px;text-align:right;font-size:12px;font-weight:650}
+.chk{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;font-size:9px;flex:0 0 16px}
+.chk.done{background:rgba(63,185,132,.16);color:var(--ok)}
+.chk.wip{background:rgba(224,164,88,.16);color:var(--warn)}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:11px 16px;font-size:13px}
+.kv dt{color:var(--txt-3)} .kv dd{color:var(--txt)}
+.reqrow{display:flex;gap:12px;padding:13px 0;border-top:1px solid var(--line);align-items:flex-start}
+.reqrow:first-child{border-top:0}
+
+/* ---------------- findings ---------------- */
+.find{border:1px solid var(--line);border-radius:9px;padding:16px;background:var(--ink-1);margin-bottom:11px}
+.find .r1{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.find h4{font-size:13.5px;font-weight:650}
+.find p{font-size:13px;color:var(--txt-2);line-height:1.6}
+.find .src{font-size:11px;color:var(--txt-4);margin-top:9px;font-family:var(--mono)}
+.find .acts{display:flex;gap:7px;margin-top:13px;flex-wrap:wrap}
+.find.gone{opacity:.4}
+.donut{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.legend{display:flex;flex-direction:column;gap:9px}
+.legend div{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--txt-2)}
+.legend i{width:9px;height:9px;border-radius:2px;flex:0 0 9px}
+.legend b{margin-left:auto;color:var(--txt);font-weight:650}
+
+/* ---------------- tables ---------------- */
+table{width:100%;border-collapse:collapse}
+th{font-size:9.5px;letter-spacing:.13em;font-weight:750;color:var(--txt-4);text-align:left;padding:11px 14px;
+  border-bottom:1px solid var(--line);white-space:nowrap}
+th.n,td.n{text-align:right}
+td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;white-space:nowrap}
+tbody tr{cursor:pointer;transition:background .13s}
+tbody tr:hover{background:var(--ink-2)}
+.tw{overflow-x:auto}
+
+/* ---------------- IC / approvals ---------------- */
+.gate{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line);
+  border-radius:8px;background:var(--ink-1);margin-bottom:9px}
+.gate.done{border-color:rgba(63,185,132,.3)}
+.gate .nm{flex:1;font-size:13px;font-weight:600}
+.gate .who{font-size:11.5px;color:var(--txt-3)}
+.decide{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:24px}
+.decide button{height:64px;border-radius:10px;font-size:14px;font-weight:700;letter-spacing:.07em}
+.audit{font-family:var(--mono);font-size:11.5px;color:var(--txt-3);padding:9px 0;border-top:1px solid var(--line);
+  display:flex;gap:14px}
+.audit b{color:var(--txt-2);font-weight:600}
+.audit .ts{color:var(--txt-4);flex:0 0 132px}
+
+/* ---------------- builder ---------------- */
+.bhero{text-align:center;padding:56px 20px 40px}
+.bhero h1{font-family:var(--serif);font-size:clamp(32px,4.6vw,58px);letter-spacing:-.03em;line-height:1.05}
+.bhero p{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--gold-2);margin-top:16px}
+.mods{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.mod{border:1px solid var(--line);border-radius:9px;padding:20px 16px;background:var(--ink-1);cursor:pointer;
+  transition:.18s;text-align:center;position:relative;overflow:hidden}
+.mod:hover{border-color:var(--gold-dim);transform:translateY(-3px)}
+.mod.on{border-color:var(--gold);background:rgba(201,169,97,.06)}
+.mod .i{width:36px;height:36px;border-radius:9px;background:var(--ink-3);display:grid;place-items:center;margin:0 auto 12px}
+.mod .i svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.6}
+.mod b{font-size:12.5px;font-weight:600;display:block}
+.mod span{font-size:10.5px;color:var(--txt-4);display:block;margin-top:4px}
+.genbox{border:1px solid var(--line);border-radius:12px;background:var(--ink-1);padding:30px;margin-top:26px}
+.genbox h3{font-family:var(--serif);font-size:23px;letter-spacing:-.02em}
+.genin{display:flex;gap:11px;margin-top:20px;flex-wrap:wrap}
+.genin input{flex:1;min-width:260px;height:50px;background:var(--ink-2);border:1px solid var(--line-2);
+  border-radius:9px;padding:0 17px;outline:none;font-size:14.5px}
+.genin input:focus{border-color:var(--gold)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{font-size:11.5px;color:var(--txt-3);border:1px solid var(--line);border-radius:20px;padding:6px 13px;
+  cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--gold-dim);color:var(--gold-2)}
+.genout{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-top:24px}
+.gmod{border:1px solid rgba(201,169,97,.3);background:rgba(201,169,97,.05);border-radius:9px;padding:15px;
+  opacity:0;transform:translateY(12px);animation:pop .5s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes pop{to{opacity:1;transform:none}}
+.gmod b{font-size:12.5px;font-weight:650;display:block}
+.gmod span{font-size:11px;color:var(--txt-3);display:block;margin-top:5px;line-height:1.5}
+.gmod .n{font-family:var(--mono);font-size:10px;color:var(--gold-dim);display:block;margin-bottom:7px}
+
+/* ---------------- security ---------------- */
+.secgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.secit{border:1px solid var(--line);border-radius:9px;padding:18px;background:var(--ink-1)}
+.secit .i{width:32px;height:32px;border-radius:8px;background:var(--ink-3);display:grid;place-items:center;margin-bottom:12px}
+.secit .i svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:1.6}
+.secit b{font-size:12.5px;font-weight:650;display:block}
+.secit span{font-size:11.5px;color:var(--txt-3);display:block;margin-top:5px;line-height:1.5}
+
+/* ---------------- overlays ---------------- */
+.ov{position:fixed;inset:0;background:rgba(4,6,9,.78);backdrop-filter:blur(4px);z-index:90;display:flex;
+  align-items:center;justify-content:center;padding:26px;animation:fade .16s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slidein{from{transform:translateX(32px);opacity:0}to{transform:none;opacity:1}}
+.mdl{background:var(--ink-1);border:1px solid var(--line-2);border-radius:13px;width:100%;max-width:600px;
+  max-height:88vh;display:flex;flex-direction:column;animation:rise .22s cubic-bezier(.2,.7,.2,1);overflow:hidden}
+.mdl.lg{max-width:920px} .mdl.xl{max-width:1120px}
+.mdl-h{padding:17px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:13px}
+.mdl-h h3{font-size:15px;font-weight:650;flex:1}
+.mdl-b{padding:22px;overflow-y:auto}
+.mdl-f{padding:15px 22px;border-top:1px solid var(--line);display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}
+.drw{position:fixed;top:0;right:0;bottom:0;width:560px;max-width:100%;background:var(--ink-1);z-index:92;
+  border-left:1px solid var(--line-2);display:flex;flex-direction:column;animation:slidein .24s cubic-bezier(.2,.7,.2,1)}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:15px}
+.fld label{font-size:11px;letter-spacing:.06em;color:var(--txt-3);font-weight:600}
+.fld input,.fld select,.fld textarea{height:39px;background:var(--ink-2);border:1px solid var(--line);
+  border-radius:8px;padding:0 12px;outline:none;font-size:13.5px}
+.fld textarea{height:auto;min-height:92px;padding:11px 12px;resize:vertical;font-family:inherit}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--gold)}
+
+/* memo / summary sheet */
+.memo{background:#0F1319;border:1px solid var(--line);border-radius:10px;padding:40px}
+.memo .mh{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--gold);
+  padding-bottom:16px;margin-bottom:26px;gap:20px;flex-wrap:wrap}
+.memo .mh b{font-family:var(--serif);font-size:21px;letter-spacing:.02em}
+.memo .mh span{font-size:10px;letter-spacing:.15em;color:var(--txt-3);display:block;margin-top:4px;font-weight:700}
+.memo h4{font-size:10px;letter-spacing:.15em;color:var(--gold-2);font-weight:750;margin:24px 0 10px}
+.memo p{font-size:13.5px;line-height:1.75;color:var(--txt-2)}
+.memo .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:8px 0 4px}
+.memo .mgrid div span{font-size:9.5px;letter-spacing:.12em;color:var(--txt-4);font-weight:700;display:block}
+.memo .mgrid div b{font-family:var(--serif);font-size:19px;display:block;margin-top:5px}
+
+/* AI assistant */
+.aifab{position:fixed;right:24px;bottom:24px;width:50px;height:50px;border-radius:50%;z-index:80;
+  background:linear-gradient(145deg,var(--ink-4),var(--ink-2));border:1px solid var(--line-2);
+  display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:.2s}
+.aifab:hover{border-color:var(--gold);transform:scale(1.06)}
+.aifab svg{width:20px;height:20px;stroke:var(--gold-2);fill:none;stroke-width:1.6}
+.aipanel{position:fixed;right:24px;bottom:86px;width:376px;max-width:calc(100vw - 40px);height:480px;z-index:81;
+  background:var(--ink-1);border:1px solid var(--line-2);border-radius:13px;display:flex;flex-direction:column;
+  box-shadow:0 24px 60px rgba(0,0,0,.6);animation:rise .2s cubic-bezier(.2,.7,.2,1);overflow:hidden}
+.aimsgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px}
+.aim{max-width:86%;padding:10px 13px;border-radius:11px;font-size:13px;line-height:1.55}
+.aim.a{background:var(--ink-3);align-self:flex-start;border-bottom-left-radius:4px}
+.aim.u{background:rgba(201,169,97,.14);color:var(--gold-2);align-self:flex-end;border-bottom-right-radius:4px}
+.aiin{padding:12px;border-top:1px solid var(--line);display:flex;gap:9px}
+.aiin input{flex:1;height:36px;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;
+  padding:0 12px;outline:none;font-size:13px}
+.aiin input:focus{border-color:var(--gold)}
+
+.toasts{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99;display:flex;
+  flex-direction:column;gap:9px;align-items:center}
+.toast{background:var(--ink-3);border:1px solid var(--line-2);padding:12px 18px;border-radius:9px;font-size:13px;
+  font-weight:500;box-shadow:0 14px 38px rgba(0,0,0,.6);animation:rise .18s ease;max-width:420px}
+.toast.ok{border-color:rgba(63,185,132,.45)} .toast.bad{border-color:rgba(224,96,95,.45)}
+.toast.gold{border-color:rgba(201,169,97,.5)}
+
+.empty{padding:56px 20px;text-align:center;color:var(--txt-4)}
+.empty b{display:block;color:var(--txt-2);font-size:14px;margin-bottom:6px}
+
+/* responsive — desktop + iPad */
+@media(max-width:1400px){.g6{grid-template-columns:repeat(3,1fr)}.mods{grid-template-columns:repeat(4,1fr)}
+  .genout,.secgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1100px){
+  :root{--rail:64px}
+  .brand b,.brand small,.nav span:not(.cnt),.navlbl,.mkbtn span{display:none}
+  .nav{justify-content:center;padding:11px 0}.brand{justify-content:center;padding:0}
+  .g4,.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr}
+  .search{width:180px}.pad{padding:22px 20px 70px}
+  .mods,.genout,.secgrid{grid-template-columns:repeat(2,1fr)}
+  .memo .mgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  .g6,.g4,.g2{grid-template-columns:1fr}.search{display:none}.me b,.me span{display:none}
+  .decide{grid-template-columns:1fr}.mods,.genout,.secgrid{grid-template-columns:1fr}
+  .hero{font-size:26px}.kv{grid-template-columns:1fr}
+}
+
+</style>
+</head>
+<body></body>
+<script>
+/* ================= GEMCORP FLOW — core ================= */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const el=h=>{const d=document.createElement('div');d.innerHTML=h.trim();return d.firstElementChild;};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const N=n=>Number(n||0).toLocaleString('en-US');
+const USD=n=>n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+Math.round(n/1e6)+'M':'$'+N(n);
+const pad2=n=>String(n).padStart(2,'0');
+const now=()=>new Date();
+const stamp=d=>`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+const ago=t=>{const m=Math.floor((Date.now()-t)/6e4);if(m<1)return'just now';if(m<60)return m+'m ago';
+  const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';};
+function toast(msg,kind=''){let b=$('.toasts');if(!b){b=el('<div class="toasts"></div>');document.body.appendChild(b);}
+  const t=el(`<div class="toast ${kind}">${esc(msg)}</div>`);b.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='.28s';setTimeout(()=>t.remove(),300);},2900);}
+const closeOv=()=>$$('.ov,.drw').forEach(x=>x.remove());
+
+/* ---------------- icons ---------------- */
+const I={
+overview:'<rect x="3" y="3" width="7" height="9" rx="1.4"/><rect x="14" y="3" width="7" height="5" rx="1.4"/><rect x="14" y="12" width="7" height="9" rx="1.4"/><rect x="3" y="16" width="7" height="5" rx="1.4"/>',
+flow:'<path d="M3 6h6M15 6h6M3 12h18M3 18h6M15 18h6"/><circle cx="12" cy="6" r="2.2"/><circle cx="12" cy="18" r="2.2"/>',
+invest:'<path d="M3 17l5-6 4 3 4-6 5 5"/><path d="M3 21h18"/>',
+dd:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 14l2 2 4-4"/>',
+ic:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.4"/><path d="M3 20a6 6 0 0112 0M15 20a5 5 0 016-4.4"/>',
+portfolio:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 12h18"/>',
+docs:'<path d="M4 4a2 2 0 012-2h7l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M13 2v5h5"/><path d="M8 13h8M8 17h5"/>',
+approve:'<path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/>',
+risk:'<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
+report:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+ai:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8 2 2 0 11-2.8 2.8 1.6 1.6 0 00-2.8 1.1V21a2 2 0 11-4 0 1.6 1.6 0 00-2.9-1.5 2 2 0 11-2.8-2.8A1.6 1.6 0 003 15a2 2 0 110-4 1.6 1.6 0 001.5-2.9 2 2 0 112.8-2.8A1.6 1.6 0 0010 4.6V4a2 2 0 114 0 1.6 1.6 0 002.9 1.1 2 2 0 112.8 2.8A1.6 1.6 0 0021 11a2 2 0 110 4z"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+bell:'<path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/>',
+arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',x:'<path d="M18 6L6 18M6 6l12 12"/>',
+check:'<path d="M20 6L9 17l-5-5"/>',dl:'<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/>',
+lock:'<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/>',
+key:'<circle cx="8" cy="15" r="4"/><path d="M10.9 12.1L21 2M17 6l3 3"/>',
+shield:'<path d="M12 2l8 4v6c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6z"/>',
+eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+link:'<path d="M9 15l6-6"/><path d="M11 6l1-1a4 4 0 116 6l-1 1M13 18l-1 1a4 4 0 11-6-6l1-1"/>',
+users:'<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.9"/>',
+box:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>',
+cart:'<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12h10.5L21 7H6"/>',
+gear2:'<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="18" r="2"/>',
+sparkle:'<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>',
+send:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',
+file:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/>',
+flag:'<path d="M4 21V4h13l-2 4 2 4H4"/>',
+};
+const svg=(k,c='')=>`<svg class="${c}" viewBox="0 0 24 24">${I[k]||I.box}</svg>`;
+
+/* ---------------- sample data (fictional) ---------------- */
+const TEAM={AK:'A. Kovachev',MR:'M. Reyes',SO:'S. Okonkwo',LF:'L. Ferreira',JN:'J. Nakamura',PD:'P. Dias',
+  HT:'H. Tanaka',CM:'C. Mensah'};
+const DEALS=[
+ {id:'HOR',n:'Project Horizon',c:'Angola',flag:'AO',s:'Energy',v:120e6,st:'dd',risk:'med',dd:82,
+  team:['AK','SO'],next:'Collateral valuation update',lead:'A. Kovachev',days:34,irr:18.4,ten:'7 yrs'},
+ {id:'ATL',n:'Project Atlas',c:'Ghana',flag:'GH',s:'Infrastructure',v:80e6,st:'dd',risk:'low',dd:82,
+  team:['CM','MR'],next:'Technical site report',lead:'C. Mensah',days:21,irr:15.2,ten:'10 yrs'},
+ {id:'NOV',n:'Project Nova',c:'Nigeria',flag:'NG',s:'Trade Finance',v:65e6,st:'screen',risk:'high',dd:34,
+  team:['SO'],next:'Counterparty KYC',lead:'S. Okonkwo',days:12,irr:21.0,ten:'3 yrs'},
+ {id:'TER',n:'Project Terra',c:'Brazil',flag:'BR',s:'Infrastructure',v:95e6,st:'ic',risk:'low',dd:100,
+  team:['LF','PD'],next:'IC decision scheduled',lead:'L. Ferreira',days:48,irr:16.8,ten:'12 yrs'},
+ {id:'MER',n:'Project Meridian',c:'Kenya',flag:'KE',s:'Renewables',v:54e6,st:'new',risk:'med',dd:8,
+  team:['CM'],next:'Initial screening call',lead:'C. Mensah',days:4,irr:17.5,ten:'8 yrs'},
+ {id:'SOL',n:'Project Solstice',c:'Morocco',flag:'MA',s:'Renewables',v:72e6,st:'new',risk:'low',dd:5,
+  team:['MR'],next:'Sponsor introduction',lead:'M. Reyes',days:6,irr:14.9,ten:'15 yrs'},
+ {id:'KES',n:'Project Kestrel',c:'UAE',flag:'AE',s:'Real Assets',v:140e6,st:'screen',risk:'low',dd:41,
+  team:['JN','AK'],next:'Preliminary term sheet',lead:'J. Nakamura',days:17,irr:13.6,ten:'9 yrs'},
+ {id:'AMA',n:'Project Amazonia',c:'Colombia',flag:'CO',s:'Agribusiness',v:47e6,st:'screen',risk:'med',dd:29,
+  team:['LF'],next:'Offtake contract review',lead:'L. Ferreira',days:9,irr:19.1,ten:'6 yrs'},
+ {id:'IND',n:'Project Indus',c:'India',flag:'IN',s:'Trade Finance',v:88e6,st:'ic',risk:'med',dd:96,
+  team:['HT'],next:'Final compliance sign-off',lead:'H. Tanaka',days:52,irr:15.8,ten:'4 yrs'},
+ {id:'SAV',n:'Project Savannah',c:'Zambia',flag:'ZM',s:'Mining',v:110e6,st:'appr',risk:'med',dd:100,
+  team:['SO','AK'],next:'Documentation & signing',lead:'S. Okonkwo',days:71,irr:20.3,ten:'8 yrs'},
+ {id:'PAM',n:'Project Pampas',c:'Argentina',flag:'AR',s:'Agribusiness',v:63e6,st:'appr',risk:'high',dd:100,
+  team:['PD'],next:'Conditions precedent',lead:'P. Dias',days:64,irr:22.7,ten:'5 yrs'},
+ {id:'DEL',n:'Project Delta',c:'Egypt',flag:'EG',s:'Infrastructure',v:130e6,st:'port',risk:'low',dd:100,
+  team:['MR','JN'],next:'Quarterly monitoring',lead:'M. Reyes',days:410,irr:16.1,ten:'11 yrs'},
+ {id:'SIL',n:'Project Silk',c:'Kazakhstan',flag:'KZ',s:'Trade Finance',v:76e6,st:'port',risk:'med',dd:100,
+  team:['HT'],next:'Covenant review',lead:'H. Tanaka',days:298,irr:18.9,ten:'5 yrs'},
+ {id:'CAR',n:'Project Cardinal',c:'Peru',flag:'PE',s:'Mining',v:92e6,st:'port',risk:'low',dd:100,
+  team:['LF','PD'],next:'Annual valuation',lead:'L. Ferreira',days:520,irr:17.2,ten:'9 yrs'},
+];
+const STAGES=[['new','NEW OPPORTUNITY'],['screen','SCREENING'],['dd','DUE DILIGENCE'],
+  ['ic','INVESTMENT COMMITTEE'],['appr','APPROVED'],['port','PORTFOLIO']];
+const STLBL=Object.fromEntries(STAGES);
+const REGIONS=[
+ {k:'africa',n:'Africa',deals:5,exp:411e6,x:53,y:56},
+ {k:'me',n:'Middle East',deals:2,exp:210e6,x:61,y:45},
+ {k:'latam',n:'Latin America',deals:4,exp:297e6,x:29,y:66},
+ {k:'asia',n:'Asia',deals:3,exp:164e6,x:72,y:47},
+];
+const PINS=[
+ {id:'HOR',x:52.5,y:63,hot:1},{id:'ATL',x:47.5,y:56},{id:'NOV',x:49,y:57.5,hot:1},
+ {id:'TER',x:33,y:69},{id:'MER',x:57,y:60},{id:'SOL',x:46,y:44},{id:'KES',x:62,y:48},
+ {id:'AMA',x:28,y:58},{id:'IND',x:70,y:52},{id:'SAV',x:55,y:67},{id:'PAM',x:31,y:76},
+ {id:'DEL',x:56,y:45},{id:'SIL',x:66,y:38},{id:'CAR',x:27,y:65},
+];
+const FINDINGS=[
+ {id:'F1',cat:'FINANCIAL',sev:'high',t:'Potential discrepancy detected between two financial reports',
+  d:'EBITDA reported in the FY2025 audited statements differs from the figure in the sponsor model by 4.2%. The variance appears concentrated in non-recurring items.',
+  src:'HOR-FIN-014.pdf p.23 · HOR-MDL-002.xlsx tab "Summary"',st:'open'},
+ {id:'F2',cat:'LEGAL',sev:'high',t:'Change-of-control provision identified in a contract',
+  d:'The offtake agreement contains a change-of-control clause permitting counterparty termination on 60 days notice following a shareholding change above 30%.',
+  src:'HOR-LEG-007.pdf clause 14.3',st:'open'},
+ {id:'F3',cat:'COLLATERAL',sev:'med',t:'Latest valuation document may require updating',
+  d:'The most recent independent valuation is dated 19 months ago. Internal policy requires valuations no older than 12 months at IC submission.',
+  src:'HOR-COL-003.pdf cover page',st:'open'},
+ {id:'F4',cat:'KYC',sev:'low',t:'Beneficial ownership chain resolved across three jurisdictions',
+  d:'Ownership traced to ultimate beneficial owners with no adverse media or sanctions matches. No action required.',
+  src:'HOR-KYC-011.pdf',st:'cleared'},
+];
+const ALERTS=[
+ {id:'A1',sev:'high',cat:'Documents',deal:'HOR',t:'Payment documentation requires review',
+  d:'Three payment instructions submitted this week reference an account not present in the approved counterparty register.',
+  exp:120e6,ev:3,age:'2h'},
+ {id:'A2',sev:'high',cat:'Counterparty',deal:'NOV',t:'Counterparty credit rating downgraded',
+  d:'Primary offtaker downgraded one notch by a major agency. Exposure concentration exceeds single-name policy limit.',
+  exp:65e6,ev:2,age:'6h'},
+ {id:'A3',sev:'med',cat:'Country',deal:'PAM',t:'Currency convertibility restrictions tightened',
+  d:'Central bank introduced new limits on FX access for imports. Potential impact on debt service in hard currency.',
+  exp:63e6,ev:4,age:'1d'},
+ {id:'A4',sev:'med',cat:'Legal',deal:'HOR',t:'Change-of-control clause requires structuring review',
+  d:'Escalated from AI document analysis. Legal counsel to confirm whether the clause is triggered by the proposed structure.',
+  exp:120e6,ev:1,age:'1d'},
+ {id:'A5',sev:'low',cat:'Compliance',deal:'IND',t:'Annual KYC refresh due in 30 days',
+  d:'Periodic review cycle approaching for two related entities.',exp:88e6,ev:2,age:'3d'},
+ {id:'A6',sev:'med',cat:'Financial',deal:'SIL',t:'Covenant headroom below 15%',
+  d:'DSCR headroom narrowed following a weaker quarter. Within covenant but on watch.',exp:76e6,ev:5,age:'4d'},
+ {id:'A7',sev:'low',cat:'Operational',deal:'DEL',t:'Construction milestone delayed by 3 weeks',
+  d:'Contractor reports delay in civil works. No impact on completion date at this stage.',exp:130e6,ev:2,age:'5d'},
+];
+const DOCCATS=[['Contracts',248,4],['Financial Statements',412,6],['Legal',186,2],['KYC',324,1],
+  ['Investment Memos',97,0],['Portfolio Reports',153,3],['Technical Reports',88,1],['Government Documents',64,0]];
+const DOCS=[
+ {n:'HOR-LEG-007 Offtake Agreement',cat:'Contracts',deal:'HOR',v:'v4.2',by:'A. Kovachev',d:'2026-08-14',st:'review',sz:'2.4 MB'},
+ {n:'HOR-FIN-014 FY2025 Audited Statements',cat:'Financial Statements',deal:'HOR',v:'v1.0',by:'External auditor',d:'2026-07-02',st:'verified',sz:'6.1 MB'},
+ {n:'HOR-COL-003 Independent Valuation',cat:'Legal',deal:'HOR',v:'v2.1',by:'M. Reyes',d:'2025-02-18',st:'expiring',sz:'11.8 MB'},
+ {n:'ATL-TEC-021 Technical Feasibility',cat:'Technical Reports',deal:'ATL',v:'v3.0',by:'C. Mensah',d:'2026-08-30',st:'verified',sz:'18.2 MB'},
+ {n:'TER-MEM-001 Investment Memorandum',cat:'Investment Memos',deal:'TER',v:'v1.4',by:'L. Ferreira',d:'2026-09-01',st:'verified',sz:'3.3 MB'},
+ {n:'NOV-KYC-009 UBO Declaration',cat:'KYC',deal:'NOV',v:'v1.0',by:'S. Okonkwo',d:'2026-08-22',st:'missing-sig',sz:'0.9 MB'},
+ {n:'SAV-GOV-004 Mining Concession',cat:'Government Documents',deal:'SAV',v:'v1.0',by:'Ministry filing',d:'2026-06-11',st:'verified',sz:'4.7 MB'},
+ {n:'DEL-RPT-Q3 Portfolio Monitoring',cat:'Portfolio Reports',deal:'DEL',v:'v1.0',by:'M. Reyes',d:'2026-09-05',st:'verified',sz:'2.0 MB'},
+];
+const GATES=[['Financial Review','A. Kovachev',1],['Legal Review','External counsel',1],
+  ['Risk Review','H. Tanaka',1],['Compliance','P. Dias',1],['Investment Director','M. Reyes',1]];
+const MODULES=[
+ ['Investment Management','invest','Pipeline, DD, IC, portfolio'],['Procurement','cart','Suppliers, RFQ, POs'],
+ ['Project Management','box','Milestones, resources'],['Operations','gear2','Daily workflows'],
+ ['Compliance','shield','Policy & controls'],['Executive Reporting','report','Board packs'],
+ ['HR & People','users','Org, onboarding'],['Document Management','docs','Control & versions'],
+ ['Approvals','approve','Multi-level sign-off'],['Custom Workflow','sparkle','Anything you describe'],
+];
+const SECURITY=[
+ ['Role-Based Access','lock','Granular permissions by function, deal and jurisdiction.'],
+ ['Single Sign-On','key','SAML and OIDC against your existing identity provider.'],
+ ['Data Encryption','shield','Encrypted in transit and at rest, with managed key rotation.'],
+ ['Audit Logs','clock','Every action recorded, immutable and exportable.'],
+ ['Document Permissions','file','Per-document access, watermarking and expiry.'],
+ ['Human Approval','approve','No irreversible action executes without a named approver.'],
+ ['API Integration','link','Connect core banking, CRM and data providers.'],
+ ['Private Data Environment','eye','Your tenant. Your region. No training on your data.'],
+];
+
+/* ---------------- persisted state ---------------- */
+const KEY='gemcorp.flow.v1';
+let DB=(()=>{try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(d.v===1)return d;}}catch(e){}
+  return {v:1,stages:{},findings:{},alerts:{},audit:[],systems:[],ic:{}};})();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}};
+const stageOf=d=>DB.stages[d.id]||d.st;
+function audit(action,detail){
+  DB.audit.unshift({t:Date.now(),who:'A. Kovachev',action,detail});
+  if(DB.audit.length>120)DB.audit.length=120; save();
+}
+const dealById=id=>DEALS.find(d=>d.id===id);
+const totalAUM=9.0e9;
+
+/* ---------------- shell ---------------- */
+const NAV=[
+ ['MAIN',[['Overview','overview','overview'],['Deal Flow','flow','flow'],['Investments','invest','investments'],
+   ['Due Diligence','dd','dd'],['Investment Committee','ic','ic'],['Portfolio','portfolio','portfolio']]],
+ ['CONTROL',[['Documents','docs','documents'],['Approvals','approve','approvals'],
+   ['Risk & Alerts','risk','risk'],['Reports','report','reports']]],
+ ['PLATFORM',[['AI Intelligence','ai','ai'],['Settings','settings','settings']]],
+];
+const TITLES={overview:'Executive Command Center',flow:'Deal Flow',investments:'Investments',dd:'Due Diligence',
+ ic:'Investment Committee',portfolio:'Portfolio',documents:'Document Control',approvals:'Approvals',
+ risk:'Risk & Alert Center',reports:'Reports',ai:'AI Intelligence',settings:'Settings',
+ builder:'Custom System Builder',detail:'Investment Detail'};
+
+function shell(){
+  const openAlerts=ALERTS.filter(a=>!DB.alerts[a.id]).length;
+  document.body.innerHTML=`<div class="app">
+   <aside class="rail">
+     <div class="brand"><div class="mk">G</div><div><b>GEMCORP</b><small>FLOW</small></div></div>
+     <div class="navwrap">${NAV.map(([g,items])=>`<div class="navlbl">${g}</div>`+items.map(([l,ic,r])=>{
+        const c=r==='flow'?DEALS.filter(d=>!['port'].includes(stageOf(d))).length
+          :r==='dd'?DEALS.filter(d=>stageOf(d)==='dd').length
+          :r==='ic'?DEALS.filter(d=>stageOf(d)==='ic').length
+          :r==='approvals'?4:r==='risk'?openAlerts:null;
+        return `<a class="nav" data-r="${r}" href="#/${r}">${svg(ic)}<span>${l}</span>${
+          c!=null?`<i class="cnt ${r==='risk'?'hot':''}">${c}</i>`:''}</a>`;}).join('')).join('')}</div>
+     <div class="railfoot"><button class="mkbtn" id="mkSystem">${svg('plus')}<span>Create Custom Workflow</span></button></div>
+   </aside>
+   <div class="main">
+     <header class="top">
+       <div><h1 id="ttl">Overview</h1><div class="crumbs" id="crumbs">Gemcorp Capital · Global</div></div>
+       <span class="demo">CONCEPT DEMO — SAMPLE DATA</span>
+       <div class="sp"></div>
+       <div class="search">${svg('search')}<input id="gq" placeholder="Search deals, documents, counterparties"/></div>
+       <button class="ico" id="bell">${svg('bell')}<i class="dot"></i></button>
+       <div class="me"><div class="av">AK</div><div><b>Atanas Kovachev</b><span>Investment Director</span></div></div>
+     </header>
+     <div class="view" id="view"></div>
+   </div></div>
+   <button class="aifab" id="aifab" title="AI assistant">${svg('sparkle')}</button>`;
+  $('#mkSystem').onclick=()=>location.hash='#/builder';
+  $('#bell').onclick=()=>location.hash='#/risk';
+  $('#aifab').onclick=toggleAI;
+  wireSearch();
+}
+function setNav(r){
+  $$('.nav').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
+  $('#ttl').textContent=TITLES[r]||'Gemcorp Flow';
+}
+function wireSearch(){
+  const inp=$('#gq');
+  inp.addEventListener('keydown',e=>{
+    if(e.key!=='Enter')return;
+    const q=inp.value.trim().toLowerCase(); if(!q)return;
+    const d=DEALS.find(x=>(x.n+x.c+x.s).toLowerCase().includes(q));
+    if(d){openDeal(d.id);inp.value='';}
+    else toast('No match for "'+q+'"');
+  });
+}
+
+/* ---------------- router ---------------- */
+const PAGES={};
+function route(){
+  const r=(location.hash.replace(/^#\//,'')||'overview').split('?')[0];
+  setNav(r);
+  const v=$('#view'); v.innerHTML=''; v.scrollTop=0;
+  try{(PAGES[r]||PAGES.overview)(v);}catch(e){
+    v.innerHTML=`<div class="pad"><div class="empty"><b>Something went wrong</b><p>${esc(e.message)}</p></div></div>`;
+    console.error(e);}
+}
+addEventListener('hashchange',route);
+addEventListener('keydown',e=>{if(e.key==='Escape'){closeOv();const p=$('.aipanel');if(p)p.remove();}});
+
+/* ---------------- shared components ---------------- */
+function modal({title,sub,body,footer,size=''}){
+  const ov=el(`<div class="ov"><div class="mdl ${size}">
+    <div class="mdl-h"><div style="flex:1"><h3>${esc(title)}</h3>${sub?`<p style="font-size:11.5px;color:var(--txt-3);margin-top:2px">${esc(sub)}</p>`:''}</div>
+      <span class="demo">SAMPLE DATA</span>
+      <button class="ico" data-close>${svg('x')}</button></div>
+    <div class="mdl-b">${body}</div>${footer?`<div class="mdl-f">${footer}</div>`:''}</div></div>`);
+  ov.addEventListener('click',e=>{if(e.target===ov||e.target.closest('[data-close]'))ov.remove();});
+  document.body.appendChild(ov); return ov;
+}
+const ringSVG=(pct,size=132,stroke=9,col='var(--gold)')=>{
+  const r=(size-stroke)/2,c=2*Math.PI*r;
+  return `<svg width="${size}" height="${size}">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--ink-4)" stroke-width="${stroke}"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${stroke}"
+      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct/100)}"
+      style="transition:stroke-dashoffset 1s cubic-bezier(.2,.7,.2,1)"/></svg>`;
+};
+function sparkline(vals,w=200,h=34,col='var(--gold)'){
+  const mn=Math.min(...vals),mx=Math.max(...vals),sp=mx-mn||1;
+  const pts=vals.map((v,i)=>[i/(vals.length-1)*w,h-((v-mn)/sp)*(h-6)-3]);
+  const d=pts.map((p,i)=>`${i?'L':'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' ');
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <path d="${d} L${w} ${h} L0 ${h} Z" fill="${col}" opacity=".08"/>
+    <path d="${d}" fill="none" stroke="${col}" stroke-width="1.6" opacity=".55"/></svg>`;
+}
+const riskLbl={low:'Low',med:'Medium',high:'High'};
+const avatars=t=>t.map(k=>`<i class="av-s" title="${esc(TEAM[k]||k)}">${k}</i>`).join('');
+
+/* ---------------- AI assistant (secondary) ---------------- */
+const AIQA=[
+ [/horizon|collateral/i,'Project Horizon is at 82% due diligence. Two items remain open: collateral valuation (68%) and technical review (76%). The valuation on file is 19 months old and falls outside the 12-month policy window for IC submission.'],
+ [/risk|alert/i,'There are 3 critical actions across the portfolio. The highest-exposure item is Project Horizon — payment documentation referencing an unregistered account, against $120M of exposure.'],
+ [/portfolio|aum|exposure/i,'Total portfolio stands at $9.0B+ across 25+ markets. Largest regional concentration is Africa at $411M of active pipeline exposure across 5 opportunities.'],
+ [/terra|committee|ic\b/i,'Project Terra has cleared all five review gates and is ready for Investment Committee. Ticket size $95M, projected IRR 16.8%, tenor 12 years.'],
+ [/document|memo/i,'147 documents processed. 126 verified, 14 require attention, 5 inconsistencies and 2 potential material issues. I can generate an executive summary from the Investment Detail screen.'],
+];
+function toggleAI(){
+  const p=$('.aipanel'); if(p){p.remove();return;}
+  const panel=el(`<div class="aipanel">
+    <div class="mdl-h"><div style="flex:1"><h3>Intelligence Assistant</h3>
+      <p style="font-size:11px;color:var(--txt-3)">Embedded across the platform</p></div>
+      <button class="ico" id="aiX">${svg('x')}</button></div>
+    <div class="aimsgs" id="aimsgs"></div>
+    <div class="aiin"><input id="aiq" placeholder="Ask about a deal, risk or document"/>
+      <button class="btn btn-g btn-sm" id="aiSend">${svg('send')}</button></div></div>`);
+  document.body.appendChild(panel);
+  const msgs=[{r:'a',t:'Good evening, Atanas. Three items need attention tonight. Ask me anything about the pipeline, or I can walk you through Project Horizon.'}];
+  const paint=()=>{$('#aimsgs').innerHTML=msgs.map(m=>`<div class="aim ${m.r}">${esc(m.t)}</div>`).join('');
+    $('#aimsgs').scrollTop=9e5;};
+  const send=()=>{const q=$('#aiq').value.trim(); if(!q)return;
+    msgs.push({r:'u',t:q}); $('#aiq').value=''; paint();
+    setTimeout(()=>{const hit=AIQA.find(([re])=>re.test(q));
+      msgs.push({r:'a',t:hit?hit[1]:'I can answer on deals, risk, portfolio exposure, the committee queue and document analysis. All figures shown are sample data for this concept demo.'});
+      paint();},480);};
+  $('#aiX',panel).onclick=()=>panel.remove();
+  $('#aiSend',panel).onclick=send;
+  $('#aiq',panel).addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+  paint(); $('#aiq',panel).focus();
+}
+
+
+/* ============ SCREEN 1 — EXECUTIVE COMMAND CENTER ============ */
+const KPIS=[
+ ['TOTAL PORTFOLIO','$9.0B+','gold','Committed & deployed capital','portfolio',[7.1,7.4,7.8,8.0,8.3,8.6,8.8,9.0]],
+ ['MARKETS','25+','','Emerging markets coverage','portfolio',[18,19,21,22,23,24,25,25]],
+ ['ACTIVE OPPORTUNITIES','34','','Across six pipeline stages','flow',[21,24,26,29,30,32,33,34]],
+ ['UNDER DUE DILIGENCE','8','','Average 46 days in stage','dd',[5,6,6,7,7,8,8,8]],
+ ['AWAITING APPROVAL','4','warn','Two scheduled this week','approvals',[2,3,3,4,3,4,4,4]],
+ ['CRITICAL ACTIONS','3','crit','Requiring director attention','risk',[1,2,4,3,5,4,3,3]],
+];
+const PRIOS=[
+ {tag:'HIGH PRIORITY',cls:'t-high',bar:'var(--bad)',deal:'HOR',t:'Project Horizon',
+  d:'Payment documentation requires review',mt:['Angola · Energy','$120M exposure','3 documents','Raised 2h ago']},
+ {tag:'REVIEW',cls:'t-review',bar:'var(--warn)',deal:'ATL',t:'Project Atlas',
+  d:'Due diligence 82% completed',mt:['Ghana · Infrastructure','$80M','Technical 76%','C. Mensah']},
+ {tag:'DECISION',cls:'t-decision',bar:'var(--info)',deal:'TER',t:'Project Terra',
+  d:'Ready for Investment Committee',mt:['Brazil · Infrastructure','$95M','All gates cleared','IC Thursday']},
+ {tag:'HIGH PRIORITY',cls:'t-high',bar:'var(--bad)',deal:'NOV',t:'Project Nova',
+  d:'Counterparty credit rating downgraded',mt:['Nigeria · Trade Finance','$65M','Concentration breach','6h ago']},
+ {tag:'REVIEW',cls:'t-review',bar:'var(--warn)',deal:'PAM',t:'Project Pampas',
+  d:'Currency convertibility restrictions tightened',mt:['Argentina · Agribusiness','$63M','Country risk','1d ago']},
+];
+PAGES.overview=function(v){
+  const h=now().getHours();
+  const greet=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  v.innerHTML=`<div class="pad">
+    <div style="margin-bottom:26px">
+      <h1 class="hero">${greet}, <em>Atanas</em>.</h1>
+      <p class="lede">Here is what requires attention.</p></div>
+    <div class="grid g6" id="kpis"></div>
+
+    <div class="sec"><h2>GLOBAL INVESTMENT MAP</h2><div class="ln"></div>
+      <button id="mapAll">Open portfolio ↗</button></div>
+    <div class="mapwrap" id="map"></div>
+
+    <div class="sec"><h2>TODAY'S PRIORITIES</h2><div class="ln"></div>
+      <button id="allPrio">VIEW ALL PRIORITIES</button></div>
+    <div class="card" id="prios"></div>
+
+    <div class="grid g2" style="margin-top:22px">
+      <div class="card"><div class="card-h"><div style="flex:1"><h3>Pipeline by stage</h3>
+        <p>Capital at each stage · sample data</p></div></div><div class="card-b" id="funnel"></div></div>
+      <div class="card"><div class="card-h"><div style="flex:1"><h3>Recent activity</h3>
+        <p>Audit trail across the platform</p></div><button class="btn btn-q btn-sm" id="clrAudit">Clear</button></div>
+        <div class="card-b" id="recent" style="max-height:300px;overflow-y:auto"></div></div>
+    </div></div>`;
+
+  $('#kpis').innerHTML=KPIS.map(([l,val,cls,d,go,sp],i)=>`<div class="kpi ${cls}" data-go="${go}">
+    <div class="l">${l}</div><div class="v num">${val}</div><div class="d">${esc(d)}</div>
+    ${sparkline(sp,240,34,cls==='crit'?'var(--bad)':cls==='warn'?'var(--warn)':'var(--gold)')}</div>`).join('');
+  $$('[data-go]').forEach(k=>k.onclick=()=>location.hash='#/'+k.dataset.go);
+
+  drawMap($('#map'));
+  $('#mapAll').onclick=()=>location.hash='#/portfolio';
+
+  $('#prios').innerHTML=PRIOS.slice(0,3).map(p=>prioRow(p)).join('');
+  wirePrios();
+  $('#allPrio').onclick=()=>{
+    $('#prios').innerHTML=PRIOS.map(p=>prioRow(p)).join(''); wirePrios();
+    $('#allPrio').textContent='ALL PRIORITIES SHOWN'; $('#allPrio').disabled=true;
+    toast('Showing all '+PRIOS.length+' priorities');};
+
+  /* funnel */
+  const byStage=STAGES.map(([k,l])=>({k,l,ds:DEALS.filter(d=>stageOf(d)===k)}));
+  const mx=Math.max(...byStage.map(s=>s.ds.reduce((a,d)=>a+d.v,0)))||1;
+  $('#funnel').innerHTML=byStage.map(s=>{
+    const sum=s.ds.reduce((a,d)=>a+d.v,0);
+    return `<div style="margin-bottom:15px;cursor:pointer" data-stage="${s.k}">
+      <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:6px">
+        <span style="color:var(--txt-2);letter-spacing:.06em">${s.l}</span>
+        <span class="num"><b style="color:var(--gold-2)">${USD(sum)}</b>
+          <span style="color:var(--txt-4)"> · ${s.ds.length}</span></span></div>
+      <div class="bar" style="height:6px"><i style="width:${sum/mx*100}%"></i></div></div>`;}).join('');
+  $$('[data-stage]').forEach(x=>x.onclick=()=>location.hash='#/flow');
+
+  paintRecent();
+  $('#clrAudit').onclick=()=>{DB.audit=[];save();paintRecent();toast('Activity cleared');};
+  function paintRecent(){
+    const seed=[{t:Date.now()-36e5,who:'H. Tanaka',action:'Risk review completed',detail:'Project Indus'},
+      {t:Date.now()-7.2e6,who:'AI Engine',action:'3 findings raised',detail:'Project Horizon document set'},
+      {t:Date.now()-1.1e7,who:'L. Ferreira',action:'Submitted for approval',detail:'Project Terra'},
+      {t:Date.now()-2.4e7,who:'P. Dias',action:'Compliance sign-off',detail:'Project Pampas'}];
+    const rows=[...DB.audit,...seed].slice(0,14);
+    $('#recent').innerHTML=rows.map(a=>`<div class="audit">
+      <span class="ts">${ago(a.t)}</span><b>${esc(a.who)}</b>
+      <span style="flex:1">${esc(a.action)}${a.detail?' — '+esc(a.detail):''}</span></div>`).join('');
+  }
+};
+function prioRow(p){
+  return `<div class="prio" data-deal="${p.deal}">
+    <div class="bar" style="background:${p.bar}"></div>
+    <span class="tagp ${p.cls}">${p.tag}</span>
+    <div class="bd"><b>${esc(p.t)}</b><p>${esc(p.d)}</p>
+      <div class="mt">${p.mt.map(m=>`<span>${esc(m)}</span>`).join('')}</div></div>
+    <div style="color:var(--txt-4);align-self:center">${svg('arrow')}</div></div>`;
+}
+function wirePrios(){$$('[data-deal]').forEach(r=>r.onclick=()=>openDeal(r.dataset.deal));}
+
+/* ---------------- world map ---------------- */
+function drawMap(host){
+  const W=1000,H=460;
+  /* stylised landmasses — abstract, not a survey map */
+  const LAND=[
+   'M120 120 L215 96 L268 130 L250 186 L196 200 L150 176 Z',
+   'M232 214 L286 202 L322 258 L306 340 L268 392 L236 330 L226 268 Z',
+   'M436 86 L560 70 L640 96 L628 150 L536 168 L462 146 Z',
+   'M452 176 L556 168 L604 210 L588 300 L520 348 L470 288 L444 226 Z',
+   'M612 120 L700 104 L748 142 L724 196 L648 200 L616 166 Z',
+   'M660 210 L742 200 L790 246 L764 300 L692 296 L656 252 Z',
+   'M796 300 L864 292 L888 336 L856 372 L806 356 Z',
+  ];
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" id="msvg">
+    <defs><radialGradient id="glow"><stop offset="0%" stop-color="#C9A961" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#C9A961" stop-opacity="0"/></radialGradient></defs>
+    <rect width="${W}" height="${H}" fill="#0A0E14"/>
+    <g stroke="#111823" stroke-width=".7">
+      ${[...Array(11)].map((_,i)=>`<line x1="0" y1="${i*46}" x2="${W}" y2="${i*46}"/>`).join('')}
+      ${[...Array(21)].map((_,i)=>`<line x1="${i*50}" y1="0" x2="${i*50}" y2="${H}"/>`).join('')}</g>
+    ${LAND.map((d,i)=>`<path class="mland ${i>=1?'act':''}" d="${d}"/>`).join('')}
+    ${REGIONS.map(r=>`<circle cx="${r.x/100*W}" cy="${r.y/100*H}" r="86" fill="url(#glow)"/>
+      <text x="${r.x/100*W}" y="${r.y/100*H-58}" text-anchor="middle" font-size="10.5"
+        fill="#5F6A78" font-weight="700" letter-spacing="2">${r.n.toUpperCase()}</text>`).join('')}
+  </svg>
+  <div class="mapstat"><div class="t">PIPELINE EXPOSURE</div>
+    ${REGIONS.map(r=>`<div class="r" data-reg="${r.k}" style="cursor:pointer">
+      <span>${r.n}</span><b class="num">${USD(r.exp)}</b></div>`).join('')}</div>
+  <div class="maplegend">
+    <div><i></i>Active opportunity</div>
+    <div><i style="background:var(--bad)"></i>Requires attention</div>
+    <div style="color:var(--txt-4)">${DEALS.length} positions · sample data</div></div>`;
+  const svgEl=$('#msvg',host);
+  PINS.forEach(p=>{
+    const d=dealById(p.id); if(!d)return;
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','mpin '+(p.hot?'hot':''));
+    g.innerHTML=`<circle class="halo" cx="${p.x/100*W}" cy="${p.y/100*H}" r="15"/>
+      <circle class="core" cx="${p.x/100*W}" cy="${p.y/100*H}" r="4.5"/>`;
+    g.addEventListener('mouseenter',e=>{
+      const t=el(`<div class="tip" style="left:${p.x}%;top:${p.y}%"><b>${esc(d.n)}</b>
+        <span>${esc(d.c)} · ${esc(d.s)} · ${USD(d.v)}</span></div>`);
+      host.appendChild(t); g._tip=t;});
+    g.addEventListener('mouseleave',()=>{if(g._tip){g._tip.remove();g._tip=null;}});
+    g.addEventListener('click',()=>openDeal(p.id));
+    svgEl.appendChild(g);
+  });
+  $$('[data-reg]',host).forEach(r=>r.onclick=()=>{
+    const reg=REGIONS.find(x=>x.k===r.dataset.reg);
+    toast(`${reg.n}: ${reg.deals} active opportunities · ${USD(reg.exp)} exposure`,'gold');});
+}
+
+/* ============ SCREEN 2 — DEAL FLOW ============ */
+PAGES.flow=function(v){
+  v.innerHTML=`<div class="pad">
+    <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px">
+      <div style="flex:1"><h1 class="hero" style="font-size:27px">Deal Flow</h1>
+        <p class="lede" style="font-size:13.5px">Drag a card between stages to advance it. Every move is recorded in the audit trail.</p></div>
+      <div class="btnrow">
+        <button class="btn btn-o" id="fExport">${svg('dl')}Export pipeline</button>
+        <button class="btn btn-g" id="fNew">${svg('plus')}New opportunity</button></div></div>
+    <div class="grid g4" style="margin-bottom:22px" id="fkpi"></div>
+    <div class="kb" id="kb"></div></div>`;
+
+  const open=DEALS.filter(d=>stageOf(d)!=='port');
+  const wt={new:.1,screen:.25,dd:.5,ic:.75,appr:.9,port:1};
+  $('#fkpi').innerHTML=[
+    ['PIPELINE VALUE',USD(open.reduce((a,d)=>a+d.v,0)),'gold'],
+    ['WEIGHTED FORECAST',USD(open.reduce((a,d)=>a+d.v*wt[stageOf(d)],0)),''],
+    ['ACTIVE OPPORTUNITIES',open.length,''],
+    ['AVG TICKET',USD(Math.round(open.reduce((a,d)=>a+d.v,0)/Math.max(1,open.length))),''],
+  ].map(([l,val,c])=>`<div class="kpi ${c}" style="cursor:default"><div class="l">${l}</div>
+    <div class="v num">${val}</div></div>`).join('');
+
+  paintKB();
+  $('#fNew').onclick=()=>toast('New opportunity intake — concept demo','gold');
+  $('#fExport').onclick=()=>{
+    const rows=DEALS.map(d=>[d.n,d.c,d.s,d.v,STLBL[stageOf(d)],d.risk,d.dd,d.lead]);
+    const csv=['Deal,Country,Sector,Size USD,Stage,Risk,DD %,Lead',
+      ...rows.map(r=>r.map(x=>`"${x}"`).join(','))].join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download='gemcorp-pipeline.csv';a.click();toast('Pipeline exported','ok');};
+
+  function paintKB(){
+    $('#kb').innerHTML=STAGES.map(([k,l])=>{
+      const ds=DEALS.filter(d=>stageOf(d)===k);
+      return `<div class="kcol" data-col="${k}"><div class="kcol-h">
+        <div class="r1"><b>${l}</b><span class="n">${ds.length}</span>
+          <span class="sum num">${USD(ds.reduce((a,d)=>a+d.v,0))}</span></div></div>
+        <div class="kcol-l" data-drop="${k}">${ds.map(dealCard).join('')}</div></div>`;}).join('');
+    let dragId=null;
+    $$('.dcard').forEach(c=>{
+      c.setAttribute('draggable','true');
+      c.addEventListener('dragstart',()=>{dragId=c.dataset.d;c.classList.add('drag');});
+      c.addEventListener('dragend',()=>c.classList.remove('drag'));
+      c.addEventListener('click',()=>openDeal(c.dataset.d));
+    });
+    $$('.kcol-l').forEach(z=>{
+      z.addEventListener('dragover',e=>{e.preventDefault();z.closest('.kcol').classList.add('over');});
+      z.addEventListener('dragleave',()=>z.closest('.kcol').classList.remove('over'));
+      z.addEventListener('drop',e=>{e.preventDefault();z.closest('.kcol').classList.remove('over');
+        const d=dealById(dragId); if(!d)return;
+        const from=stageOf(d), to=z.dataset.drop; if(from===to)return;
+        DB.stages[d.id]=to; audit('Stage changed',`${d.n}: ${STLBL[from]} → ${STLBL[to]}`);
+        toast(`${d.n} moved to ${STLBL[to]}`,'ok'); paintKB();});
+    });
+  }
+};
+function dealCard(d){
+  return `<div class="dcard" data-d="${d.id}">
+    <div class="r1"><span class="risk ${d.risk}" title="Risk: ${riskLbl[d.risk]}"></span>
+      <h4>${esc(d.n)}</h4></div>
+    <div class="geo">${esc(d.c)} · ${esc(d.s)}</div>
+    <div class="amt num">${USD(d.v)}</div>
+    <div class="prog"><div class="lbl"><span>DUE DILIGENCE</span><span class="num">${d.dd}%</span></div>
+      <div class="bar ${d.dd>=90?'ok':d.dd>=50?'':'warn'}"><i style="width:${d.dd}%"></i></div></div>
+    <div class="team">${avatars(d.team)}</div>
+    <div class="next">${svg('arrow')}<span>${esc(d.next)}</span></div></div>`;
+}
+
+/* ============ SCREEN 3 — INVESTMENT DETAIL ============ */
+let curDeal='HOR', curTab=0;
+function openDeal(id){curDeal=id;curTab=0;location.hash='#/detail';}
+const DDPARTS=[['Corporate',100],['Financial',100],['Legal',100],['KYC',100],['Technical',76],['Collateral',68]];
+const REQS=[
+ ['Updated collateral valuation required','Valuation on file dated 19 months ago — outside the 12-month policy window.','high'],
+ ['Two financial documents missing','FY2024 management accounts and the Q2 2026 covenant certificate.','high'],
+ ['Legal review pending','Change-of-control provision requires counsel opinion before IC.','med'],
+];
+PAGES.detail=function(v){
+  const d=dealById(curDeal)||DEALS[0];
+  const tabs=['Overview','Financial','Legal','KYC','Technical','Collateral','Documents','Timeline','Tasks','AI Findings'];
+  v.innerHTML=`<div class="pad">
+    <div style="margin-bottom:16px"><a href="#/flow" style="font-size:11.5px;color:var(--gold-2)">← Deal Flow</a></div>
+    <div class="dhead">
+      <div class="t"><div style="flex:1">
+        <h1>${esc(d.n)}</h1>
+        <div class="meta">
+          <div><span>COUNTRY</span><b>${esc(d.c)}</b></div>
+          <div><span>SECTOR</span><b>${esc(d.s)}</b></div>
+          <div><span>TRANSACTION SIZE</span><b class="g num">${USD(d.v)}</b></div>
+          <div><span>STATUS</span><b>${STLBL[stageOf(d)]}</b></div>
+          <div><span>TARGET IRR</span><b class="num">${d.irr}%</b></div>
+          <div><span>TENOR</span><b>${d.ten}</b></div>
+        </div></div>
+        <span class="demo">CONCEPT DEMO — SAMPLE DATA</span></div>
+      <div class="btnrow" style="margin-top:20px">
+        <button class="btn btn-o" id="bReq">${svg('file')}REQUEST DOCUMENT</button>
+        <button class="btn btn-o" id="bTask">${svg('users')}ASSIGN TASK</button>
+        <button class="btn btn-o" id="bMemo">${svg('docs')}GENERATE MEMO</button>
+        <button class="btn btn-g" id="bSubmit">${svg('check')}SUBMIT FOR APPROVAL</button></div>
+    </div>
+    <div class="tabs" id="dtabs">${tabs.map((t,i)=>
+      `<button class="tab ${i===curTab?'on':''}" data-t="${i}">${t}</button>`).join('')}</div>
+    <div id="dbody"></div></div>`;
+
+  $('#dtabs').onclick=e=>{const b=e.target.closest('[data-t]'); if(!b)return;
+    curTab=+b.dataset.t; $$('#dtabs .tab').forEach((t,i)=>t.classList.toggle('on',i===curTab)); paint();};
+  $('#bReq').onclick=()=>modal({title:'Request document',sub:d.n,
+    body:`<div class="fld"><label>DOCUMENT TYPE</label><select id="rqT">
+        <option>Updated collateral valuation</option><option>FY2024 management accounts</option>
+        <option>Q2 2026 covenant certificate</option><option>Insurance certificate</option></select></div>
+      <div class="fld"><label>REQUEST FROM</label><select id="rqW"><option>Sponsor — finance team</option>
+        <option>External valuer</option><option>Legal counsel</option></select></div>
+      <div class="fld"><label>DUE DATE</label><input type="date" id="rqD" value="2026-09-30"/></div>
+      <div class="fld"><label>NOTE</label><textarea placeholder="Optional context for the recipient"></textarea></div>`,
+    footer:`<button class="btn btn-o" data-close>Cancel</button><button class="btn btn-g" id="rqGo">Send request</button>`})
+    .querySelector('#rqGo').onclick=function(){const t=$('#rqT').value;closeOv();
+      audit('Document requested',`${d.n}: ${t}`);toast('Request sent · tracked in Documents','ok');};
+  $('#bTask').onclick=()=>modal({title:'Assign task',sub:d.n,
+    body:`<div class="fld"><label>TASK</label><input id="tkT" value="Complete collateral valuation review"/></div>
+      <div class="fld"><label>ASSIGNEE</label><select id="tkA">${Object.values(TEAM).map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="fld"><label>PRIORITY</label><select id="tkP"><option>High</option><option>Medium</option><option>Low</option></select></div>`,
+    footer:`<button class="btn btn-o" data-close>Cancel</button><button class="btn btn-g" id="tkGo">Assign</button>`})
+    .querySelector('#tkGo').onclick=function(){const a=$('#tkA').value;closeOv();
+      audit('Task assigned',`${d.n} → ${a}`);toast('Task assigned to '+a,'ok');};
+  $('#bMemo').onclick=()=>showMemo(d);
+  $('#bSubmit').onclick=()=>{
+    if(d.dd<100&&stageOf(d)!=='ic'){
+      modal({title:'Submit for approval',sub:d.n,
+        body:`<p style="font-size:13.5px;line-height:1.7;color:var(--txt-2)">Due diligence is at
+          <b style="color:var(--warn)">${d.dd}%</b>. Three required actions remain open. Submitting now will flag
+          the file to the Investment Committee as incomplete.</p>
+          <div style="margin-top:16px">${REQS.map(r=>`<div class="reqrow">
+            <span class="tagp ${r[2]==='high'?'t-high':'t-review'}">${r[2].toUpperCase()}</span>
+            <div style="flex:1"><b style="font-size:13px">${esc(r[0])}</b></div></div>`).join('')}</div>`,
+        footer:`<button class="btn btn-o" data-close>Cancel</button>
+          <button class="btn btn-warn" id="smAny">Submit anyway</button>`})
+        .querySelector('#smAny').onclick=function(){DB.stages[d.id]='ic';save();closeOv();
+          audit('Submitted to IC',`${d.n} — submitted with ${d.dd}% DD`);
+          toast('Submitted to Investment Committee','ok');location.hash='#/ic';};
+    }else{DB.stages[d.id]='ic';save();audit('Submitted to IC',d.n);
+      toast('Submitted to Investment Committee','ok');location.hash='#/ic';}};
+  paint();
+
+  function paint(){
+    const b=$('#dbody');
+    if(curTab===0){
+      b.innerHTML=`<div class="grid g2">
+        <div class="card"><div class="card-h"><div style="flex:1"><h3>Due diligence progress</h3>
+          <p>Six workstreams · updated ${stamp(now())}</p></div></div>
+          <div class="card-b" style="display:flex;gap:26px;align-items:center;flex-wrap:wrap">
+            <div class="ring">${ringSVG(d.dd)}<div class="mid"><b class="num">${d.dd}%</b><span>COMPLETE</span></div></div>
+            <div style="flex:1;min-width:240px">${DDPARTS.map(([n,p])=>`<div class="ddrow">
+              <span class="chk ${p===100?'done':'wip'}">${p===100?'✓':'·'}</span>
+              <span class="nm">${n}</span>
+              <span class="bar ${p===100?'ok':'warn'}"><i style="width:${p}%"></i></span>
+              <span class="pc num">${p}%</span></div>`).join('')}</div></div></div>
+        <div class="card"><div class="card-h"><div style="flex:1"><h3>Required actions</h3>
+          <p>Must close before committee</p></div><span class="tagp t-high">3 OPEN</span></div>
+          <div class="card-b">${REQS.map((r,i)=>`<div class="reqrow">
+            <span class="tagp ${r[2]==='high'?'t-high':'t-review'}">${r[2].toUpperCase()}</span>
+            <div style="flex:1"><b style="font-size:13px">${esc(r[0])}</b>
+              <p style="font-size:12.5px;color:var(--txt-3);margin-top:4px">${esc(r[1])}</p></div>
+            <button class="btn btn-o btn-sm" data-fix="${i}">Resolve</button></div>`).join('')}</div></div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="card-h"><div style="flex:1"><h3>Transaction summary</h3></div></div>
+        <div class="card-b"><dl class="kv">
+          <dt>Sponsor</dt><dd>Regional energy group · 3 prior transactions</dd>
+          <dt>Instrument</dt><dd>Senior secured term facility</dd>
+          <dt>Use of proceeds</dt><dd>Generation capacity expansion and grid connection</dd>
+          <dt>Security</dt><dd>Asset pledge, offtake assignment, DSRA</dd>
+          <dt>Target IRR</dt><dd class="num">${d.irr}%</dd>
+          <dt>Tenor</dt><dd>${d.ten}</dd>
+          <dt>Deal lead</dt><dd>${esc(d.lead)}</dd>
+          <dt>Days in stage</dt><dd class="num">${d.days}</dd></dl></div></div>`;
+      $$('[data-fix]').forEach(x=>x.onclick=()=>{const r=REQS[+x.dataset.fix];
+        audit('Action resolved',`${d.n}: ${r[0]}`);x.textContent='Resolved';x.disabled=true;
+        x.classList.remove('btn-o');x.classList.add('btn-ok');toast('Action marked resolved','ok');});
+    }
+    else if(curTab===9) b.innerHTML=`<div id="findHost"></div>`, renderFindings($('#findHost'),d);
+    else if(curTab===6){
+      const ds=DOCS.filter(x=>x.deal===d.id);
+      b.innerHTML=`<div class="card"><div class="tw"><table><thead><tr>
+        <th>DOCUMENT</th><th>CATEGORY</th><th>VERSION</th><th>OWNER</th><th>DATE</th><th>STATUS</th><th class="n">SIZE</th>
+        </tr></thead><tbody>${ds.map(x=>docRow(x)).join('')||`<tr><td colspan="7"><div class="empty"><b>No documents</b></div></td></tr>`}</tbody></table></div></div>`;
+      wireDocRows();
+    }
+    else if(curTab===7){
+      const tl=[['2026-09-06','AI analysis completed','3 findings raised across financial, legal and collateral'],
+        ['2026-08-30','Technical workstream advanced to 76%','Site visit report received'],
+        ['2026-08-14','Offtake agreement v4.2 received','Change-of-control clause identified'],
+        ['2026-07-02','FY2025 audited statements received','Verified against sponsor model'],
+        ['2026-06-18','Due diligence commenced','Six workstreams opened'],
+        ['2026-05-29','Screening cleared','Advanced to due diligence']];
+      b.innerHTML=`<div class="card"><div class="card-b">${tl.map(([dt,t,s])=>`<div class="reqrow">
+        <span style="flex:0 0 96px;font-family:var(--mono);font-size:11.5px;color:var(--txt-4)">${dt}</span>
+        <div style="flex:1"><b style="font-size:13px">${esc(t)}</b>
+          <p style="font-size:12.5px;color:var(--txt-3);margin-top:3px">${esc(s)}</p></div></div>`).join('')}</div></div>`;
+    }
+    else if(curTab===8){
+      const tasks=[['Complete collateral valuation review','M. Reyes','High','In progress'],
+        ['Obtain FY2024 management accounts','A. Kovachev','High','Open'],
+        ['Counsel opinion on change-of-control','External counsel','Medium','Open'],
+        ['Update financial model with revised capex','S. Okonkwo','Medium','In progress'],
+        ['Prepare IC presentation pack','A. Kovachev','Low','Not started']];
+      b.innerHTML=`<div class="card"><div class="tw"><table><thead><tr><th>TASK</th><th>ASSIGNEE</th>
+        <th>PRIORITY</th><th>STATUS</th></tr></thead><tbody>${tasks.map(t=>`<tr>
+        <td><b style="font-weight:600">${esc(t[0])}</b></td><td>${esc(t[1])}</td>
+        <td><span class="tagp ${t[2]==='High'?'t-high':t[2]==='Medium'?'t-review':'t-mut'}">${t[2].toUpperCase()}</span></td>
+        <td>${esc(t[3])}</td></tr>`).join('')}</tbody></table></div></div>`;
+    }
+    else{
+      const name=tabs[curTab];
+      const part=DDPARTS.find(p=>p[0]===name);
+      b.innerHTML=`<div class="card"><div class="card-h"><div style="flex:1"><h3>${name} workstream</h3>
+        <p>${part?`${part[1]}% complete`:'Workstream detail'}</p></div>
+        ${part?`<span class="tagp ${part[1]===100?'t-ok':'t-review'}">${part[1]===100?'CLEARED':'IN PROGRESS'}</span>`:''}</div>
+        <div class="card-b">
+        ${part?`<div class="bar ${part[1]===100?'ok':'warn'}" style="height:6px;margin-bottom:20px"><i style="width:${part[1]}%"></i></div>`:''}
+        <dl class="kv">
+          <dt>Workstream lead</dt><dd>${esc(d.lead)}</dd>
+          <dt>Documents in scope</dt><dd class="num">${12+curTab*3}</dd>
+          <dt>Open items</dt><dd class="num">${part&&part[1]<100?2:0}</dd>
+          <dt>Last update</dt><dd>${stamp(now())}</dd>
+          <dt>External advisor</dt><dd>${curTab===2?'Appointed — international firm':'Not required'}</dd></dl>
+        <p style="font-size:13px;color:var(--txt-3);margin-top:20px;line-height:1.7">
+          Sample workstream detail for this concept demo. In a live deployment this panel renders the checklist,
+          evidence trail and reviewer notes drawn from your own data model.</p></div></div>`;
+    }
+  }
+};
+function showMemo(d){
+  const ov=modal({title:'Executive investment summary',sub:d.n+' · generated '+stamp(now()),size:'xl',
+    body:`<div class="memo" id="memoSheet">
+      <div class="mh"><div><b>${esc(d.n)}</b><span>INVESTMENT COMMITTEE SUMMARY — SAMPLE DATA</span></div>
+        <div style="text-align:right"><b style="font-size:15px">GEMCORP FLOW</b>
+          <span>${stamp(now())}</span></div></div>
+      <div class="mgrid">
+        <div><span>TRANSACTION SIZE</span><b class="num">${USD(d.v)}</b></div>
+        <div><span>TARGET IRR</span><b class="num">${d.irr}%</b></div>
+        <div><span>TENOR</span><b>${d.ten}</b></div>
+        <div><span>DD COMPLETE</span><b class="num">${d.dd}%</b></div></div>
+      <h4>TRANSACTION</h4>
+      <p>${esc(d.n)} is a ${USD(d.v)} senior secured facility to a ${esc(d.s).toLowerCase()} sponsor in ${esc(d.c)}.
+      Proceeds fund capacity expansion, secured on project assets with assignment of the offtake contract and a
+      debt service reserve account. Deal lead ${esc(d.lead)}; ${d.days} days in current stage.</p>
+      <h4>KEY STRENGTHS</h4>
+      <p>Contracted revenue under a long-term offtake agreement with an investment-grade counterparty. Sponsor has
+      completed three prior transactions with the firm without incident. Security package covers ${Math.round(d.v/1e6*1.4)}M of
+      appraised asset value against a ${USD(d.v)} facility.</p>
+      <h4>KEY RISKS &amp; MITIGANTS</h4>
+      <p>Change-of-control provision in the offtake agreement permits counterparty termination on 60 days notice
+      following a shareholding change above 30% — counsel opinion pending. Collateral valuation is 19 months old
+      and requires refresh before drawdown. Country risk mitigated through hard-currency structuring and offshore
+      collection accounts.</p>
+      <h4>AI FINDINGS SUMMARY</h4>
+      <p>147 documents processed; 126 verified. Three findings raised: one financial discrepancy of 4.2% in reported
+      EBITDA between the audited statements and the sponsor model, one legal change-of-control provision, and one
+      collateral valuation outside policy window. Two are classified as potentially material.</p>
+      <h4>RECOMMENDATION</h4>
+      <p>Proceed to Investment Committee conditional on (i) refreshed collateral valuation, (ii) counsel opinion on
+      the change-of-control clause, and (iii) reconciliation of the EBITDA variance. Subject to these conditions the
+      transaction is consistent with mandate, concentration limits and return targets.</p>
+      <p style="margin-top:26px;font-size:11px;color:var(--txt-4);border-top:1px solid var(--line);padding-top:14px">
+      CONCEPT DEMO — all transaction data is fictional and generated for demonstration purposes.</p></div>`,
+    footer:`<button class="btn btn-o" data-close>Close</button>
+      <button class="btn btn-o" id="mPrint">${svg('dl')}Export PDF</button>
+      <button class="btn btn-g" id="mSend">Circulate to committee</button>`});
+  ov.querySelector('#mPrint').onclick=()=>{audit('Memo exported',d.n);toast('Investment memo exported','ok');};
+  ov.querySelector('#mSend').onclick=()=>{closeOv();audit('Memo circulated',`${d.n} → Investment Committee`);
+    toast('Memo circulated to committee members','ok');};
+}
+
+
+/* ============ SCREEN 4 — AI DOCUMENT INTELLIGENCE ============ */
+const sevTag=s=>s==='high'?'t-high':s==='med'?'t-review':'t-ok';
+function renderFindings(host,deal){
+  const list=FINDINGS.filter(f=>f.st!=='cleared');
+  host.innerHTML=`<div class="grid g2" style="margin-bottom:18px">
+    <div class="card"><div class="card-h"><div style="flex:1"><h3>Document analysis</h3>
+      <p>${deal?deal.n:'Portfolio-wide'} · automated extraction and verification</p></div>
+      <span class="tagp t-gold">147 PROCESSED</span></div>
+      <div class="card-b donut">
+        <div class="ring" style="width:150px;height:150px;flex:0 0 150px">${ringSVG(86,150,11,'var(--ok)')}
+          <div class="mid"><b class="num">126</b><span>VERIFIED</span></div></div>
+        <div class="legend" style="flex:1;min-width:210px">
+          <div><i style="background:var(--ok)"></i>Verified<b class="num">126</b></div>
+          <div><i style="background:var(--warn)"></i>Require attention<b class="num">14</b></div>
+          <div><i style="background:var(--info)"></i>Inconsistencies detected<b class="num">5</b></div>
+          <div><i style="background:var(--bad)"></i>Potential material issues<b class="num">2</b></div>
+          <div style="border-top:1px solid var(--line);padding-top:9px;margin-top:3px">
+            <i style="background:var(--txt-4)"></i>Total processed<b class="num">147</b></div></div></div></div>
+    <div class="card"><div class="card-h"><div style="flex:1"><h3>Extraction confidence</h3>
+      <p>Model output quality by document class</p></div></div>
+      <div class="card-b">${[['Financial statements',97],['Contracts',94],['KYC packs',99],
+        ['Technical reports',88],['Government filings',81]].map(([n,p])=>`<div class="ddrow">
+        <span class="nm">${n}</span><span class="bar ${p>=95?'ok':p>=85?'':'warn'}"><i style="width:${p}%"></i></span>
+        <span class="pc num">${p}%</span></div>`).join('')}
+        <p style="font-size:12px;color:var(--txt-4);margin-top:16px;line-height:1.6">
+        Findings below are ranked by potential materiality. Every item links to its source page.</p></div></div></div>
+
+    <div class="sec"><h2>AI FINDINGS</h2><div class="ln"></div>
+      <button class="btn btn-g btn-sm" id="genSum">${svg('sparkle')}GENERATE EXECUTIVE SUMMARY</button></div>
+    <div id="findList">${list.map(findCard).join('')}</div>`;
+  wireFindings(deal);
+  $('#genSum',host).onclick=()=>showMemo(deal||dealById('HOR'));
+}
+function findCard(f){
+  const dismissed=DB.findings[f.id]==='dismissed', escl=DB.findings[f.id]==='escalated';
+  return `<div class="find ${dismissed?'gone':''}" data-f="${f.id}">
+    <div class="r1"><span class="tagp ${sevTag(f.sev)}">${f.cat}</span>
+      ${escl?'<span class="tagp t-high">ESCALATED</span>':''}
+      ${dismissed?'<span class="tagp t-mut">DISMISSED</span>':''}
+      <div style="flex:1"></div>
+      <span style="font-size:11px;color:var(--txt-4)">Confidence ${f.sev==='high'?'96':f.sev==='med'?'89':'99'}%</span></div>
+    <h4>${esc(f.t)}</h4>
+    <p>${esc(f.d)}</p>
+    <div class="src">${esc(f.src)}</div>
+    <div class="acts">
+      <button class="btn btn-o btn-sm" data-a="src" data-id="${f.id}">VIEW SOURCE</button>
+      <button class="btn btn-o btn-sm" data-a="assign" data-id="${f.id}">ASSIGN</button>
+      <button class="btn btn-q btn-sm" data-a="dismiss" data-id="${f.id}">DISMISS</button>
+      <button class="btn btn-bad btn-sm" data-a="escalate" data-id="${f.id}">ESCALATE</button></div></div>`;
+}
+function wireFindings(deal){
+  $$('[data-a]').forEach(b=>b.onclick=()=>{
+    const f=FINDINGS.find(x=>x.id===b.dataset.id), a=b.dataset.a;
+    if(a==='src') modal({title:'Source document',sub:f.src,
+      body:`<div style="background:var(--ink-2);border:1px solid var(--line);border-radius:9px;padding:26px;
+        font-family:var(--mono);font-size:12.5px;line-height:2;color:var(--txt-2)">
+        <div style="color:var(--txt-4);margin-bottom:14px">— extract —</div>
+        <div style="background:rgba(224,164,88,.1);border-left:2px solid var(--warn);padding:12px 14px;margin:10px 0">
+          ${esc(f.t)}</div>
+        <div style="color:var(--txt-4);margin-top:14px">Highlighted region flagged by the extraction model with
+        ${f.sev==='high'?'96':'89'}% confidence. Full document available in Document Control.</div></div>`,
+      footer:`<button class="btn btn-o" data-close>Close</button>
+        <button class="btn btn-g" onclick="location.hash='#/documents';closeOv()">Open in Documents</button>`});
+    if(a==='assign') modal({title:'Assign finding',sub:f.t,
+      body:`<div class="fld"><label>ASSIGNEE</label><select id="fA">${Object.values(TEAM).map(t=>`<option>${t}</option>`).join('')}</select></div>
+        <div class="fld"><label>DUE</label><input type="date" value="2026-09-20"/></div>`,
+      footer:`<button class="btn btn-o" data-close>Cancel</button><button class="btn btn-g" id="fGo">Assign</button>`})
+      .querySelector('#fGo').onclick=function(){const w=$('#fA').value;closeOv();
+        audit('Finding assigned',`${f.cat}: ${f.t} → ${w}`);toast('Assigned to '+w,'ok');};
+    if(a==='dismiss'){DB.findings[f.id]='dismissed';save();audit('Finding dismissed',f.t);
+      toast('Finding dismissed — recorded in audit trail');
+      const host=$('#findHost')||$('#aiHost'); if(host)renderFindings(host,deal);}
+    if(a==='escalate'){DB.findings[f.id]='escalated';save();audit('Finding escalated',`${f.cat}: ${f.t}`);
+      toast('Escalated to Risk & Alert Center','bad');
+      const host=$('#findHost')||$('#aiHost'); if(host)renderFindings(host,deal);}
+  });
+}
+PAGES.ai=function(v){
+  v.innerHTML=`<div class="pad">
+    <div style="margin-bottom:24px"><h1 class="hero" style="font-size:27px">AI Intelligence</h1>
+      <p class="lede" style="font-size:13.5px">Analysis runs continuously across every document in the platform.
+      Findings surface where the work happens — not in a chat window.</p></div>
+    <div class="grid g4" style="margin-bottom:24px">
+      ${[['DOCUMENTS PROCESSED','147','gold'],['VERIFIED','126',''],['REQUIRE ATTENTION','14','warn'],
+         ['POTENTIAL MATERIAL ISSUES','2','crit']].map(([l,n,c])=>
+        `<div class="kpi ${c}" style="cursor:default"><div class="l">${l}</div><div class="v num">${n}</div></div>`).join('')}</div>
+    <div id="aiHost"></div>
+    <div class="sec"><h2>WHERE AI OPERATES</h2><div class="ln"></div></div>
+    <div class="secgrid">${[
+      ['Document analysis','docs','Classifies, extracts and cross-checks every file on upload.'],
+      ['Data extraction','file','Pulls figures, dates and parties into structured fields.'],
+      ['Risk detection','risk','Flags clauses, concentrations and covenant drift.'],
+      ['Automatic summaries','sparkle','One-page memos generated from the underlying evidence.'],
+      ['Workflow automation','flow','Routes items to the right reviewer at the right stage.'],
+      ['Report generation','report','Board and investor packs assembled from live data.'],
+      ['Smart recommendations','ai','Suggests next action based on comparable transactions.'],
+      ['Anomaly detection','eye','Surfaces figures that diverge from history or peers.'],
+    ].map(([t,i,d])=>`<div class="secit"><div class="i">${svg(i)}</div><b>${t}</b><span>${d}</span></div>`).join('')}</div>
+  </div>`;
+  renderFindings($('#aiHost'),dealById('HOR'));
+};
+
+/* ============ SCREEN 5 — INVESTMENT COMMITTEE ============ */
+PAGES.ic=function(v){
+  const queue=DEALS.filter(d=>stageOf(d)==='ic');
+  const d=queue[0]||dealById('TER');
+  v.innerHTML=`<div class="pad">
+    <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px">
+      <div style="flex:1"><h1 class="hero" style="font-size:27px">Investment Committee</h1>
+        <p class="lede" style="font-size:13.5px">${queue.length} transaction${queue.length===1?'':'s'} awaiting decision.
+        Every action generates an audit entry.</p></div>
+      <span class="demo">CONCEPT DEMO — SAMPLE DATA</span></div>
+
+    ${queue.length>1?`<div class="grid g4" style="margin-bottom:20px">${queue.map(q=>
+      `<div class="kpi" data-q="${q.id}"><div class="l">${esc(q.c).toUpperCase()} · ${esc(q.s).toUpperCase()}</div>
+       <div class="v num" style="font-size:24px">${USD(q.v)}</div>
+       <div class="d">${esc(q.n)}</div></div>`).join('')}</div>`:''}
+
+    <div class="card"><div class="card-h">
+      <div style="flex:1"><h3 style="font-size:18px;font-family:var(--serif);font-weight:400">${esc(d.n)}</h3>
+        <p>Investment Committee Review · ${esc(d.c)} · ${esc(d.s)}</p></div>
+      <div style="text-align:right"><div style="font-family:var(--serif);font-size:26px;color:var(--gold-2)"
+        class="num">${USD(d.v)}</div>
+        <div style="font-size:11px;color:var(--txt-3)">Target IRR ${d.irr}% · ${d.ten}</div></div></div>
+      <div class="card-b">
+        <div class="sec" style="margin-top:0"><h2>REVIEW GATES</h2><div class="ln"></div></div>
+        ${GATES.map(([n,w])=>`<div class="gate done">
+          <span class="chk done">✓</span><span class="nm">${n}</span>
+          <span class="who">${w}</span><span class="tagp t-ok">CLEARED</span></div>`).join('')}
+
+        <div class="grid g2" style="margin-top:24px">
+          <div><div class="sec" style="margin-top:0"><h2>INVESTMENT SUMMARY</h2><div class="ln"></div></div>
+            <dl class="kv"><dt>Instrument</dt><dd>Senior secured term facility</dd>
+              <dt>Ticket</dt><dd class="num">${USD(d.v)}</dd>
+              <dt>Target IRR</dt><dd class="num">${d.irr}%</dd>
+              <dt>Tenor</dt><dd>${d.ten}</dd>
+              <dt>Security</dt><dd>Asset pledge · offtake assignment · DSRA</dd>
+              <dt>Deal lead</dt><dd>${esc(d.lead)}</dd></dl>
+            <button class="btn btn-o btn-sm" id="icMemo" style="margin-top:14px">${svg('docs')}Open full memo</button></div>
+          <div><div class="sec" style="margin-top:0"><h2>RISK ASSESSMENT</h2><div class="ln"></div></div>
+            ${[['Country risk',d.risk==='low'?72:d.risk==='med'?55:34],['Counterparty',d.risk==='high'?41:78],
+               ['Structure',84],['Documentation',d.dd],['Concentration',66]].map(([n,p])=>`<div class="ddrow">
+              <span class="nm">${n}</span><span class="bar ${p>=70?'ok':p>=50?'warn':'bad'}"><i style="width:${p}%"></i></span>
+              <span class="pc num">${p}</span></div>`).join('')}
+            <p style="font-size:12px;color:var(--txt-4);margin-top:12px">Composite score
+              <b style="color:var(--gold-2)">${d.risk==='low'?'B+':d.risk==='med'?'B':'B−'}</b> · within mandate</p></div>
+        </div>
+
+        <div class="sec"><h2>KEY DOCUMENTS</h2><div class="ln"></div>
+          <a href="#/documents">Open Document Control ↗</a></div>
+        <div class="tw"><table><tbody>${DOCS.slice(0,4).map(x=>`<tr data-doc="${esc(x.n)}">
+          <td><b style="font-weight:600">${esc(x.n)}</b></td><td>${esc(x.cat)}</td>
+          <td class="num">${x.v}</td><td>${x.d}</td>
+          <td><span class="tagp ${x.st==='verified'?'t-ok':x.st==='expiring'?'t-review':'t-high'}">${x.st.toUpperCase().replace('-',' ')}</span></td>
+        </tr>`).join('')}</tbody></table></div>
+
+        <div class="sec"><h2>AI FINDINGS</h2><div class="ln"></div>
+          <a href="#/ai">Open AI Intelligence ↗</a></div>
+        ${FINDINGS.filter(f=>f.st!=='cleared').slice(0,2).map(f=>`<div class="gate">
+          <span class="tagp ${sevTag(f.sev)}">${f.cat}</span>
+          <span class="nm" style="font-weight:500;font-size:12.5px">${esc(f.t)}</span>
+          <span class="who">${DB.findings[f.id]==='escalated'?'Escalated':'Open'}</span></div>`).join('')}
+
+        <div class="sec"><h2>TEAM COMMENTS</h2><div class="ln"></div></div>
+        ${[['M. Reyes','Investment Director','Structure is consistent with the two prior transactions with this sponsor. Comfortable subject to the valuation refresh.'],
+           ['H. Tanaka','Risk','Country exposure sits within limit after this ticket. Recommend a covenant on FX conversion.'],
+           ['P. Dias','Compliance','KYC chain resolved across three jurisdictions. No adverse findings.']]
+          .map(([n,r,c])=>`<div class="reqrow"><div class="av-s" style="width:28px;height:28px;flex:0 0 28px;margin:0">
+            ${n.split(' ').map(x=>x[0]).join('')}</div>
+            <div style="flex:1"><b style="font-size:12.5px">${n}</b>
+              <span style="font-size:11px;color:var(--txt-4);margin-left:8px">${r}</span>
+              <p style="font-size:12.5px;color:var(--txt-2);margin-top:5px;line-height:1.6">${c}</p></div></div>`).join('')}
+
+        <div class="sec"><h2>DECISION HISTORY</h2><div class="ln"></div></div>
+        <div id="icHist"></div>
+
+        <div class="decide">
+          <button class="btn btn-ok" id="icApprove">APPROVE</button>
+          <button class="btn btn-warn" id="icChanges">REQUEST CHANGES</button>
+          <button class="btn btn-bad" id="icDecline">DECLINE</button></div>
+      </div></div></div>`;
+
+  $$('[data-q]').forEach(k=>k.onclick=()=>toast('Queued: '+dealById(k.dataset.q).n));
+  $('#icMemo').onclick=()=>showMemo(d);
+  $$('[data-doc]').forEach(r=>r.onclick=()=>location.hash='#/documents');
+  paintHist();
+  function paintHist(){
+    const seed=[{t:Date.now()-864e5*3,who:'L. Ferreira',action:'Submitted to committee',detail:d.n},
+      {t:Date.now()-864e5*4,who:'P. Dias',action:'Compliance cleared',detail:d.n},
+      {t:Date.now()-864e5*6,who:'H. Tanaka',action:'Risk review cleared',detail:d.n}];
+    const mine=(DB.ic[d.id]||[]).map(x=>({t:x.t,who:'A. Kovachev',action:x.a,detail:x.n||''}));
+    $('#icHist').innerHTML=[...mine,...seed].map(a=>`<div class="audit">
+      <span class="ts">${stamp(new Date(a.t))}</span><b>${esc(a.who)}</b>
+      <span style="flex:1">${esc(a.action)}${a.detail?' — '+esc(a.detail):''}</span></div>`).join('');
+  }
+  const decide=(action,kind,move)=>{
+    modal({title:action,sub:d.n+' · '+USD(d.v),
+      body:`<div class="fld"><label>RATIONALE (RECORDED IN AUDIT TRAIL)</label>
+          <textarea id="icNote" placeholder="Basis for the decision">${
+            action==='Approve'?'Approved subject to refreshed collateral valuation and counsel opinion on change-of-control.':''}</textarea></div>
+        <div class="fld"><label>CONDITIONS</label><select id="icCond">
+          <option>Conditions precedent as documented</option><option>Unconditional</option>
+          <option>Subject to legal opinion</option></select></div>
+        <p style="font-size:12px;color:var(--txt-4);margin-top:6px">This decision is final for the demo session and
+        appears immediately in the decision history and platform audit trail.</p>`,
+      footer:`<button class="btn btn-o" data-close>Cancel</button>
+        <button class="btn ${kind}" id="icGo">Confirm ${action.toLowerCase()}</button>`})
+      .querySelector('#icGo').onclick=function(){
+        const note=$('#icNote').value.trim();
+        DB.ic[d.id]=DB.ic[d.id]||[];
+        DB.ic[d.id].unshift({t:Date.now(),a:action+(note?': '+note:''),n:''});
+        if(move)DB.stages[d.id]=move; save();
+        audit('IC decision — '+action,`${d.n} (${USD(d.v)})`);
+        closeOv(); toast(`${d.n} — ${action.toLowerCase()} recorded`,kind==='btn-ok'?'ok':kind==='btn-bad'?'bad':'gold');
+        route();};
+  };
+  $('#icApprove').onclick=()=>decide('Approve','btn-ok','appr');
+  $('#icChanges').onclick=()=>decide('Request changes','btn-warn','dd');
+  $('#icDecline').onclick=()=>decide('Decline','btn-bad',null);
+};
+
+/* ============ SCREEN 6 — RISK & ALERT CENTER ============ */
+const RISKCATS=['All','Financial','Counterparty','Operational','Country','Legal','Compliance','Documents'];
+let riskCat='All';
+PAGES.risk=function(v){
+  v.innerHTML=`<div class="pad">
+    <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px">
+      <div style="flex:1"><h1 class="hero" style="font-size:27px">Risk &amp; Alert Center</h1>
+        <p class="lede" style="font-size:13.5px">Continuous monitoring across the portfolio and active pipeline.</p></div>
+      <span class="demo">CONCEPT DEMO — SAMPLE DATA</span></div>
+    <div class="grid g4" style="margin-bottom:22px">
+      ${[['CRITICAL',ALERTS.filter(a=>a.sev==='high'&&!DB.alerts[a.id]).length,'crit'],
+         ['ELEVATED',ALERTS.filter(a=>a.sev==='med'&&!DB.alerts[a.id]).length,'warn'],
+         ['TOTAL EXPOSURE FLAGGED',USD(ALERTS.filter(a=>!DB.alerts[a.id]).reduce((s,a)=>s+a.exp,0)),'gold'],
+         ['CASES OPENED',Object.keys(DB.alerts).length,'']].map(([l,n,c])=>
+        `<div class="kpi ${c}" style="cursor:default"><div class="l">${l}</div><div class="v num">${n}</div></div>`).join('')}</div>
+    <div class="chips" style="margin-bottom:16px" id="rcats">
+      ${RISKCATS.map(c=>`<button class="chip ${c===riskCat?'on':''}" data-c="${c}"
+        style="${c===riskCat?'border-color:var(--gold);color:var(--gold-2)':''}">${c}${
+        c!=='All'?` · ${ALERTS.filter(a=>a.cat===c).length}`:` · ${ALERTS.length}`}</button>`).join('')}</div>
+    <div id="alist"></div></div>`;
+  $('#rcats').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;riskCat=b.dataset.c;route();};
+  paintAlerts();
+  function paintAlerts(){
+    const list=ALERTS.filter(a=>riskCat==='All'||a.cat===riskCat);
+    $('#alist').innerHTML=list.length?list.map(a=>{
+      const d=dealById(a.deal), done=DB.alerts[a.id];
+      return `<div class="find ${done?'gone':''}">
+        <div class="r1"><span class="tagp ${sevTag(a.sev)}">${a.sev==='high'?'HIGH PRIORITY':a.sev==='med'?'ELEVATED':'MONITOR'}</span>
+          <span class="tagp t-mut">${a.cat.toUpperCase()}</span>
+          ${done?`<span class="tagp t-ok">${done.toUpperCase()}</span>`:''}
+          <div style="flex:1"></div><span style="font-size:11px;color:var(--txt-4)">${a.age} ago</span></div>
+        <h4>${esc(d?d.n:a.deal)}</h4>
+        <p>${esc(a.t)}. ${esc(a.d)}</p>
+        <div style="display:flex;gap:26px;margin-top:13px;flex-wrap:wrap">
+          <div><span style="font-size:9.5px;letter-spacing:.12em;color:var(--txt-4);font-weight:700;display:block">RELATED EXPOSURE</span>
+            <b class="num" style="font-family:var(--serif);font-size:19px;color:var(--gold-2)">${USD(a.exp)}</b></div>
+          <div><span style="font-size:9.5px;letter-spacing:.12em;color:var(--txt-4);font-weight:700;display:block">EVIDENCE</span>
+            <b style="font-size:15px">${a.ev} document${a.ev===1?'':'s'}</b></div>
+          <div><span style="font-size:9.5px;letter-spacing:.12em;color:var(--txt-4);font-weight:700;display:block">DEAL</span>
+            <b style="font-size:15px">${esc(d?d.c:'—')}</b></div></div>
+        <div class="acts">
+          <button class="btn btn-o btn-sm" data-al="case" data-id="${a.id}">OPEN CASE</button>
+          <button class="btn btn-o btn-sm" data-al="assign" data-id="${a.id}">ASSIGN REVIEW</button>
+          <button class="btn btn-o btn-sm" data-al="ev" data-id="${a.id}">VIEW EVIDENCE</button>
+          <button class="btn btn-bad btn-sm" data-al="esc" data-id="${a.id}">ESCALATE</button></div></div>`;
+    }).join(''):`<div class="card"><div class="empty"><b>No alerts in this category</b>
+      <p>Monitoring remains active.</p></div></div>`;
+    $$('[data-al]').forEach(b=>b.onclick=()=>{
+      const a=ALERTS.find(x=>x.id===b.dataset.id), act=b.dataset.al, d=dealById(a.deal);
+      if(act==='case'){DB.alerts[a.id]='case opened';save();audit('Risk case opened',`${d.n}: ${a.t}`);
+        toast('Case opened · assigned reference RSK-'+a.id,'ok');paintAlerts();}
+      if(act==='assign') modal({title:'Assign review',sub:a.t,
+        body:`<div class="fld"><label>REVIEWER</label><select id="aA">${Object.values(TEAM).map(t=>`<option>${t}</option>`).join('')}</select></div>
+          <div class="fld"><label>TARGET DATE</label><input type="date" value="2026-09-15"/></div>`,
+        footer:`<button class="btn btn-o" data-close>Cancel</button><button class="btn btn-g" id="aGo">Assign</button>`})
+        .querySelector('#aGo').onclick=function(){const w=$('#aA').value;DB.alerts[a.id]='assigned';save();
+          closeOv();audit('Risk review assigned',`${a.t} → ${w}`);toast('Assigned to '+w,'ok');paintAlerts();};
+      if(act==='ev') modal({title:'Evidence',sub:`${d.n} · ${a.ev} document${a.ev===1?'':'s'}`,
+        body:`<div class="tw"><table><thead><tr><th>DOCUMENT</th><th>TYPE</th><th>DATE</th><th>FLAG</th></tr></thead>
+          <tbody>${[...Array(a.ev)].map((_,i)=>`<tr><td><b style="font-weight:600">${a.deal}-EV-${pad2(i+1)}.pdf</b></td>
+            <td>${['Payment instruction','Bank confirmation','Counterparty register','Board minute','Rating report'][i%5]}</td>
+            <td>2026-09-0${i+1}</td><td><span class="tagp ${i===0?'t-high':'t-review'}">${i===0?'FLAGGED':'REVIEW'}</span></td></tr>`).join('')}
+          </tbody></table></div>`,
+        footer:`<button class="btn btn-o" data-close>Close</button>
+          <button class="btn btn-g" onclick="location.hash='#/documents';closeOv()">Open Document Control</button>`});
+      if(act==='esc'){DB.alerts[a.id]='escalated';save();audit('Alert escalated',`${d.n}: ${a.t}`);
+        toast('Escalated to Investment Director','bad');paintAlerts();}
+    });
+  }
+};
+
+
+/* ============ SCREEN 7 — DOCUMENT CONTROL ============ */
+const DOCAI=[['17 documents approaching expiry','warn','Renewal window opens within 60 days'],
+ ['6 documents missing signatures','high','Execution incomplete on counterparty side'],
+ ['4 potential data inconsistencies','warn','Figures diverge across related filings'],
+ ['3 items requiring compliance review','high','Flagged by policy engine']];
+let docCat='All', docQ='';
+function docRow(x){
+  const st={verified:['t-ok','VERIFIED'],expiring:['t-review','EXPIRING'],
+    review:['t-review','IN REVIEW'],'missing-sig':['t-high','MISSING SIGNATURE']}[x.st]||['t-mut',x.st];
+  return `<tr data-doc="${esc(x.n)}"><td><b style="font-weight:600">${esc(x.n)}</b></td>
+    <td style="color:var(--txt-3)">${esc(x.cat)}</td><td class="num">${x.v}</td>
+    <td style="color:var(--txt-3)">${esc(x.by)}</td><td class="num">${x.d}</td>
+    <td><span class="tagp ${st[0]}">${st[1]}</span></td><td class="n num" style="color:var(--txt-3)">${x.sz}</td></tr>`;
+}
+function wireDocRows(){
+  $$('[data-doc]').forEach(r=>r.onclick=()=>{
+    const x=DOCS.find(d=>d.n===r.dataset.doc)||{n:r.dataset.doc,cat:'—',v:'v1.0',by:'—',d:'—',sz:'—',st:'verified'};
+    modal({title:x.n,sub:`${x.cat} · ${x.v} · ${x.sz}`,size:'lg',
+      body:`<div class="grid g2">
+        <div><div class="sec" style="margin-top:0"><h2>PROPERTIES</h2><div class="ln"></div></div>
+          <dl class="kv"><dt>Category</dt><dd>${esc(x.cat)}</dd><dt>Version</dt><dd>${x.v}</dd>
+            <dt>Owner</dt><dd>${esc(x.by)}</dd><dt>Uploaded</dt><dd>${x.d}</dd>
+            <dt>Size</dt><dd>${x.sz}</dd><dt>Classification</dt><dd>Auto-classified · 96% confidence</dd>
+            <dt>Retention</dt><dd>7 years from maturity</dd></dl></div>
+        <div><div class="sec" style="margin-top:0"><h2>VERSION HISTORY</h2><div class="ln"></div></div>
+          ${['v4.2 · current · A. Kovachev','v4.1 · superseded · sponsor upload','v3.0 · superseded · counsel markup',
+             'v1.0 · original · sponsor upload'].map((h,i)=>`<div class="audit">
+            <span class="ts">${['2026-08-14','2026-07-28','2026-06-30','2026-05-12'][i]}</span>
+            <span style="flex:1">${h}</span></div>`).join('')}
+          <div class="sec"><h2>PERMISSIONS</h2><div class="ln"></div></div>
+          ${[['Deal team','Read / write'],['Investment Committee','Read'],['External counsel','Read · watermarked'],
+             ['All staff','No access']].map(([g,p])=>`<div class="gate" style="padding:9px 13px">
+            <span class="nm" style="font-size:12.5px">${g}</span><span class="who">${p}</span></div>`).join('')}</div></div>`,
+      footer:`<button class="btn btn-o" data-close>Close</button>
+        <button class="btn btn-o" id="dvDl">${svg('dl')}Download</button>
+        <button class="btn btn-g" id="dvAI">${svg('sparkle')}Run AI analysis</button>`})
+      .addEventListener('click',e=>{
+        if(e.target.closest('#dvDl')){audit('Document downloaded',x.n);toast('Download started','ok');}
+        if(e.target.closest('#dvAI')){closeOv();audit('AI analysis run',x.n);
+          toast('Analysis complete — 1 finding raised','gold');location.hash='#/ai';}});
+  });
+}
+PAGES.documents=function(v){
+  v.innerHTML=`<div class="pad">
+    <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px">
+      <div style="flex:1"><h1 class="hero" style="font-size:27px">Document Control</h1>
+        <p class="lede" style="font-size:13.5px">1,572 documents · classified, versioned and permissioned automatically.</p></div>
+      <div class="btnrow"><button class="btn btn-o" id="dUp">${svg('plus')}Upload</button>
+        <button class="btn btn-g" id="dAudit">${svg('shield')}Compliance sweep</button></div></div>
+
+    <div class="grid g4" style="margin-bottom:22px">${DOCAI.map(([t,sev,d])=>
+      `<div class="card" style="padding:16px 18px"><div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+        <span class="tagp ${sev==='high'?'t-high':'t-review'}">${sev==='high'?'ACTION':'MONITOR'}</span></div>
+        <b style="font-size:13.5px;display:block">${t}</b>
+        <span style="font-size:11.5px;color:var(--txt-3);display:block;margin-top:5px">${d}</span></div>`).join('')}</div>
+
+    <div class="sec"><h2>CATEGORIES</h2><div class="ln"></div>
+      <span style="font-size:11px;color:var(--txt-4)">Automatic classification</span></div>
+    <div class="grid g4" style="margin-bottom:22px" id="dcats">
+      ${DOCCATS.map(([n,c,f])=>`<div class="kpi" data-cat="${n}" style="padding:15px 17px">
+        <div class="l">${n.toUpperCase()}</div><div class="v num" style="font-size:24px">${N(c)}</div>
+        <div class="d">${f?`<span style="color:var(--warn)">${f} need attention</span>`:'All verified'}</div></div>`).join('')}</div>
+
+    <div class="card"><div class="card-h">
+      <div class="search" style="width:320px">${svg('search')}
+        <input id="dq" placeholder="Smart search — try &quot;valuation&quot; or &quot;Horizon&quot;" value="${esc(docQ)}"/></div>
+      <div class="sp"></div>
+      <span class="tagp t-mut" id="dcount"></span></div>
+      <div class="tw"><table><thead><tr><th>DOCUMENT</th><th>CATEGORY</th><th>VERSION</th><th>OWNER</th>
+        <th>DATE</th><th>STATUS</th><th class="n">SIZE</th></tr></thead>
+        <tbody id="dbody"></tbody></table></div></div></div>`;
+
+  const paint=()=>{
+    const list=DOCS.filter(x=>(docCat==='All'||x.cat===docCat)&&
+      (!docQ||(x.n+x.cat+x.by+x.deal).toLowerCase().includes(docQ.toLowerCase())));
+    $('#dbody').innerHTML=list.length?list.map(docRow).join('')
+      :`<tr><td colspan="7"><div class="empty"><b>No documents match</b><p>Adjust the search or category.</p></div></td></tr>`;
+    $('#dcount').textContent=`${list.length} of ${DOCS.length} shown${docCat!=='All'?' · '+docCat:''}`;
+    wireDocRows();
+  };
+  $('#dq').addEventListener('input',e=>{docQ=e.target.value;paint();});
+  $$('[data-cat]').forEach(c=>c.onclick=()=>{docCat=docCat===c.dataset.cat?'All':c.dataset.cat;
+    toast(docCat==='All'?'Showing all categories':'Filtered: '+docCat);paint();});
+  $('#dUp').onclick=()=>modal({title:'Upload documents',
+    body:`<div style="border:1.5px dashed var(--line-2);border-radius:11px;padding:40px;text-align:center;color:var(--txt-3)">
+      ${svg('docs')}<p style="margin-top:12px;font-size:13.5px"><b>Drop files here</b> or click to browse</p>
+      <p style="font-size:11.5px;margin-top:5px">PDF, DOCX, XLSX · classified automatically on upload</p></div>`,
+    footer:`<button class="btn btn-o" data-close>Cancel</button><button class="btn btn-g" id="upGo">Upload</button>`})
+    .querySelector('#upGo').onclick=function(){closeOv();audit('Documents uploaded','3 files');
+      toast('3 files uploaded · classification running','ok');};
+  $('#dAudit').onclick=()=>{audit('Compliance sweep run','1,572 documents');
+    toast('Sweep complete — 4 items require compliance review','gold');};
+  paint();
+};
+
+/* ============ SCREEN 8 — CUSTOM SYSTEM BUILDER ============ */
+const SUGGEST={
+ procurement:[['Supplier Management','Registry, qualification, performance scoring'],
+  ['RFQ','Structured requests issued to qualified suppliers'],
+  ['Quotation Comparison','Side-by-side normalisation across bids'],
+  ['Approval Workflow','Threshold-based routing by value and country'],
+  ['Purchase Orders','Issue, amend, receipt and match'],
+  ['Contracts','Terms, renewals and obligation tracking'],
+  ['Delivery Tracking','Milestones, partial receipt, exceptions'],
+  ['Executive Dashboard','Spend, cycle time and savings by entity']],
+ default:[['Intake','Structured capture of every request'],
+  ['Classification','Automatic routing by type and value'],
+  ['Review Workflow','Multi-level approval with delegation'],
+  ['Evidence & Documents','Version control and permissions'],
+  ['Exception Handling','Escalation paths with SLA tracking'],
+  ['Audit Trail','Immutable record of every action'],
+  ['Notifications','Targeted alerts to the right owner'],
+  ['Executive Dashboard','Live view for leadership']],
+};
+PAGES.builder=function(v){
+  v.innerHTML=`<div class="pad">
+    <div class="bhero">
+      <span class="demo">CONCEPT DEMO — SAMPLE DATA</span>
+      <h1 style="margin-top:20px">BUILD WHAT YOUR<br/>BUSINESS NEEDS.</h1>
+      <p>“Your process. Your rules. Your system.”</p></div>
+
+    <div class="sec"><h2>AVAILABLE MODULES</h2><div class="ln"></div>
+      <span style="font-size:11px;color:var(--txt-4)">Select to compose · or describe your process below</span></div>
+    <div class="mods" id="mods">${MODULES.map(([n,i,d])=>`<div class="mod" data-m="${esc(n)}">
+      <div class="i">${svg(i)}</div><b>${n}</b><span>${d}</span></div>`).join('')}</div>
+
+    <div class="genbox">
+      <h3>What business process would you like to improve?</h3>
+      <p style="color:var(--txt-3);font-size:13.5px;margin-top:7px">Describe it in your own words.
+        The platform proposes the modules, data model and workflow.</p>
+      <div class="genin">
+        <input id="bq" placeholder="Manage procurement, suppliers and approvals across multiple countries."/>
+        <button class="btn btn-g btn-lg" id="bGo">${svg('sparkle')}CREATE NEW SYSTEM</button></div>
+      <div class="chips">${['Manage procurement, suppliers and approvals across multiple countries.',
+        'Track capital calls and investor reporting for three funds.',
+        'Run board approvals with full audit for a regulated entity.',
+        'Onboard counterparties with KYC across five jurisdictions.']
+        .map(s=>`<button class="chip" data-ex="${esc(s)}">${esc(s.length>52?s.slice(0,52)+'…':s)}</button>`).join('')}</div>
+      <div id="bout"></div></div>
+
+    <div class="sec"><h2>ENTERPRISE SECURITY</h2><div class="ln"></div>
+      <span style="font-size:11px;color:var(--gold-2);font-weight:700;letter-spacing:.1em">YOUR DATA. YOUR CONTROL.</span></div>
+    <div class="secgrid">${SECURITY.map(([t,i,d])=>`<div class="secit">
+      <div class="i">${svg(i)}</div><b>${t}</b><span>${d}</span></div>`).join('')}</div>
+
+    <div class="card" style="margin-top:34px;background:linear-gradient(140deg,#0F1319,#141B24);border-color:var(--gold-dim)">
+      <div class="card-b" style="padding:40px;text-align:center">
+        <h2 style="font-family:var(--serif);font-size:clamp(21px,2.8vw,31px);letter-spacing:-.02em;line-height:1.3">
+          We don't sell you a fixed system.<br/><em style="color:var(--gold-2);font-style:italic">We build the system your business needs.</em></h2>
+        <p style="color:var(--txt-3);margin-top:18px;font-size:14.5px">
+          If you can describe the process, we can build the system around it.</p></div></div>
+  </div>`;
+
+  const sel=new Set();
+  $$('.mod').forEach(m=>m.onclick=()=>{const n=m.dataset.m;
+    sel.has(n)?sel.delete(n):sel.add(n); m.classList.toggle('on');
+    if(sel.size)toast(`${sel.size} module${sel.size===1?'':'s'} selected`);});
+  $$('[data-ex]').forEach(c=>c.onclick=()=>{$('#bq').value=c.dataset.ex;generate();});
+  $('#bGo').onclick=generate;
+  $('#bq').addEventListener('keydown',e=>{if(e.key==='Enter')generate();});
+
+  function generate(){
+    const q=$('#bq').value.trim();
+    if(!q){toast('Describe the process first','bad');$('#bq').focus();return;}
+    const key=/procure|supplier|purchas|rfq|vendor/i.test(q)?'procurement':'default';
+    const mods=SUGGEST[key];
+    const out=$('#bout');
+    out.innerHTML=`<div style="margin-top:26px;display:flex;align-items:center;gap:11px">
+      <div class="tagp t-gold">ANALYSING</div>
+      <div style="flex:1"><div class="bar" style="height:3px"><i id="bbar" style="width:0%"></i></div></div></div>`;
+    let p=0;
+    const iv=setInterval(()=>{p=Math.min(100,p+14+Math.random()*10);$('#bbar').style.width=p+'%';
+      if(p>=100){clearInterval(iv);show();}},110);
+    function show(){
+      out.innerHTML=`<div class="sec"><h2>PROPOSED SYSTEM</h2><div class="ln"></div>
+          <span style="font-size:11px;color:var(--txt-4)">${mods.length} modules · generated from your description</span></div>
+        <div class="genout">${mods.map(([n,d],i)=>`<div class="gmod" style="animation-delay:${i*70}ms">
+          <span class="n">MODULE ${pad2(i+1)}</span><b>${n}</b><span>${d}</span></div>`).join('')}</div>
+        <div class="grid g3" style="margin-top:20px">
+          ${[['ESTIMATED BUILD','3 weeks'],['INTEGRATIONS','ERP · email · e-signature'],
+             ['USERS AT LAUNCH','40 – 120']].map(([l,val])=>`<div class="card" style="padding:16px 18px">
+            <div class="l" style="font-size:10px;letter-spacing:.12em;color:var(--txt-4);font-weight:700">${l}</div>
+            <b style="font-family:var(--serif);font-size:20px;display:block;margin-top:7px">${val}</b></div>`).join('')}</div>
+        <div class="btnrow" style="margin-top:20px;justify-content:flex-end">
+          <button class="btn btn-o" id="bRefine">Refine description</button>
+          <button class="btn btn-g" id="bSave">${svg('check')}Save this system</button></div>`;
+      $('#bRefine').onclick=()=>$('#bq').focus();
+      $('#bSave').onclick=()=>{DB.systems.unshift({t:Date.now(),q,mods:mods.map(m=>m[0])});save();
+        audit('Custom system generated',q.slice(0,60));
+        toast('System saved — '+mods.length+' modules','ok');};
+      audit('System generated from description',q.slice(0,60));
+    }
+  }
+};
+
+/* ============ REMAINING SCREENS ============ */
+function listPage(v,{title,sub,rows,cols,onRow,kpis}){
+  v.innerHTML=`<div class="pad">
+    <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px">
+      <div style="flex:1"><h1 class="hero" style="font-size:27px">${esc(title)}</h1>
+        <p class="lede" style="font-size:13.5px">${esc(sub)}</p></div>
+      <span class="demo">CONCEPT DEMO — SAMPLE DATA</span></div>
+    ${kpis?`<div class="grid g4" style="margin-bottom:22px">${kpis.map(([l,n,c])=>
+      `<div class="kpi ${c||''}" style="cursor:default"><div class="l">${l}</div>
+       <div class="v num">${n}</div></div>`).join('')}</div>`:''}
+    <div class="card"><div class="tw"><table><thead><tr>${cols.map(c=>
+      `<th class="${c.n?'n':''}">${c.h}</th>`).join('')}</tr></thead><tbody>
+      ${rows.map((r,i)=>`<tr data-i="${i}">${cols.map(c=>
+        `<td class="${c.n?'n':''}">${c.r(r)}</td>`).join('')}</tr>`).join('')}
+      </tbody></table></div></div></div>`;
+  if(onRow)$$('tbody tr').forEach(tr=>tr.onclick=()=>onRow(rows[+tr.dataset.i]));
+}
+const dealCols=[
+ {h:'DEAL',r:d=>`<b style="font-weight:600">${esc(d.n)}</b>`},
+ {h:'COUNTRY',r:d=>`<span style="color:var(--txt-3)">${esc(d.c)}</span>`},
+ {h:'SECTOR',r:d=>`<span style="color:var(--txt-3)">${esc(d.s)}</span>`},
+ {h:'SIZE',n:1,r:d=>`<b class="num" style="color:var(--gold-2)">${USD(d.v)}</b>`},
+ {h:'STAGE',r:d=>`<span class="tagp t-mut">${STLBL[stageOf(d)]}</span>`},
+ {h:'RISK',r:d=>`<span class="tagp ${d.risk==='low'?'t-ok':d.risk==='med'?'t-review':'t-high'}">${riskLbl[d.risk].toUpperCase()}</span>`},
+ {h:'DD',n:1,r:d=>`<span class="num">${d.dd}%</span>`},
+ {h:'IRR',n:1,r:d=>`<span class="num">${d.irr}%</span>`},
+ {h:'LEAD',r:d=>`<span style="color:var(--txt-3)">${esc(d.lead)}</span>`}];
+PAGES.investments=v=>listPage(v,{title:'Investments',sub:'All transactions across pipeline and portfolio.',
+  rows:DEALS,cols:dealCols,onRow:d=>openDeal(d.id),
+  kpis:[['TOTAL TRANSACTIONS',DEALS.length],['AGGREGATE SIZE',USD(DEALS.reduce((a,d)=>a+d.v,0)),'gold'],
+    ['AVERAGE IRR',(DEALS.reduce((a,d)=>a+d.irr,0)/DEALS.length).toFixed(1)+'%'],
+    ['MARKETS',new Set(DEALS.map(d=>d.c)).size]]});
+PAGES.dd=v=>{
+  const rows=DEALS.filter(d=>['dd','screen'].includes(stageOf(d)));
+  listPage(v,{title:'Due Diligence',sub:'Active workstreams and completion by transaction.',
+    rows,cols:[...dealCols.slice(0,4),
+      {h:'PROGRESS',r:d=>`<div style="display:flex;align-items:center;gap:9px;min-width:150px">
+        <span class="bar ${d.dd>=90?'ok':d.dd>=50?'':'warn'}" style="flex:1"><i style="width:${d.dd}%"></i></span>
+        <span class="num" style="font-size:12px">${d.dd}%</span></div>`},
+      {h:'NEXT ACTION',r:d=>`<span style="color:var(--txt-3)">${esc(d.next)}</span>`},
+      {h:'DAYS',n:1,r:d=>`<span class="num">${d.days}</span>`}],
+    onRow:d=>openDeal(d.id),
+    kpis:[['IN DUE DILIGENCE',rows.length],['CAPITAL UNDER REVIEW',USD(rows.reduce((a,d)=>a+d.v,0)),'gold'],
+      ['AVERAGE COMPLETION',Math.round(rows.reduce((a,d)=>a+d.dd,0)/Math.max(1,rows.length))+'%'],
+      ['OPEN ACTIONS','11','warn']]});
+};
+PAGES.portfolio=v=>{
+  const rows=DEALS.filter(d=>['port','appr'].includes(stageOf(d)));
+  listPage(v,{title:'Portfolio',sub:'Deployed and committed positions under management.',
+    rows,cols:dealCols,onRow:d=>openDeal(d.id),
+    kpis:[['TOTAL PORTFOLIO','$9.0B+','gold'],['ACTIVE POSITIONS',rows.length],
+      ['MARKETS','25+'],['WEIGHTED IRR',(rows.reduce((a,d)=>a+d.irr,0)/Math.max(1,rows.length)).toFixed(1)+'%']]});
+};
+PAGES.approvals=v=>{
+  const rows=[...DEALS.filter(d=>['ic','appr'].includes(stageOf(d))).map(d=>({
+    n:d.n,t:'Investment approval',v:d.v,who:d.lead,st:stageOf(d)==='ic'?'Pending IC':'Approved',id:d.id})),
+    {n:'Project Horizon',t:'Document request — collateral valuation',v:0,who:'A. Kovachev',st:'Pending',id:'HOR'},
+    {n:'Project Silk',t:'Covenant waiver',v:76e6,who:'H. Tanaka',st:'Pending',id:'SIL'}];
+  listPage(v,{title:'Approvals',sub:'Items awaiting a named approver. Nothing executes without sign-off.',
+    rows,cols:[
+      {h:'ITEM',r:r=>`<b style="font-weight:600">${esc(r.t)}</b>`},
+      {h:'TRANSACTION',r:r=>`<span style="color:var(--txt-3)">${esc(r.n)}</span>`},
+      {h:'VALUE',n:1,r:r=>r.v?`<b class="num" style="color:var(--gold-2)">${USD(r.v)}</b>`:'—'},
+      {h:'OWNER',r:r=>`<span style="color:var(--txt-3)">${esc(r.who)}</span>`},
+      {h:'STATUS',r:r=>`<span class="tagp ${r.st==='Approved'?'t-ok':'t-review'}">${r.st.toUpperCase()}</span>`}],
+    onRow:r=>{if(r.st.includes('IC'))location.hash='#/ic';else openDeal(r.id);},
+    kpis:[['AWAITING APPROVAL','4','warn'],['APPROVED THIS MONTH','6'],
+      ['AVG TIME TO DECISION','4.2 days'],['ESCALATIONS','1','crit']]});
+};
+PAGES.reports=function(v){
+  const REPS=[['Quarterly Portfolio Review','Board','Q3 2026','Ready'],
+    ['Investment Committee Pack','Committee','September','Ready'],
+    ['Risk & Exposure Summary','Risk','Weekly','Ready'],
+    ['Regulatory Filing Extract','Compliance','H1 2026','Draft'],
+    ['Investor Update','LP relations','Q3 2026','Draft'],
+    ['Pipeline Analytics','Management','Live','Ready']];
+  v.innerHTML=`<div class="pad">
+    <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px">
+      <div style="flex:1"><h1 class="hero" style="font-size:27px">Reports</h1>
+        <p class="lede" style="font-size:13.5px">Assembled from live platform data — not re-keyed.</p></div>
+      <span class="demo">CONCEPT DEMO — SAMPLE DATA</span></div>
+    <div class="grid g3">${REPS.map(([n,aud,per,st])=>`<div class="card" data-rep="${esc(n)}"
+      style="cursor:pointer;transition:.18s">
+      <div class="card-b"><div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
+        <span class="tagp ${st==='Ready'?'t-ok':'t-review'}">${st.toUpperCase()}</span>
+        <div style="flex:1"></div><span style="font-size:11px;color:var(--txt-4)">${per}</span></div>
+        <b style="font-size:15px;display:block">${n}</b>
+        <span style="font-size:12px;color:var(--txt-3);display:block;margin-top:5px">Audience · ${aud}</span>
+        <div class="btnrow" style="margin-top:16px">
+          <button class="btn btn-o btn-sm">${svg('eye')}Preview</button>
+          <button class="btn btn-g btn-sm">${svg('dl')}Generate</button></div></div></div>`).join('')}</div></div>`;
+  $$('[data-rep]').forEach(c=>c.onclick=()=>{audit('Report generated',c.dataset.rep);
+    toast(c.dataset.rep+' generated','ok');});
+};
+PAGES.settings=function(v){
+  v.innerHTML=`<div class="pad">
+    <div style="margin-bottom:22px"><h1 class="hero" style="font-size:27px">Settings</h1>
+      <p class="lede" style="font-size:13.5px">Platform configuration, security posture and integrations.</p></div>
+    <div class="sec" style="margin-top:0"><h2>ENTERPRISE SECURITY</h2><div class="ln"></div>
+      <span style="font-size:11px;color:var(--gold-2);font-weight:700;letter-spacing:.1em">YOUR DATA. YOUR CONTROL.</span></div>
+    <div class="secgrid">${SECURITY.map(([t,i,d])=>`<div class="secit">
+      <div class="i">${svg(i)}</div><b>${t}</b><span>${d}</span></div>`).join('')}</div>
+    <div class="grid g2" style="margin-top:26px">
+      <div class="card"><div class="card-h"><div style="flex:1"><h3>Workspace</h3></div></div>
+        <div class="card-b"><dl class="kv">
+          <dt>Organisation</dt><dd>Gemcorp Capital</dd><dt>Environment</dt><dd>Private tenant · EU region</dd>
+          <dt>Users</dt><dd class="num">148</dd><dt>Retention policy</dt><dd>7 years from maturity</dd>
+          <dt>Data residency</dt><dd>Single region · no cross-border replication</dd>
+          <dt>Model training</dt><dd>Disabled on customer data</dd></dl></div></div>
+      <div class="card"><div class="card-h"><div style="flex:1"><h3>Audit trail</h3>
+        <p>Every action, immutable and exportable</p></div>
+        <button class="btn btn-o btn-sm" id="expAudit">${svg('dl')}Export</button></div>
+        <div class="card-b" style="max-height:320px;overflow-y:auto" id="auditList"></div></div></div></div>`;
+  const seed=[{t:Date.now()-3.6e6,who:'H. Tanaka',action:'Risk review completed',detail:'Project Indus'},
+    {t:Date.now()-9e6,who:'AI Engine',action:'Document analysis run',detail:'147 documents'},
+    {t:Date.now()-1.6e7,who:'P. Dias',action:'Compliance sign-off',detail:'Project Pampas'}];
+  const rows=[...DB.audit,...seed];
+  $('#auditList').innerHTML=rows.length?rows.map(a=>`<div class="audit">
+    <span class="ts">${stamp(new Date(a.t))}</span><b>${esc(a.who)}</b>
+    <span style="flex:1">${esc(a.action)}${a.detail?' — '+esc(a.detail):''}</span></div>`).join('')
+    :`<div class="empty"><b>No entries yet</b></div>`;
+  $('#expAudit').onclick=()=>{
+    const csv=['Timestamp,User,Action,Detail',...rows.map(a=>
+      `"${stamp(new Date(a.t))}","${a.who}","${a.action}","${a.detail||''}"`)].join('\n');
+    const el2=document.createElement('a');el2.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    el2.download='gemcorp-audit-trail.csv';el2.click();toast('Audit trail exported','ok');};
+};
+
+/* boot */
+shell(); route();
+
+</script>
+</html>
