@@ -553,6 +553,93 @@ body[data-theme="ledger"] .tsw{border-color:var(--line-2)}
 .ccell:hover .cdot{fill:var(--gold-2)}
 body[data-theme="ledger"] .ccell:hover .cdot{fill:var(--txt)}
 
+/* ===================== VIZ ENGINE ===================== */
+body{--heat:#C9A961}
+body[data-theme="ledger"]{--heat:#181A1D}
+.vsvg{width:100%;height:auto;display:block;overflow:visible}
+.vgrid{stroke:var(--line);stroke-width:1}
+.vaxis{font-size:10px;fill:var(--txt-4);font-family:var(--mono);letter-spacing:.03em}
+.vaxis-t{font-size:9.5px;fill:var(--txt-4);letter-spacing:.14em;font-weight:700}
+.vval{font-size:11px;fill:var(--txt-2);font-weight:650;font-family:var(--mono)}
+.vcross{stroke:var(--txt-3);stroke-width:1;stroke-dasharray:3 3}
+.vconn{stroke:var(--txt-4);stroke-width:1;stroke-dasharray:3 3}
+.vtip{position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;z-index:20;
+  background:var(--ink-3);border:1px solid var(--line-2);padding:9px 12px;min-width:150px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35)}
+body[data-theme="ledger"] .vtip{background:var(--txt);border-color:var(--txt)}
+.vtip b{font-size:12px;display:block;color:var(--txt)}
+body[data-theme="ledger"] .vtip b{color:var(--ink-1)}
+.vtip span{font-size:11px;color:var(--txt-3);display:flex;align-items:center;gap:6px;margin-top:3px}
+body[data-theme="ledger"] .vtip span{color:rgba(255,255,255,.72)}
+.vtip span b{display:inline;margin-left:auto;color:var(--txt)}
+body[data-theme="ledger"] .vtip span b{color:var(--ink-1)}
+.vtip i{width:8px;height:8px;flex:0 0 8px}
+.vlegend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;padding-left:64px}
+.vlegend button{font-size:11.5px;color:var(--txt-4);display:flex;align-items:center;gap:7px}
+.vlegend button.on{color:var(--txt-2)}
+.vlegend button i{width:9px;height:9px;flex:0 0 9px;opacity:.35}
+.vlegend button.on i{opacity:1}
+.vdonut{position:relative;flex:0 0 auto}
+.vcenter{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+.vcenter b{font-family:var(--serif);font-size:24px;display:block;line-height:1}
+.vcenter span{font-size:9px;letter-spacing:.14em;color:var(--txt-4);font-weight:700;display:block;margin-top:5px}
+.vseg{cursor:pointer;transition:opacity .18s}
+.vlist{flex:1;min-width:210px}
+.vrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);
+  font-size:12.5px;cursor:pointer}
+.vrow:last-child{border-bottom:0}
+.vrow.on{background:var(--ink-3)}
+.vrow i{width:9px;height:9px;flex:0 0 9px}
+.vrow span{flex:1;color:var(--txt-2)}
+.vrow b{font-weight:650}
+.vrow em{font-style:normal;font-size:11px;color:var(--txt-4);width:46px;text-align:right;font-family:var(--mono)}
+.vbars{display:flex;flex-direction:column;gap:9px}
+.vbar{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:12.5px}
+.vbar:hover .lb{color:var(--txt)}
+.vbar .lb{flex:0 0 148px;color:var(--txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vbar .tr{flex:1;height:16px;background:var(--ink-3);position:relative}
+.vbar .tr i{display:block;height:100%;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.vbar b{flex:0 0 74px;text-align:right;font-weight:650}
+.vsort{margin-top:14px;font-size:9.5px;letter-spacing:.13em;font-weight:750;color:var(--txt-3);
+  border:1px solid var(--line);padding:6px 11px}
+.vsort:hover{color:var(--txt);border-color:var(--line-2)}
+.vpt{cursor:pointer;transition:filter .15s}
+.vheat{display:grid;gap:2px;font-size:11px}
+.vh-c{font-size:9px;letter-spacing:.1em;color:var(--txt-4);font-weight:700;text-align:center;padding:6px 2px}
+.vh-r{font-size:11.5px;color:var(--txt-2);display:flex;align-items:center;padding-right:10px}
+.vh-x{aspect-ratio:2.1/1;display:grid;place-items:center;cursor:pointer;transition:outline .12s;
+  outline:0 solid var(--txt)}
+.vh-x:hover{outline:2px solid var(--txt)}
+.vh-x span{font-size:10.5px;font-family:var(--mono);color:var(--txt);font-weight:600;mix-blend-mode:difference}
+body[data-theme="ledger"] .vh-x span{mix-blend-mode:normal;color:var(--ink-1)}
+/* hex map */
+.hexwrap{position:relative;overflow:hidden;background:var(--ink-1);border:1px solid var(--line)}
+.hexsvg{width:100%;height:auto;display:block;cursor:grab;touch-action:none}
+.hex{fill:currentColor;opacity:.05;stroke:var(--ink);stroke-width:1}
+.hex.live{opacity:.11}
+.hexwrap{color:var(--txt)}
+.hexpin{cursor:pointer;transition:opacity .2s}
+.hexpin .hc{fill:var(--gold)}
+.hexpin .hh{fill:var(--gold);opacity:.18}
+.hexpin.hot .hc{fill:var(--bad)} .hexpin.hot .hh{fill:var(--bad);opacity:.2}
+body[data-theme="ledger"] .hexpin .hc{fill:var(--txt)}
+body[data-theme="ledger"] .hexpin .hh{fill:var(--txt);opacity:.12}
+body[data-theme="ledger"] .hexpin.hot .hc{fill:var(--bad)}
+.hexpin:hover .hc{transform-box:fill-box;transform-origin:center}
+.hexctl{position:absolute;right:14px;top:14px;display:flex;flex-direction:column;gap:5px}
+.hexctl button{width:32px;height:30px;background:var(--ink-2);border:1px solid var(--line);
+  font-size:14px;font-weight:700;color:var(--txt-2)}
+.hexctl button:last-child{width:auto;padding:0 9px;font-size:9px;letter-spacing:.12em}
+.hexctl button:hover{color:var(--txt);border-color:var(--line-2)}
+.hexleg{position:absolute;left:14px;bottom:14px;display:flex;gap:7px;flex-wrap:wrap}
+.hexleg button{font-size:10.5px;color:var(--txt-2);background:var(--ink-2);border:1px solid var(--line);
+  padding:5px 10px;display:flex;align-items:center;gap:7px}
+.hexleg button i{width:7px;height:7px;background:var(--gold)}
+body[data-theme="ledger"] .hexleg button i{background:var(--txt)}
+.hexleg button.mute{opacity:.4;text-decoration:line-through}
+.vwf{cursor:pointer}
+.vwf:hover rect{opacity:1}
+
 </style>
 </head>
 <body></body>
@@ -738,13 +825,14 @@ const totalAUM=9.0e9;
 /* ---------------- shell ---------------- */
 const NAV=[
  ['MAIN',[['Overview','overview','overview'],['Deal Flow','flow','flow'],['Investments','invest','investments'],
-   ['Due Diligence','dd','dd'],['Investment Committee','ic','ic'],['Portfolio','portfolio','portfolio']]],
+   ['Due Diligence','dd','dd'],['Investment Committee','ic','ic'],['Portfolio','portfolio','portfolio'],
+   ['Analytics','report','analytics']]],
  ['CONTROL',[['Documents','docs','documents'],['Approvals','approve','approvals'],
    ['Risk & Alerts','risk','risk'],['Reports','report','reports']]],
  ['PLATFORM',[['AI Intelligence','ai','ai'],['Settings','settings','settings']]],
 ];
 const TITLES={overview:'Executive Command Center',flow:'Deal Flow',investments:'Investments',dd:'Due Diligence',
- ic:'Investment Committee',portfolio:'Portfolio',documents:'Document Control',approvals:'Approvals',
+ ic:'Investment Committee',portfolio:'Portfolio',analytics:'Analytics',documents:'Document Control',approvals:'Approvals',
  risk:'Risk & Alert Center',reports:'Reports',ai:'AI Intelligence',settings:'Settings',
  builder:'Custom System Builder',detail:'Investment Detail'};
 
@@ -913,6 +1001,275 @@ function toggleAI(){
 }
 
 
+/* =====================================================================
+   VIZ — interactive SVG chart engine (no dependencies)
+   Every chart: hover readout, click-through, keyboard-free, themable.
+   ===================================================================== */
+const VIZ_PAL=['#C9A961','#5B8DEF','#3FB984','#9B8CEF','#E0A458','#E0605F','#4FB3C4','#B08968'];
+const vid=()=>'v'+Math.random().toString(36).slice(2,8);
+const cssv=n=>getComputedStyle(document.body).getPropertyValue(n).trim()||'#888';
+
+function tipFor(host){
+  let t=host.querySelector('.vtip');
+  if(!t){t=el('<div class="vtip"></div>');host.appendChild(t);}
+  return t;
+}
+function showTip(host,t,x,y,html){
+  t.innerHTML=html; t.style.opacity='1';
+  const hb=host.getBoundingClientRect();
+  t.style.left=Math.max(8,Math.min(hb.width-t.offsetWidth-8,x-t.offsetWidth/2))+'px';
+  t.style.top=Math.max(4,y-t.offsetHeight-12)+'px';
+}
+const hideTip=t=>{if(t)t.style.opacity='0';};
+
+/* ---------------- 1. line / area with crosshair ---------------- */
+function lineChart(host,{series,labels,fmt=USD,height=260,onPoint}){
+  const W=920,H=height,P={l:64,r:18,t:18,b:34},iw=W-P.l-P.r,ih=H-P.t-P.b;
+  const all=series.flatMap(s=>s.data);
+  const mx=Math.max(...all)*1.1||1, mn=Math.min(0,Math.min(...all));
+  const X=i=>P.l+(i/(labels.length-1))*iw, Y=v=>P.t+ih-((v-mn)/(mx-mn))*ih;
+  const id=vid();
+  let grid='';
+  for(let i=0;i<=4;i++){const y=P.t+ih-(i/4)*ih,v=mn+(mx-mn)*i/4;
+    grid+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" class="vgrid"/>
+      <text x="${P.l-10}" y="${y+4}" text-anchor="end" class="vaxis">${fmt(v)}</text>`;}
+  let xax=labels.map((l,i)=>i%Math.ceil(labels.length/8)?'':
+    `<text x="${X(i)}" y="${H-12}" text-anchor="middle" class="vaxis">${esc(l)}</text>`).join('');
+  const paths=series.map((s,si)=>{
+    const c=s.color||VIZ_PAL[si%VIZ_PAL.length];
+    const d=s.data.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ');
+    return `${s.area!==false?`<path d="${d} L${X(s.data.length-1)} ${P.t+ih} L${P.l} ${P.t+ih} Z"
+      fill="${c}" opacity=".10" class="vs-${si}"/>`:''}
+      <path d="${d}" fill="none" stroke="${c}" stroke-width="2.2" stroke-linejoin="round"
+        stroke-linecap="round" class="vs-${si}"/>`;}).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" class="vsvg" id="${id}">
+    ${grid}${xax}${paths}
+    <line class="vcross" id="${id}c" x1="0" y1="${P.t}" x2="0" y2="${P.t+ih}" style="opacity:0"/>
+    ${series.map((s,si)=>`<circle class="vdot" id="${id}d${si}" r="4.5" fill="${cssv('--ink-1')}"
+      stroke="${s.color||VIZ_PAL[si%VIZ_PAL.length]}" stroke-width="2.2" style="opacity:0"/>`).join('')}
+    <rect x="${P.l}" y="${P.t}" width="${iw}" height="${ih}" fill="transparent" id="${id}h"/></svg>
+    <div class="vlegend">${series.map((s,si)=>`<button data-s="${si}" class="on">
+      <i style="background:${s.color||VIZ_PAL[si%VIZ_PAL.length]}"></i>${esc(s.name)}</button>`).join('')}</div>`;
+  const svgEl=$('#'+id,host), tip=tipFor(host);
+  $('#'+id+'h',host).addEventListener('mousemove',e=>{
+    const r=svgEl.getBoundingClientRect(), sx=(e.clientX-r.left)/r.width*W;
+    const i=Math.max(0,Math.min(labels.length-1,Math.round((sx-P.l)/iw*(labels.length-1))));
+    const cx=X(i);
+    const cl=$('#'+id+'c',host); cl.setAttribute('x1',cx);cl.setAttribute('x2',cx);cl.style.opacity='1';
+    series.forEach((s,si)=>{const dt=$('#'+id+'d'+si,host);
+      if(!dt)return; dt.setAttribute('cx',cx);dt.setAttribute('cy',Y(s.data[i]));
+      dt.style.opacity=$(`[data-s="${si}"]`,host).classList.contains('on')?'1':'0';});
+    showTip(host,tip,(cx/W)*r.width,(Y(series[0].data[i])/H)*r.height,
+      `<b>${esc(labels[i])}</b>${series.map((s,si)=>`<span><i style="background:${
+        s.color||VIZ_PAL[si%VIZ_PAL.length]}"></i>${esc(s.name)} <b>${fmt(s.data[i])}</b></span>`).join('')}`);
+  });
+  $('#'+id+'h',host).addEventListener('mouseleave',()=>{hideTip(tip);
+    $('#'+id+'c',host).style.opacity='0';
+    series.forEach((s,si)=>{const d=$('#'+id+'d'+si,host);if(d)d.style.opacity='0';});});
+  if(onPoint)$('#'+id+'h',host).addEventListener('click',e=>{
+    const r=svgEl.getBoundingClientRect(), sx=(e.clientX-r.left)/r.width*W;
+    onPoint(Math.round((sx-P.l)/iw*(labels.length-1)));});
+  $$('.vlegend button',host).forEach(b=>b.onclick=()=>{
+    b.classList.toggle('on'); const si=b.dataset.s, on=b.classList.contains('on');
+    $$('.vs-'+si,host).forEach(p=>p.style.opacity=on?'':'0');});
+}
+
+/* ---------------- 2. donut with hover + click ---------------- */
+function donutChart(host,{data,fmt=USD,onSlice,size=210,thick=34,center}){
+  const tot=data.reduce((a,d)=>a+d.v,0)||1, id=vid();
+  const R=size/2, r=R-thick; let a0=-Math.PI/2, segs='';
+  data.forEach((d,i)=>{
+    const a1=a0+(d.v/tot)*Math.PI*2, big=(a1-a0)>Math.PI?1:0;
+    const p=(rad,a)=>[R+rad*Math.cos(a),R+rad*Math.sin(a)];
+    const[x1,y1]=p(R,a0),[x2,y2]=p(R,a1),[x3,y3]=p(r,a1),[x4,y4]=p(r,a0);
+    segs+=`<path class="vseg" data-i="${i}" d="M${x1} ${y1} A${R} ${R} 0 ${big} 1 ${x2} ${y2}
+      L${x3} ${y3} A${r} ${r} 0 ${big} 0 ${x4} ${y4} Z" fill="${d.c||VIZ_PAL[i%VIZ_PAL.length]}"/>`;
+    a0=a1;});
+  host.innerHTML=`<div class="vdonut"><svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" id="${id}">
+      ${segs}</svg>
+    <div class="vcenter"><b id="${id}v">${center||fmt(tot)}</b><span id="${id}l">TOTAL</span></div></div>
+    <div class="vlist">${data.map((d,i)=>`<div class="vrow" data-i="${i}">
+      <i style="background:${d.c||VIZ_PAL[i%VIZ_PAL.length]}"></i><span>${esc(d.n)}</span>
+      <b class="num">${fmt(d.v)}</b><em>${(d.v/tot*100).toFixed(1)}%</em></div>`).join('')}</div>`;
+  const hi=i=>{$$('.vseg',host).forEach(s=>s.style.opacity=(i==null||+s.dataset.i===i)?'1':'.28');
+    $$('.vrow',host).forEach(r2=>r2.classList.toggle('on',i!=null&&+r2.dataset.i===i));
+    $('#'+id+'v',host).textContent=i==null?(center||fmt(tot)):fmt(data[i].v);
+    $('#'+id+'l',host).textContent=i==null?'TOTAL':data[i].n.toUpperCase();};
+  $$('.vseg,.vrow',host).forEach(x=>{
+    x.addEventListener('mouseenter',()=>hi(+x.dataset.i));
+    x.addEventListener('mouseleave',()=>hi(null));
+    if(onSlice)x.addEventListener('click',()=>onSlice(data[+x.dataset.i]));});
+}
+
+/* ---------------- 3. sortable ranked bars ---------------- */
+function barRank(host,{data,fmt=USD,onBar}){
+  let desc=true;
+  const paint=()=>{
+    const d=[...data].sort((a,b)=>desc?b.v-a.v:a.v-b.v);
+    const mx=Math.max(...d.map(x=>x.v))||1;
+    host.innerHTML=`<div class="vbars">${d.map((x,i)=>`<div class="vbar" data-k="${esc(x.n)}">
+      <span class="lb">${esc(x.n)}</span>
+      <span class="tr"><i style="width:${x.v/mx*100}%;background:${x.c||VIZ_PAL[i%VIZ_PAL.length]}"></i></span>
+      <b class="num">${fmt(x.v)}</b></div>`).join('')}</div>
+      <button class="vsort">${desc?'HIGH → LOW':'LOW → HIGH'}</button>`;
+    $('.vsort',host).onclick=()=>{desc=!desc;paint();};
+    if(onBar)$$('.vbar',host).forEach(b=>b.onclick=()=>onBar(b.dataset.k));};
+  paint();
+}
+
+/* ---------------- 4. bubble scatter (risk / return / size) ---------------- */
+function scatter(host,{points,xl,yl,onPoint,height=320}){
+  const W=880,H=height,P={l:58,r:24,t:20,b:44},iw=W-P.l-P.r,ih=H-P.t-P.b,id=vid();
+  const xs=points.map(p=>p.x), ys=points.map(p=>p.y);
+  const x0=Math.min(...xs)*.9,x1=Math.max(...xs)*1.06;
+  const y0=Math.min(...ys)*.9,y1=Math.max(...ys)*1.08;
+  const X=v=>P.l+((v-x0)/(x1-x0))*iw, Y=v=>P.t+ih-((v-y0)/(y1-y0))*ih;
+  const rmax=Math.max(...points.map(p=>p.r));
+  let grid='';
+  for(let i=0;i<=4;i++){const y=P.t+ih-(i/4)*ih,v=y0+(y1-y0)*i/4;
+    grid+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" class="vgrid"/>
+      <text x="${P.l-10}" y="${y+4}" text-anchor="end" class="vaxis">${v.toFixed(0)}%</text>`;}
+  for(let i=0;i<=4;i++){const x=P.l+(i/4)*iw,v=x0+(x1-x0)*i/4;
+    grid+=`<text x="${x}" y="${H-16}" text-anchor="middle" class="vaxis">${USD(v)}</text>`;}
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" class="vsvg" id="${id}">${grid}
+    <text x="${P.l+iw/2}" y="${H-2}" text-anchor="middle" class="vaxis-t">${esc(xl)}</text>
+    <text x="14" y="${P.t+ih/2}" text-anchor="middle" class="vaxis-t"
+      transform="rotate(-90 14 ${P.t+ih/2})">${esc(yl)}</text>
+    ${points.map((p,i)=>`<g class="vpt" data-i="${i}">
+      <circle cx="${X(p.x)}" cy="${Y(p.y)}" r="${8+p.r/rmax*20}" fill="${p.c||VIZ_PAL[i%VIZ_PAL.length]}" opacity=".22"/>
+      <circle cx="${X(p.x)}" cy="${Y(p.y)}" r="${4+p.r/rmax*9}" fill="${p.c||VIZ_PAL[i%VIZ_PAL.length]}"/></g>`).join('')}
+    </svg>`;
+  const tip=tipFor(host), svgEl=$('#'+id,host);
+  $$('.vpt',host).forEach(g=>{
+    const p=points[+g.dataset.i];
+    g.addEventListener('mouseenter',()=>{
+      const r=svgEl.getBoundingClientRect();
+      showTip(host,tip,X(p.x)/W*r.width,Y(p.y)/H*r.height,
+        `<b>${esc(p.n)}</b><span>${esc(p.sub||'')}</span>
+         <span>${esc(xl)} <b>${USD(p.x)}</b></span><span>${esc(yl)} <b>${p.y}%</b></span>`);
+      g.style.filter='brightness(1.25)';});
+    g.addEventListener('mouseleave',()=>{hideTip(tip);g.style.filter='';});
+    if(onPoint)g.addEventListener('click',()=>onPoint(p));});
+}
+
+/* ---------------- 5. heatmap grid ---------------- */
+function heatmap(host,{rows,cols,matrix,fmt=USD,onCell}){
+  const mx=Math.max(...matrix.flat())||1, id=vid();
+  host.innerHTML=`<div class="vheat" style="grid-template-columns:132px repeat(${cols.length},1fr)">
+    <div></div>${cols.map(c=>`<div class="vh-c">${esc(c)}</div>`).join('')}
+    ${rows.map((r,ri)=>`<div class="vh-r">${esc(r)}</div>`+cols.map((c,ci)=>{
+      const v=matrix[ri][ci], a=v/mx;
+      return `<div class="vh-x" data-r="${ri}" data-c="${ci}"
+        style="background:color-mix(in srgb, var(--heat) ${(a*88+4).toFixed(0)}%, transparent)">
+        ${v?`<span>${fmt(v)}</span>`:''}</div>`;}).join('')).join('')}</div>`;
+  const tip=tipFor(host);
+  $$('.vh-x',host).forEach(x=>{
+    const ri=+x.dataset.r, ci=+x.dataset.c, v=matrix[ri][ci];
+    x.addEventListener('mouseenter',e=>{const hb=host.getBoundingClientRect(),b=x.getBoundingClientRect();
+      showTip(host,tip,b.left-hb.left+b.width/2,b.top-hb.top,
+        `<b>${esc(rows[ri])} · ${esc(cols[ci])}</b><span>Exposure <b>${fmt(v)}</b></span>`);});
+    x.addEventListener('mouseleave',()=>hideTip(tip));
+    if(onCell)x.addEventListener('click',()=>onCell(rows[ri],cols[ci],v));});
+}
+
+/* ---------------- 6. waterfall / conversion ---------------- */
+function waterfall(host,{steps,fmt=USD,onStep}){
+  const W=880,H=260,P={l:16,r:16,t:24,b:44},iw=W-P.l-P.r,ih=H-P.t-P.b;
+  const mx=Math.max(...steps.map(s=>s.v))||1, bw=iw/steps.length-14;
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" class="vsvg">
+    ${steps.map((s,i)=>{const h=s.v/mx*ih, x=P.l+i*(iw/steps.length)+7, y=P.t+ih-h;
+      const c=VIZ_PAL[i%VIZ_PAL.length];
+      return `<g class="vwf" data-i="${i}">
+        <rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="${c}" opacity=".82"/>
+        <text x="${x+bw/2}" y="${y-8}" text-anchor="middle" class="vval">${fmt(s.v)}</text>
+        <text x="${x+bw/2}" y="${H-24}" text-anchor="middle" class="vaxis">${esc(s.n)}</text>
+        <text x="${x+bw/2}" y="${H-10}" text-anchor="middle" class="vaxis" opacity=".6">${s.n2||''}</text>
+        ${i?`<line x1="${x-7}" y1="${P.t+ih-steps[i-1].v/mx*ih}" x2="${x}" y2="${y}" class="vconn"/>`:''}
+      </g>`;}).join('')}</svg>`;
+  if(onStep)$$('.vwf',host).forEach(g=>g.onclick=()=>onStep(steps[+g.dataset.i]));
+}
+
+/* ---------------- 7. hex world map — pan, zoom, drill ---------------- */
+const HEXROWS=[
+ /* coarse hand-built continental silhouette, one hex per cell.
+    r = region key or null. Deliberately schematic, not a survey map. */
+ '....nnnn......eeee......aaaaaa....',
+ '..nnnnnnn....eeeeee....aaaaaaaa..',
+ '..nnnnnn......eeee....aaaaaaaaaa.',
+ '...nnnn........ff......aaaaaaaa..',
+ '....nn.........ff.mm....aaaaaa...',
+ '.....s.........ff.mm.....aaaa....',
+ '.....ss........ff..mm.....aa.....',
+ '.....ss.......fff...mm...........',
+ '......s.......fff.........pp.....',
+ '......s........ff.........ppp....',
+];
+const HEXKEY={n:'North',e:'Europe',a:'Asia',f:'Africa',m:'Middle East',s:'Latin America',p:'Oceania'};
+const HEXREG={f:'africa',m:'me',s:'latam',a:'asia'};
+function hexMap(host,{onDeal}={}){
+  const R=15, w=Math.sqrt(3)*R, h=2*R*0.75;
+  const cells=[];
+  HEXROWS.forEach((row,r)=>[...row].forEach((ch,c)=>{
+    if(ch==='.')return;
+    cells.push({x:c*w+(r%2?w/2:0)+w,y:r*h+R+10,k:ch});
+  }));
+  const W=Math.max(...cells.map(c=>c.x))+w, H=Math.max(...cells.map(c=>c.y))+R+10;
+  const hexPath=(cx,cy)=>[...Array(6)].map((_,i)=>{
+    const a=Math.PI/180*(60*i-30);
+    return `${i?'L':'M'}${(cx+R*Math.cos(a)).toFixed(1)} ${(cy+R*Math.sin(a)).toFixed(1)}`;}).join(' ')+' Z';
+  /* assign each deal to a hex inside its region */
+  const byReg={}; cells.forEach(c=>{const rk=HEXREG[c.k]; if(rk)(byReg[rk]=byReg[rk]||[]).push(c);});
+  const regOf=d=>['Angola','Ghana','Nigeria','Kenya','Zambia','Morocco','Egypt'].includes(d.c)?'africa'
+    :['UAE'].includes(d.c)?'me':['India','Kazakhstan'].includes(d.c)?'asia':'latam';
+  const placed=[];
+  DEALS.forEach((d,i)=>{const pool=byReg[regOf(d)]||[];
+    if(!pool.length)return; placed.push({...pool[(i*5+3)%pool.length],d});});
+  const hot=new Set(['HOR','NOV']);
+  let zoom=1,ox=0,oy=0,drag=null;
+  host.innerHTML=`<div class="hexwrap">
+    <svg viewBox="0 0 ${W} ${H}" class="hexsvg" id="hexsvg">
+      <g id="hexg">
+        ${cells.map(c=>`<path class="hex ${HEXREG[c.k]?'live':''}" data-k="${c.k}" d="${hexPath(c.x,c.y)}"/>`).join('')}
+        ${placed.map(p=>{const sz=Math.max(4,Math.min(10,p.d.v/1e6/14));
+          return `<g class="hexpin ${hot.has(p.d.id)?'hot':''}" data-d="${p.d.id}">
+            <circle cx="${p.x}" cy="${p.y}" r="${sz+5}" class="hh"/>
+            <circle cx="${p.x}" cy="${p.y}" r="${sz}" class="hc"/></g>`;}).join('')}
+      </g></svg>
+    <div class="hexctl">
+      <button data-z="in">+</button><button data-z="out">−</button><button data-z="fit">RESET</button></div>
+    <div class="hexleg">
+      ${REGIONS.map(r=>`<button data-hr="${r.k}"><i></i>${r.n} · ${USD(r.exp)}</button>`).join('')}</div>
+  </div>`;
+  const g=$('#hexg',host), svgEl=$('#hexsvg',host), tip=tipFor(host);
+  const apply=()=>g.setAttribute('transform',`translate(${ox} ${oy}) scale(${zoom})`);
+  $$('[data-z]',host).forEach(b=>b.onclick=()=>{
+    const z=b.dataset.z;
+    if(z==='in')zoom=Math.min(3,zoom*1.35); if(z==='out')zoom=Math.max(.6,zoom/1.35);
+    if(z==='fit'){zoom=1;ox=0;oy=0;} apply();});
+  svgEl.addEventListener('wheel',e=>{e.preventDefault();
+    zoom=Math.max(.6,Math.min(3,zoom*(e.deltaY<0?1.12:.89)));apply();},{passive:false});
+  svgEl.addEventListener('mousedown',e=>{drag={x:e.clientX-ox,y:e.clientY-oy};svgEl.style.cursor='grabbing';});
+  addEventListener('mousemove',e=>{if(!drag)return;ox=e.clientX-drag.x;oy=e.clientY-drag.y;apply();});
+  addEventListener('mouseup',()=>{drag=null;if(svgEl)svgEl.style.cursor='grab';});
+  $$('.hexpin',host).forEach(p=>{
+    const d=dealById(p.dataset.d);
+    p.addEventListener('mouseenter',()=>{
+      const b=p.getBoundingClientRect(), hb=host.getBoundingClientRect();
+      showTip(host,tip,b.left-hb.left+b.width/2,b.top-hb.top,
+        `<b>${esc(d.n)}</b><span>${esc(d.c)} · ${esc(d.s)}</span>
+         <span>Ticket <b>${USD(d.v)}</b> · IRR <b>${d.irr}%</b></span>
+         <span>DD <b>${d.dd}%</b> · ${STLBL[stageOf(d)]}</span>`);});
+    p.addEventListener('mouseleave',()=>hideTip(tip));
+    p.addEventListener('click',()=>onDeal?onDeal(d):openDeal(d.id));});
+  $$('[data-hr]',host).forEach(b=>b.onclick=()=>{
+    const k=b.dataset.hr, on=b.classList.toggle('mute');
+    $$('.hexpin',host).forEach(p=>{const d=dealById(p.dataset.d);
+      if(regOf(d)===k)p.style.opacity=on?'.12':'1';});
+    const r=REGIONS.find(x=>x.k===k);
+    toast(`${r.n} ${on?'hidden':'shown'} · ${r.deals} positions · ${USD(r.exp)}`);});
+}
+
+
 /* ============ SCREEN 1 — EXECUTIVE COMMAND CENTER ============ */
 const KPIS=[
  ['TOTAL PORTFOLIO','$9.0B+','gold','Committed & deployed capital','portfolio',[7.1,7.4,7.8,8.0,8.3,8.6,8.8,9.0]],
@@ -944,8 +1301,8 @@ PAGES.overview=function(v){
     <div class="grid g6" id="kpis"></div>
 
     <div class="sec"><h2>GLOBAL INVESTMENT MAP</h2><div class="ln"></div>
-      <button id="mapAll">Open portfolio ↗</button></div>
-    <div class="mapwrap" id="map"></div>
+      <button id="mapAll">Open analytics ↗</button></div>
+    <div id="map" style="position:relative"></div>
 
     <div class="sec"><h2>TODAY'S PRIORITIES</h2><div class="ln"></div>
       <button id="allPrio">VIEW ALL PRIORITIES</button></div>
@@ -964,8 +1321,8 @@ PAGES.overview=function(v){
     ${sparkline(sp,240,34,cls==='crit'?'var(--bad)':cls==='warn'?'var(--warn)':'var(--gold)')}</div>`).join('');
   $$('[data-go]').forEach(k=>k.onclick=()=>location.hash='#/'+k.dataset.go);
 
-  drawMap($('#map'));
-  $('#mapAll').onclick=()=>location.hash='#/portfolio';
+  hexMap($('#map'),{onDeal:d=>openDeal(d.id)});
+  $('#mapAll').onclick=()=>location.hash='#/analytics';
 
   $('#prios').innerHTML=PRIOS.slice(0,3).map(p=>prioRow(p)).join('');
   wirePrios();
@@ -1964,6 +2321,99 @@ PAGES.settings=function(v){
 
 /* boot */
 shell(); route();
+
+
+/* ============ ANALYTICS — interactive maps & charts ============ */
+const MONTHS=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+const SERIES={
+ committed:[7.1,7.25,7.4,7.55,7.8,7.95,8.05,8.3,8.45,8.6,8.8,9.0].map(x=>x*1e9),
+ deployed:[5.4,5.6,5.75,5.9,6.15,6.3,6.4,6.6,6.8,6.95,7.1,7.35].map(x=>x*1e9),
+ pipeline:[.62,.70,.66,.74,.81,.79,.86,.92,.88,.95,1.02,1.09].map(x=>x*1e9),
+};
+const SECTORS=[...new Set(DEALS.map(d=>d.s))];
+const REGNAMES=['Africa','Middle East','Latin America','Asia'];
+const regOfDeal=d=>['Angola','Ghana','Nigeria','Kenya','Zambia','Morocco','Egypt'].includes(d.c)?'Africa'
+  :['UAE'].includes(d.c)?'Middle East':['India','Kazakhstan'].includes(d.c)?'Asia':'Latin America';
+let anRange=12;
+
+PAGES.analytics=function(v){
+  v.innerHTML=`<div class="pad">
+    <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px">
+      <div style="flex:1"><h1 class="hero" style="font-size:27px">Analytics</h1>
+        <p class="lede" style="font-size:13.5px">Every chart is live — hover for the readout, click to open the position.</p></div>
+      <div class="tsw">${[[6,'6M'],[12,'12M'],[24,'24M']].map(([n,l])=>
+        `<button data-rg="${n}" class="${anRange===n?'on':''}">${l}</button>`).join('')}</div>
+      <span class="demo">CONCEPT DEMO — SAMPLE DATA</span></div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-h"><div style="flex:1"><h3>Capital under management</h3>
+        <p>Committed, deployed and active pipeline · click a point to open that month</p></div></div>
+      <div class="card-b" style="position:relative"><div id="cLine"></div></div></div>
+
+    <div class="sec"><h2>GLOBAL EXPOSURE MAP</h2><div class="ln"></div>
+      <span style="font-size:11px;color:var(--txt-4)">Scroll to zoom · drag to pan · click a position</span></div>
+    <div id="cHex" style="position:relative;margin-bottom:22px"></div>
+
+    <div class="grid g2" style="margin-bottom:16px">
+      <div class="card"><div class="card-h"><div style="flex:1"><h3>Exposure by region</h3>
+        <p>Hover a segment · click to filter the pipeline</p></div></div>
+        <div class="card-b" style="position:relative;display:flex;gap:26px;align-items:center;flex-wrap:wrap">
+          <div id="cDonut" style="display:contents"></div></div></div>
+      <div class="card"><div class="card-h"><div style="flex:1"><h3>Largest positions</h3>
+        <p>Click a bar to open the transaction</p></div></div>
+        <div class="card-b" style="position:relative"><div id="cBars"></div></div></div></div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-h"><div style="flex:1"><h3>Risk / return profile</h3>
+        <p>Bubble size is ticket · colour is risk band · click to open</p></div></div>
+      <div class="card-b" style="position:relative"><div id="cScatter"></div></div></div>
+
+    <div class="grid g2" style="margin-bottom:16px">
+      <div class="card"><div class="card-h"><div style="flex:1"><h3>Sector × region exposure</h3>
+        <p>Click a cell to drill into that combination</p></div></div>
+        <div class="card-b" style="position:relative"><div id="cHeat"></div></div></div>
+      <div class="card"><div class="card-h"><div style="flex:1"><h3>Pipeline conversion</h3>
+        <p>Capital at each stage · click a stage to open Deal Flow</p></div></div>
+        <div class="card-b" style="position:relative"><div id="cWater"></div></div></div></div>
+  </div>`;
+
+  $$('[data-rg]').forEach(b=>b.onclick=()=>{anRange=+b.dataset.rg;route();});
+  const n=Math.min(anRange,12), sl=a=>a.slice(-n), lb=MONTHS.slice(-n);
+
+  lineChart($('#cLine'),{
+    labels:lb,fmt:USD,height:280,
+    series:[{name:'Committed',data:sl(SERIES.committed),color:VIZ_PAL[0]},
+      {name:'Deployed',data:sl(SERIES.deployed),color:VIZ_PAL[1]},
+      {name:'Active pipeline',data:sl(SERIES.pipeline),color:VIZ_PAL[2]}],
+    onPoint:i=>toast(`${lb[i]} — committed ${USD(sl(SERIES.committed)[i])}`,'gold')});
+
+  hexMap($('#cHex'),{onDeal:d=>openDeal(d.id)});
+
+  const byReg=REGNAMES.map((r,i)=>({n:r,c:VIZ_PAL[i],
+    v:DEALS.filter(d=>regOfDeal(d)===r).reduce((a,d)=>a+d.v,0)}));
+  donutChart($('#cDonut'),{data:byReg,onSlice:s=>{
+    toast(`${s.n} · ${USD(s.v)} across ${DEALS.filter(d=>regOfDeal(d)===s.n).length} positions`,'gold');
+    location.hash='#/flow';}});
+
+  barRank($('#cBars'),{data:[...DEALS].map(d=>({n:d.n,v:d.v,c:d.risk==='low'?VIZ_PAL[2]:d.risk==='med'?VIZ_PAL[4]:VIZ_PAL[5]})).slice(0,9),
+    onBar:nm=>{const d=DEALS.find(x=>x.n===nm); if(d)openDeal(d.id);}});
+
+  scatter($('#cScatter'),{xl:'TICKET SIZE',yl:'TARGET IRR',height:330,
+    points:DEALS.map(d=>({n:d.n,sub:`${d.c} · ${d.s}`,x:d.v,y:d.irr,r:d.v,
+      c:d.risk==='low'?VIZ_PAL[2]:d.risk==='med'?VIZ_PAL[4]:VIZ_PAL[5]})),
+    onPoint:p=>{const d=DEALS.find(x=>x.n===p.n); if(d)openDeal(d.id);}});
+
+  const matrix=SECTORS.map(s=>REGNAMES.map(r=>
+    DEALS.filter(d=>d.s===s&&regOfDeal(d)===r).reduce((a,d)=>a+d.v,0)));
+  heatmap($('#cHeat'),{rows:SECTORS,cols:REGNAMES,matrix,
+    onCell:(r,c,val)=>{if(!val){toast('No exposure in '+r+' · '+c);return;}
+      toast(`${r} in ${c}: ${USD(val)}`,'gold');location.hash='#/investments';}});
+
+  waterfall($('#cWater'),{steps:STAGES.map(([k,l])=>{
+      const ds=DEALS.filter(d=>stageOf(d)===k);
+      return {n:l.split(' ')[0],n2:ds.length+' deals',v:ds.reduce((a,d)=>a+d.v,0),k};}),
+    onStep:()=>location.hash='#/flow'});
+};
 
 </script>
 </html>
